@@ -3,6 +3,7 @@
 #include <windows.h>
 #include <windowsx.h>
 
+///Esta es una prueba de pull request (Git)
 ///Botones
 HWND ventana,texto;
 HWND bsin,bcos,btan,bsec,bcsc,bcot,barcsin,barccos,barctan,barcsec,barccsc,barccot;
