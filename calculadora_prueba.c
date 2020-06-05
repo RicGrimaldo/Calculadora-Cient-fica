@@ -271,7 +271,7 @@ int parentesis_operador(char entrada[n]){
             }
         }
     }
-        return resultado;
+    return resultado;
 }
 void ConversionInfijaAPostfija(char entrada[n], char postfija[n]){
     int longitud;
@@ -286,6 +286,11 @@ void ConversionInfijaAPostfija(char entrada[n], char postfija[n]){
             }
         }
 	}
+	printf("\n");
+	for(int i=0; postfija[i] != '\0'; i++){
+        printf("%c", postfija[i]);
+	}
+	printf("\n");
 }
 void pos(char entrada[n], char postfija[n]){
 	struct PILAA pila;
@@ -310,6 +315,9 @@ void pos(char entrada[n], char postfija[n]){
 			     retira_pila (&pila, &elemento);
 			     postfija[++j] = elemento;
 		      }
+		      if(isdigit(postfija[j]) == 1){
+                    postfija[++j] = ',';
+		      }
 		      if (entrada[i] == ')')
 			   retira_pila(&pila, &elemento);
 		      else ins_pila(&pila, entrada[i]);
@@ -332,8 +340,8 @@ int operando (char c){
 		 c != '('    );
 }
 
- int priori[6][7] =
- {
+int priori[6][7] =
+{
 	{ 1,1,0,0,0,0,1 },
 	{ 1,1,0,0,0,0,1 },
 	{ 1,1,1,1,0,0,1 },
