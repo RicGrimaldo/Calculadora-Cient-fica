@@ -1,11 +1,11 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <windows.h>
-#include <windowsx.h>
+#include <string.h>
 
 ///Esta es una prueba de pull request (Git)
 ///Botones
-HWND ventana,texto;
+HWND ventana,caja_texto;
 HWND bsin,bcos,btan,bsec,bcsc,bcot,barcsin,barccos,barctan,barcsec,barccsc,barccot;
 HWND bpot,bmul,bdiv,boff,bac,braiz,bsum,bfact,bporc,bpariz,bparder,bpunto,bresta,bresultado;
 HWND b0,b1,b2,b3,b4,b5,b6,b7,b8,b9;
@@ -25,19 +25,47 @@ char enteroACaracter(int numero){
 }
 
 LRESULT CALLBACK winProc(HWND hwnd,UINT msj,WPARAM wParam,LPARAM lParam){
+    char texto[31];
     switch(msj){
 
     case WM_COMMAND: ///Referente a cuando se hace click
 
 
-
         if((HWND)lParam == b1){
-            MessageBox(hwnd,"1","Aviso",MB_OK | MB_ICONASTERISK);
+            GetWindowText(caja_texto,texto,31);
+            strcat(texto,"1");
+            SetWindowText(caja_texto,texto);
+        }
+
+        if((HWND)lParam == b2){
+            GetWindowText(caja_texto,texto,31);
+            strcat(texto,"2");
+            SetWindowText(caja_texto,texto);
+        }
+
+        if((HWND)lParam == barccot){
+            GetWindowText(caja_texto,texto,31);
+            strcat(texto,"arcot(");
+            SetWindowText(caja_texto,texto);
         }
 
 
         if((HWND)lParam == bpot){
-            MessageBox(hwnd,"^","Aviso",MB_OK | MB_ICONASTERISK);
+            GetWindowText(caja_texto,texto,31);
+            strcat(texto,"^");
+            SetWindowText(caja_texto,texto);
+        }
+
+        if((HWND)lParam == bsum){
+            GetWindowText(caja_texto,texto,31);
+            strcat(texto,"+");
+            SetWindowText(caja_texto,texto);
+        }
+
+        if((HWND)lParam == bresta){
+            GetWindowText(caja_texto,texto,31);
+            strcat(texto,"-");
+            SetWindowText(caja_texto,texto);
         }
 
         if((HWND)lParam == bresultado){
@@ -86,7 +114,7 @@ int WINAPI WinMain(HINSTANCE ins,HINSTANCE ins2,LPSTR cmd, int estado){
     ventana = CreateWindow(app,"Mi ventana",WS_OVERLAPPED | WS_CAPTION | WS_SYSMENU | WS_MINIMIZEBOX,CW_USEDEFAULT,CW_USEDEFAULT,640,380,HWND_DESKTOP,NULL,ins,NULL);
 
 ///Caja de texto
-    texto = CreateWindow("EDIT","",WS_CHILD | WS_VISIBLE  | ES_LOWERCASE | WS_BORDER | ES_RIGHT,6,12,610,34,ventana,NULL,ins,NULL);
+    caja_texto = CreateWindow("EDIT","",WS_CHILD | WS_VISIBLE  | ES_LOWERCASE | WS_BORDER | ES_RIGHT,6,12,610,34,ventana,NULL,ins,NULL);
 
 ///Creación de etiquetas
 
