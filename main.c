@@ -30,6 +30,83 @@ LRESULT CALLBACK winProc(HWND hwnd,UINT msj,WPARAM wParam,LPARAM lParam){
 
     case WM_COMMAND: ///Referente a cuando se hace click
 
+///Funcionalidad de botones
+
+    //Funciones trigonométricas
+
+    if((HWND)lParam == barcsec){
+            GetWindowText(caja_texto,texto,31);
+            strcat(texto,"arcsec(");
+            SetWindowText(caja_texto,texto);
+        }
+
+    if((HWND)lParam == barccsc){
+            GetWindowText(caja_texto,texto,31);
+            strcat(texto,"arccsc(");
+            SetWindowText(caja_texto,texto);
+        }
+
+     if((HWND)lParam == barccot ){
+            GetWindowText(caja_texto,texto,31);
+            strcat(texto,"arccot(");
+            SetWindowText(caja_texto,texto);
+        }
+
+     if((HWND)lParam == barcsin ){
+            GetWindowText(caja_texto,texto,31);
+            strcat(texto,"arcsin(");
+            SetWindowText(caja_texto,texto);
+        }
+
+     if((HWND)lParam == barccos){
+            GetWindowText(caja_texto,texto,31);
+            strcat(texto,"arccos(");
+            SetWindowText(caja_texto,texto);
+        }
+
+     if((HWND)lParam == barctan ){
+            GetWindowText(caja_texto,texto,31);
+            strcat(texto,"arctan(");
+            SetWindowText(caja_texto,texto);
+        }
+
+     if((HWND)lParam == bsec ){
+            GetWindowText(caja_texto,texto,31);
+            strcat(texto,"bsec(");
+            SetWindowText(caja_texto,texto);
+        }
+
+     if((HWND)lParam == bcsc){
+            GetWindowText(caja_texto,texto,31);
+            strcat(texto,"csc(");
+            SetWindowText(caja_texto,texto);
+        }
+
+     if((HWND)lParam == bcot){
+            GetWindowText(caja_texto,texto,31);
+            strcat(texto,"cot(");
+            SetWindowText(caja_texto,texto);
+        }
+
+     if((HWND)lParam == bsin){
+            GetWindowText(caja_texto,texto,31);
+            strcat(texto,"sin(");
+            SetWindowText(caja_texto,texto);
+        }
+
+    if((HWND)lParam == bcos){
+            GetWindowText(caja_texto,texto,31);
+            strcat(texto,"cos(");
+            SetWindowText(caja_texto,texto);
+        }
+
+    if((HWND)lParam == btan){
+            GetWindowText(caja_texto,texto,31);
+            strcat(texto,"tan(");
+            SetWindowText(caja_texto,texto);
+        }
+
+    //Operaciones principales y básicas
 
         if((HWND)lParam == b1){
             GetWindowText(caja_texto,texto,31);
@@ -40,12 +117,6 @@ LRESULT CALLBACK winProc(HWND hwnd,UINT msj,WPARAM wParam,LPARAM lParam){
         if((HWND)lParam == b2){
             GetWindowText(caja_texto,texto,31);
             strcat(texto,"2");
-            SetWindowText(caja_texto,texto);
-        }
-
-        if((HWND)lParam == barccot){
-            GetWindowText(caja_texto,texto,31);
-            strcat(texto,"arcot(");
             SetWindowText(caja_texto,texto);
         }
 
