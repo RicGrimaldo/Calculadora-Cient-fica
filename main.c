@@ -255,7 +255,11 @@ LRESULT CALLBACK winProc(HWND hwnd,UINT msj,WPARAM wParam,LPARAM lParam){
         ///Funciones que se llevarán a cabo cuando se de click en el botón de "Resultado"
 
        /// if((HWND)lParam == bresultado){
-        //}
+                /*Validación de errores
+                  Conversión de bin, oct, hex, grad
+                  Resultado final
+                  Copiar el resultado con SetWindowText*/
+        ///}
 
         break;
 
