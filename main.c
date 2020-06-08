@@ -174,6 +174,12 @@ LRESULT CALLBACK winProc(HWND hwnd,UINT msj,WPARAM wParam,LPARAM lParam){
         SetWindowText(caja_texto,texto);
         }
 
+    if((HWND)lParam == bac){
+        GetWindowText(caja_texto,texto,31);
+        strcpy(texto,"");
+        SetWindowText(caja_texto,texto);
+        }
+
 
     //Números y dígitos
 
