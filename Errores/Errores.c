@@ -11,6 +11,7 @@ int parentesis_vacio(char a[]);
 int validacion_caracter(char a[]);
 void decimal(char a[]);
 int parentesis_operador(char a[]);
+int encontrarCaracter(char cad[], char car);
 
 int main(){
     char a[n];
@@ -245,3 +246,13 @@ int parentesis_operador(char a[]){
         return resultado;
 }
 
+int encontrarCaracter(char cad[], char car){
+     int r=0;
+     for(int i=0;i<strlen(cad);i++){
+        if(cad[i]==car){
+            r=i+1;
+            break;
+        }
+     }
+     return r-1;
+ }
