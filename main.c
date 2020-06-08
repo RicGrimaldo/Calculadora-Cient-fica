@@ -180,6 +180,15 @@ LRESULT CALLBACK winProc(HWND hwnd,UINT msj,WPARAM wParam,LPARAM lParam){
         SetWindowText(caja_texto,texto);
         }
 
+    //Función especial
+    ///OFF
+
+    if((HWND)lParam == boff){
+        if(MessageBox(hwnd,"¿Estás seguro que quieres salir del programa?","Aviso",MB_OKCANCEL | MB_ICONEXCLAMATION) == IDOK){
+            PostQuitMessage(0);
+        }
+        }
+
 
     //Números y dígitos
 
