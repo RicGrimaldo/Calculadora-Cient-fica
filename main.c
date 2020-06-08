@@ -253,14 +253,10 @@ LRESULT CALLBACK winProc(HWND hwnd,UINT msj,WPARAM wParam,LPARAM lParam){
         }
 
 
-        if((HWND)lParam == bresultado){
-    ///La función getwindow es para copiar lo que hay en la caja de texto en la cadena "gtext"
-            ///char gtext[100],c[2];
-            ///GetWindowText(texto,gtext,100);
-           /// MessageBox(hwnd,gtext,"Longitud de texto",MB_OK | MB_ICONINFORMATION);
-            break;
-        }
+       /// if((HWND)lParam == bresultado){
 
+        //}
+        break;
         break;
 
     case WM_DESTROY :
@@ -296,7 +292,7 @@ int WINAPI WinMain(HINSTANCE ins,HINSTANCE ins2,LPSTR cmd, int estado){
 
 ///Ventana principal
 
-    ventana = CreateWindow(app,"Mi ventana",WS_OVERLAPPED | WS_CAPTION | WS_SYSMENU | WS_MINIMIZEBOX,CW_USEDEFAULT,CW_USEDEFAULT,640,380,HWND_DESKTOP,NULL,ins,NULL);
+    ventana = CreateWindow(app,"Calculadora científica",WS_OVERLAPPED | WS_CAPTION | WS_SYSMENU | WS_MINIMIZEBOX,CW_USEDEFAULT,CW_USEDEFAULT,640,380,HWND_DESKTOP,NULL,ins,NULL);
 
 ///Caja de texto
     caja_texto = CreateWindow("EDIT","",WS_CHILD | WS_VISIBLE  | ES_LOWERCASE | WS_BORDER | ES_RIGHT,6,12,610,34,ventana,NULL,ins,NULL);
