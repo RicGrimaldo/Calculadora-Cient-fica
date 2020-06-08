@@ -1,4 +1,5 @@
 #include<stdio.h>
+#include <string.h>
 #define n 30
 int encontrar_error(char a[]);
 int error_sintatico(char a[]);
@@ -113,7 +114,7 @@ int esDigito (char car){
 int es_operador(char car){
     int resultado=0;
     switch(car){
-    case'+': case'-': case'*': case'/': case '^': case'(': case ')': resultado=1;
+    case'+': case'-': case'*': case'/': case '^': case'(': case ')': case '%': case '.': case '!': resultado=1;
     break;
     }
     return resultado;
