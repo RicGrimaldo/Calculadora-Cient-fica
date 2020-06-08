@@ -108,6 +108,75 @@ LRESULT CALLBACK winProc(HWND hwnd,UINT msj,WPARAM wParam,LPARAM lParam){
 
     //Operaciones principales y básicas
 
+    if((HWND)lParam == bpot){
+            GetWindowText(caja_texto,texto,31);
+            strcat(texto,"^");
+            SetWindowText(caja_texto,texto);
+        }
+
+    if((HWND)lParam == braiz){
+            GetWindowText(caja_texto,texto,31);
+            strcat(texto,"sqrt(");
+            SetWindowText(caja_texto,texto);
+        }
+
+    if((HWND)lParam == bfact){
+            GetWindowText(caja_texto,texto,31);
+            strcat(texto,"!");
+            SetWindowText(caja_texto,texto);
+        }
+
+    if((HWND)lParam == bporc){
+            GetWindowText(caja_texto,texto,31);
+            strcat(texto,"%");
+            SetWindowText(caja_texto,texto);
+        }
+
+    if((HWND)lParam == bpariz){
+            GetWindowText(caja_texto,texto,31);
+            strcat(texto,"(");
+            SetWindowText(caja_texto,texto);
+        }
+
+    if((HWND)lParam == bparder){
+            GetWindowText(caja_texto,texto,31);
+            strcat(texto,")");
+            SetWindowText(caja_texto,texto);
+        }
+
+    if((HWND)lParam == bmul){
+            GetWindowText(caja_texto,texto,31);
+            strcat(texto,"*");
+            SetWindowText(caja_texto,texto);
+        }
+
+    if((HWND)lParam == bdiv){
+            GetWindowText(caja_texto,texto,31);
+            strcat(texto,"/");
+            SetWindowText(caja_texto,texto);
+        }
+
+    if((HWND)lParam == bsum){
+        GetWindowText(caja_texto,texto,31);
+        strcat(texto,"+");
+        SetWindowText(caja_texto,texto);
+        }
+
+    if((HWND)lParam == bresta){
+        GetWindowText(caja_texto,texto,31);
+        strcat(texto,"-");
+        SetWindowText(caja_texto,texto);
+        }
+
+    if((HWND)lParam == bpunto){
+        GetWindowText(caja_texto,texto,31);
+        strcat(texto,".");
+        SetWindowText(caja_texto,texto);
+        }
+
+
+    //Números y dígitos
+
         if((HWND)lParam == b1){
             GetWindowText(caja_texto,texto,31);
             strcat(texto,"1");
@@ -120,24 +189,54 @@ LRESULT CALLBACK winProc(HWND hwnd,UINT msj,WPARAM wParam,LPARAM lParam){
             SetWindowText(caja_texto,texto);
         }
 
-
-        if((HWND)lParam == bpot){
+        if((HWND)lParam == b3){
             GetWindowText(caja_texto,texto,31);
-            strcat(texto,"^");
+            strcat(texto,"3");
             SetWindowText(caja_texto,texto);
         }
 
-        if((HWND)lParam == bsum){
+        if((HWND)lParam == b4){
             GetWindowText(caja_texto,texto,31);
-            strcat(texto,"+");
+            strcat(texto,"4");
             SetWindowText(caja_texto,texto);
         }
 
-        if((HWND)lParam == bresta){
+        if((HWND)lParam == b5){
             GetWindowText(caja_texto,texto,31);
-            strcat(texto,"-");
+            strcat(texto,"5");
             SetWindowText(caja_texto,texto);
         }
+
+        if((HWND)lParam == b6){
+            GetWindowText(caja_texto,texto,31);
+            strcat(texto,"6");
+            SetWindowText(caja_texto,texto);
+        }
+
+        if((HWND)lParam == b7){
+            GetWindowText(caja_texto,texto,31);
+            strcat(texto,"7");
+            SetWindowText(caja_texto,texto);
+        }
+
+        if((HWND)lParam == b8){
+            GetWindowText(caja_texto,texto,31);
+            strcat(texto,"8");
+            SetWindowText(caja_texto,texto);
+        }
+
+        if((HWND)lParam == b9){
+            GetWindowText(caja_texto,texto,31);
+            strcat(texto,"9");
+            SetWindowText(caja_texto,texto);
+        }
+
+        if((HWND)lParam == b0){
+            GetWindowText(caja_texto,texto,31);
+            strcat(texto,"0");
+            SetWindowText(caja_texto,texto);
+        }
+
 
         if((HWND)lParam == bresultado){
     ///La función getwindow es para copiar lo que hay en la caja de texto en la cadena "gtext"
