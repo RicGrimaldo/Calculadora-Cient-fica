@@ -28,7 +28,7 @@ LRESULT CALLBACK winProc(HWND hwnd,UINT msj,WPARAM wParam,LPARAM lParam){
     char texto[31];
     switch(msj){
 
-    case WM_COMMAND: ///Referente a cuando se hace click
+    case WM_COMMAND: ///Referente a cuando se hace click en algún botón
 
 ///Funcionalidad de botones
 
@@ -252,11 +252,13 @@ LRESULT CALLBACK winProc(HWND hwnd,UINT msj,WPARAM wParam,LPARAM lParam){
             SetWindowText(caja_texto,texto);
         }
 
+        ///Funciones que se llevarán a cabo cuando se de click en el botón de "Resultado"
 
        /// if((HWND)lParam == bresultado){
-
         //}
+
         break;
+
         break;
 
     case WM_DESTROY :
@@ -268,9 +270,6 @@ LRESULT CALLBACK winProc(HWND hwnd,UINT msj,WPARAM wParam,LPARAM lParam){
 
 char app[] = "Mi clase";
 int WINAPI WinMain(HINSTANCE ins,HINSTANCE ins2,LPSTR cmd, int estado){
-    ///Ventana madre------"Contenido de la ventana","Título","Comportamiento y apariencia con botones y/o íconos"
-
-
 
     WNDCLASSEX vtn;
     vtn.cbClsExtra=0;
