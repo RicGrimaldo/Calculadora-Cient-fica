@@ -255,7 +255,7 @@ int encontrarCaracter(char cad[], char car){
  int limite_cadena(char cad[])
  {
      int error = 0;
-     if(strlen(cad) > 32)
+     if(strlen(cad) >= 32)
         error = 1;
     else
         error = 0;
