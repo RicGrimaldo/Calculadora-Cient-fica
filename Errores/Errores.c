@@ -10,7 +10,7 @@ int Longitud_cadena(char a[]);
 int parentesis_paridad(char a[]);
 int parentesis_vacio(char a[]);
 int validacion_caracter(char a[]);
-void decimal(char a[]);
+int decimal(char a[]);
 int parentesis_operador(char a[]);
 int encontrarCaracter(char cad[], char car);
 
@@ -22,7 +22,7 @@ int main(){
     fgets(a,n,stdin);
     r=encontrar_error(a);
     m=Longitud_cadena(a);
-    printf("1 Si se encontr%c error, 0 si no se encontr%c: %i",o_tilde,o_tilde,r);
+    printf("\n\n1 Si se encontr%c error, 0 si no se encontr%c: %i",o_tilde,o_tilde,r);
     printf("\nEsta es la longitud: %i",m);
     return 0;
 }
@@ -43,7 +43,7 @@ int error_lexico(char a[]){
     char a_tilde = 160,e_tilde = 130,o_tilde = 162;
     m=Longitud_cadena(a);
     for(int i=0;i<m;i++){
-        if(esDigito(a[i])==1 || es_operador(a[i])==1){
+        if(esDigito(a[i])==1 || es_operador(a[i])==1 && a[i]!='.'){
                 resultado=0;
 /*Como la condición es falsa si y solo si ambos casos son falsos, entonces el carácter leído es dígito u operaror,
 procediendo a leer el siguiente carácter de la candena*/
@@ -52,9 +52,8 @@ procediendo a leer el siguiente carácter de la candena*/
         else{
         /*En caso de que el carácter leído no sea dígito u operador, se detectará el error léxico*/
                 resultado=1;
-                printf("Error l%cxico.\n",e_tilde);
                 if(a[i]=='.'){ /*Si el carácter inválido es un punto decimal, hará una impresión diferente*/
-                        decimal(a);
+                        resultado = decimal(a);
                         break;
                 }
                 else{
@@ -127,28 +126,20 @@ int Longitud_cadena(char a[]){
     return i-1;
 }
 
-void decimal(char a[]){
-    int m;
-    char a_tilde = 160,e_tilde = 130,o_tilde = 162;
-    m=Longitud_cadena(a);
-    for(int i=0;i<m;i++){
-            if(a[i]=='.'){
-        if(i!=0 && i+1!=m){ /*Primero veamos si el punto no está como primer carácter, y su siguiente carácter no está vacío*/
-                printf("Observaci%cn. \nError en la secuencia '%c%c%c'\n",o_tilde,a[i-1],a[i],a[i+1]);
-                break;
+int decimal(char a[]){
+
+    int error = 0,x;
+    x = encontrarCaracter(a,'.');
+    for(int i=x+1;i<strlen(a);i++){
+        if(es_operador(a[i]) == 1 && a[i]!= '.'){
+            break;
         }
         else{
-            if(i==0 && i+1!=m) { /*En caso de que el punto esté como primer elemento del arreglo, solamente se imprimirá éste y el siguiente elemento*/
-                    printf("Observaci%cn. \nError en la secuencia '%c%c'\n",o_tilde,a[i],a[i+1]);
-                    break;
-            }
-                    else{
-                            printf("Observaci%cn. \nError en la secuencia '%c%c'\n",o_tilde,a[i-1],a[i]);
-                            /*En caso que los únicos 2 elementos del arreglo sean  un número y un punto*/
-                    }
+            if(a[i] == '.')
+                error = 1;
+        }
     }
-    }
-}
+    return error;
 }
 
 int parentesis_paridad(char a[]){
