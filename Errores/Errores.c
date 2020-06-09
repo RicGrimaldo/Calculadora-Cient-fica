@@ -1,6 +1,6 @@
 #include<stdio.h>
 #include <string.h>
-#define n 30
+#define n 40
 int encontrar_error(char a[]);
 int error_sintatico(char a[]);
 int error_lexico(char a[]);
@@ -13,6 +13,7 @@ int validacion_caracter(char a[]);
 int decimal(char a[]);
 int parentesis_operador(char a[]);
 int encontrarCaracter(char cad[], char car);
+int limite_cadena (char cad[]);
 
 int main(){
     char a[n];
@@ -20,10 +21,12 @@ int main(){
     char e_tilde = 130,o_tilde = 162;
     printf("Ingrese expresi%cn aritm%ctica: \n",o_tilde,e_tilde);
     fgets(a,n,stdin);
-    r=encontrar_error(a);
+    //r=encontrar_error(a);
     m=Longitud_cadena(a);
-    printf("\n\n1 Si se encontr%c error, 0 si no se encontr%c: %i",o_tilde,o_tilde,r);
-    printf("\nEsta es la longitud: %i",m);
+    ///printf("\n\n1 Si se encontr%c error, 0 si no se encontr%c: %i\n\n",o_tilde,o_tilde,r);
+    printf("\n%i",limite_cadena(a));
+    printf("\n\nLongitud: %i",strlen(a));
+
     return 0;
 }
 
@@ -247,4 +250,15 @@ int encontrarCaracter(char cad[], char car){
         }
      }
      return r-1;
+ }
+
+ int limite_cadena(char cad[])
+ {
+     int error = 0;
+     if(strlen(cad) >= 32)
+        error = 1;
+    else
+        error = 0;
+
+    return error;
  }
