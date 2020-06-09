@@ -24,8 +24,19 @@ char enteroACaracter(int numero){
     return numero + '0';
 }
 
+int limite_cadena(char cad[])
+ {
+     int error = 0;
+     if(strlen(cad) >= 31)
+        error = 1;
+    else
+        error = 0;
+
+    return error;
+ }
+
 LRESULT CALLBACK winProc(HWND hwnd,UINT msj,WPARAM wParam,LPARAM lParam){
-    char texto[31];
+    char texto[33];
     switch(msj){
 
     case WM_COMMAND: ///Referente a cuando se hace click en algún botón
@@ -35,73 +46,73 @@ LRESULT CALLBACK winProc(HWND hwnd,UINT msj,WPARAM wParam,LPARAM lParam){
     //Funciones trigonométricas
 
     if((HWND)lParam == barcsec){
-            GetWindowText(caja_texto,texto,31);
+            GetWindowText(caja_texto,texto,33);
             strcat(texto,"arcsec(");
             SetWindowText(caja_texto,texto);
         }
 
     if((HWND)lParam == barccsc){
-            GetWindowText(caja_texto,texto,31);
+            GetWindowText(caja_texto,texto,33);
             strcat(texto,"arccsc(");
             SetWindowText(caja_texto,texto);
         }
 
      if((HWND)lParam == barccot ){
-            GetWindowText(caja_texto,texto,31);
+            GetWindowText(caja_texto,texto,33);
             strcat(texto,"arccot(");
             SetWindowText(caja_texto,texto);
         }
 
      if((HWND)lParam == barcsin ){
-            GetWindowText(caja_texto,texto,31);
+            GetWindowText(caja_texto,texto,33);
             strcat(texto,"arcsin(");
             SetWindowText(caja_texto,texto);
         }
 
      if((HWND)lParam == barccos){
-            GetWindowText(caja_texto,texto,31);
+            GetWindowText(caja_texto,texto,33);
             strcat(texto,"arccos(");
             SetWindowText(caja_texto,texto);
         }
 
      if((HWND)lParam == barctan ){
-            GetWindowText(caja_texto,texto,31);
+            GetWindowText(caja_texto,texto,33);
             strcat(texto,"arctan(");
             SetWindowText(caja_texto,texto);
         }
 
      if((HWND)lParam == bsec ){
-            GetWindowText(caja_texto,texto,31);
+            GetWindowText(caja_texto,texto,33);
             strcat(texto,"bsec(");
             SetWindowText(caja_texto,texto);
         }
 
      if((HWND)lParam == bcsc){
-            GetWindowText(caja_texto,texto,31);
+            GetWindowText(caja_texto,texto,33);
             strcat(texto,"csc(");
             SetWindowText(caja_texto,texto);
         }
 
      if((HWND)lParam == bcot){
-            GetWindowText(caja_texto,texto,31);
+            GetWindowText(caja_texto,texto,33);
             strcat(texto,"cot(");
             SetWindowText(caja_texto,texto);
         }
 
      if((HWND)lParam == bsin){
-            GetWindowText(caja_texto,texto,31);
+            GetWindowText(caja_texto,texto,33);
             strcat(texto,"sin(");
             SetWindowText(caja_texto,texto);
         }
 
     if((HWND)lParam == bcos){
-            GetWindowText(caja_texto,texto,31);
+            GetWindowText(caja_texto,texto,33);
             strcat(texto,"cos(");
             SetWindowText(caja_texto,texto);
         }
 
     if((HWND)lParam == btan){
-            GetWindowText(caja_texto,texto,31);
+            GetWindowText(caja_texto,texto,33);
             strcat(texto,"tan(");
             SetWindowText(caja_texto,texto);
         }
@@ -109,73 +120,73 @@ LRESULT CALLBACK winProc(HWND hwnd,UINT msj,WPARAM wParam,LPARAM lParam){
     //Operaciones principales y básicas
 
     if((HWND)lParam == bpot){
-            GetWindowText(caja_texto,texto,31);
+            GetWindowText(caja_texto,texto,33);
             strcat(texto,"^");
             SetWindowText(caja_texto,texto);
         }
 
     if((HWND)lParam == braiz){
-            GetWindowText(caja_texto,texto,31);
+            GetWindowText(caja_texto,texto,33);
             strcat(texto,"sqrt(");
             SetWindowText(caja_texto,texto);
         }
 
     if((HWND)lParam == bfact){
-            GetWindowText(caja_texto,texto,31);
+            GetWindowText(caja_texto,texto,33);
             strcat(texto,"!");
             SetWindowText(caja_texto,texto);
         }
 
     if((HWND)lParam == bporc){
-            GetWindowText(caja_texto,texto,31);
+            GetWindowText(caja_texto,texto,33);
             strcat(texto,"%");
             SetWindowText(caja_texto,texto);
         }
 
     if((HWND)lParam == bpariz){
-            GetWindowText(caja_texto,texto,31);
+            GetWindowText(caja_texto,texto,33);
             strcat(texto,"(");
             SetWindowText(caja_texto,texto);
         }
 
     if((HWND)lParam == bparder){
-            GetWindowText(caja_texto,texto,31);
+            GetWindowText(caja_texto,texto,33);
             strcat(texto,")");
             SetWindowText(caja_texto,texto);
         }
 
     if((HWND)lParam == bmul){
-            GetWindowText(caja_texto,texto,31);
+            GetWindowText(caja_texto,texto,33);
             strcat(texto,"*");
             SetWindowText(caja_texto,texto);
         }
 
     if((HWND)lParam == bdiv){
-            GetWindowText(caja_texto,texto,31);
+            GetWindowText(caja_texto,texto,33);
             strcat(texto,"/");
             SetWindowText(caja_texto,texto);
         }
 
     if((HWND)lParam == bsum){
-        GetWindowText(caja_texto,texto,31);
+        GetWindowText(caja_texto,texto,33);
         strcat(texto,"+");
         SetWindowText(caja_texto,texto);
         }
 
     if((HWND)lParam == bresta){
-        GetWindowText(caja_texto,texto,31);
+        GetWindowText(caja_texto,texto,33);
         strcat(texto,"-");
         SetWindowText(caja_texto,texto);
         }
 
     if((HWND)lParam == bpunto){
-        GetWindowText(caja_texto,texto,31);
+        GetWindowText(caja_texto,texto,33);
         strcat(texto,".");
         SetWindowText(caja_texto,texto);
         }
 
     if((HWND)lParam == bac){
-        GetWindowText(caja_texto,texto,31);
+        GetWindowText(caja_texto,texto,33);
         strcpy(texto,"");
         SetWindowText(caja_texto,texto);
         }
@@ -193,74 +204,81 @@ LRESULT CALLBACK winProc(HWND hwnd,UINT msj,WPARAM wParam,LPARAM lParam){
     //Números y dígitos
 
         if((HWND)lParam == b1){
-            GetWindowText(caja_texto,texto,31);
+            GetWindowText(caja_texto,texto,33);
             strcat(texto,"1");
             SetWindowText(caja_texto,texto);
         }
 
         if((HWND)lParam == b2){
-            GetWindowText(caja_texto,texto,31);
+            GetWindowText(caja_texto,texto,33);
             strcat(texto,"2");
             SetWindowText(caja_texto,texto);
         }
 
         if((HWND)lParam == b3){
-            GetWindowText(caja_texto,texto,31);
+            GetWindowText(caja_texto,texto,33);
             strcat(texto,"3");
             SetWindowText(caja_texto,texto);
         }
 
         if((HWND)lParam == b4){
-            GetWindowText(caja_texto,texto,31);
+            GetWindowText(caja_texto,texto,33);
             strcat(texto,"4");
             SetWindowText(caja_texto,texto);
         }
 
         if((HWND)lParam == b5){
-            GetWindowText(caja_texto,texto,31);
+            GetWindowText(caja_texto,texto,33);
             strcat(texto,"5");
             SetWindowText(caja_texto,texto);
         }
 
         if((HWND)lParam == b6){
-            GetWindowText(caja_texto,texto,31);
+            GetWindowText(caja_texto,texto,33);
             strcat(texto,"6");
             SetWindowText(caja_texto,texto);
         }
 
         if((HWND)lParam == b7){
-            GetWindowText(caja_texto,texto,31);
+            GetWindowText(caja_texto,texto,33);
             strcat(texto,"7");
             SetWindowText(caja_texto,texto);
         }
 
         if((HWND)lParam == b8){
-            GetWindowText(caja_texto,texto,31);
+            GetWindowText(caja_texto,texto,33);
             strcat(texto,"8");
             SetWindowText(caja_texto,texto);
         }
 
         if((HWND)lParam == b9){
-            GetWindowText(caja_texto,texto,31);
+            GetWindowText(caja_texto,texto,33);
             strcat(texto,"9");
             SetWindowText(caja_texto,texto);
         }
 
         if((HWND)lParam == b0){
-            GetWindowText(caja_texto,texto,31);
+            GetWindowText(caja_texto,texto,33);
             strcat(texto,"0");
             SetWindowText(caja_texto,texto);
         }
 
         ///Funciones que se llevarán a cabo cuando se de click en el botón de "Resultado"
 
-       /// if((HWND)lParam == bresultado){
-                /*Validación de errores
+        if((HWND)lParam == bresultado){
+                GetWindowText(caja_texto,texto,33);
+                if(limite_cadena(texto) == 1)
+                        MessageBox(hwnd,"Se excedió el límite de carácteres permitido","Error",MB_ICONWARNING | MB_OK);
+                else{///Después de verificar el límite de carácteres permitido...
+                        /*Validación de errores
                   Conversión de bin, oct, hex, grad
                   Resultado final
                   Copiar el resultado con SetWindowText*/
-        ///}
-
+                    strcpy(texto,"");
+                    SetWindowText(caja_texto,texto);
+                }
+                break;
+        }
         break;
 
         break;
