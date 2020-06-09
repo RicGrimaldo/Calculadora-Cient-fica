@@ -1,6 +1,6 @@
 #include<stdio.h>
 #include <string.h>
-#define n 40
+#define n 33
 int encontrar_error(char a[]);
 int error_sintatico(char a[]);
 int error_lexico(char a[]);
@@ -255,7 +255,7 @@ int encontrarCaracter(char cad[], char car){
  int limite_cadena(char cad[])
  {
      int error = 0;
-     if(strlen(cad) > 31)
+     if(strlen(cad) > 32)
         error = 1;
     else
         error = 0;
