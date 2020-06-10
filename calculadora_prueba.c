@@ -32,6 +32,7 @@ struct struct_nodo_float{
     struct struct_nodo_float *siguiente;
 };
 typedef struct struct_nodo_float nodo_float;
+void funciones_trigo(char entrada [1000]);
 nodo_float *crear_pila_float(nodo_float *pila);
 nodo_float *push_float(float valor, nodo_float *pila);
 nodo_float *pop_float(float *valor, nodo_float *pila);
@@ -48,7 +49,7 @@ int main(){
     printf("Ingrese la expresi%cn:\n", o_tilde);
     fflush(stdin);
     //fgets(entrada, n, stdin);
-    scanf("%[^\n]", &entrada);
+    fgets(entrada,1000,stdin);
     fflush(stdin);
     Procedimiento(entrada, postfija);
     return 0;
@@ -323,18 +324,19 @@ void funciones_tri(char entrada [n]){
     }
 }
 void ConversionInfijaAPostfija(char entrada[n], char postfija[n]){
+    funciones_trigo(entrada);
     int longitud;
     longitud = strlen(entrada);
 	entrada[longitud] = '.';
 	entrada[longitud+1] = '\0';
 	pos(entrada, postfija);
-	/*for(int i=0; postfija[i] != '\0'; i++){
+	for(int i=0; postfija[i] != '\0'; i++){
         if(postfija[i] == 10){
             for(int j=i; postfija[j] != '\0'; j++){
                 postfija[j] = postfija[j+1];
             }
         }
-	}*/
+	}
 	printf("\n");
 	for(int i=0; postfija[i] != '\0'; i++){
         printf("%c", postfija[i]);
@@ -342,7 +344,7 @@ void ConversionInfijaAPostfija(char entrada[n], char postfija[n]){
 	printf("\n");
 }
 void pos(char entrada[n], char postfija[n]){
-    struct PILAA pila;
+	struct PILAA pila;
 	int i, j;
 	char elemento;
 	int operando (char c);
@@ -356,23 +358,24 @@ void pos(char entrada[n], char postfija[n]){
 	j = -1;
 	init_pila (&pila);
 	while(entrada[i] != '.') {
-        if(operando(entrada[i]) )
-            postfija [++j] = entrada[i++];
-        else{
-            while (!pila_vacia (&pila)  &&
-            prioridad(tope(pila), entrada[i])){
-                retira_pila (&pila, &elemento);
-                postfija[++j] = elemento;
-            }
-            if(isdigit(postfija[j]) == 1){
-                postfija[++j] = ',';
-            }
-            if(entrada[i] == ')') retira_pila(&pila, &elemento);
-            else ins_pila(&pila, entrada[i]);
-            i++;
+	   if(operando(entrada[i]) )
+		   postfija [++j] = entrada[i++];
+	   else{
+		     while (!pila_vacia (&pila)  &&
+			 prioridad (tope (pila), entrada[i] ) )  {
+			     retira_pila (&pila, &elemento);
+			     postfija[++j] = elemento;
+		      }
+		      if(isdigit(postfija[j]) == 1){
+                    postfija[++j] = ',';
+		      }
+		      if (entrada[i] == ')')
+			   retira_pila(&pila, &elemento);
+		      else ins_pila(&pila, entrada[i]);
+		      i++;
 		}
 	}
-	while(!pila_vacia(&pila)){
+	while (!pila_vacia (&pila) ) {
 		retira_pila (&pila, &elemento);
 		postfija[++j] = elemento;
 	}
@@ -380,14 +383,27 @@ void pos(char entrada[n], char postfija[n]){
 }
 int operando (char c){
 	return ( c != '+' &&
-		 c != '-' &&
-		 c != '*' &&
+         c != '-' &&
+         c != '*' &&
 		 c != '/' &&
 		 c != '^' &&
 		 c != ')' &&
-		 c != '('    );
+		 c != '(' &&
+         c != 224 &&
+         c != 225 &&
+         c != 226 &&
+         c != 227 &&
+         c != 228 &&
+         c != 229 &&
+         c != 230 &&
+         c != 231 &&
+         c != 232 &&
+         c != 233 &&
+         c != 234 &&
+         c != 235 &&
+         c != 236
+    );
 }
-
 int priori[6][7] ={
 	{ 1,1,0,0,0,0,1 },
 	{ 1,1,0,0,0,0,1 },
@@ -396,27 +412,52 @@ int priori[6][7] ={
 	{ 1,1,1,1,1,0,1 },
 	{ 0,0,0,0,0,0,0 }
 };
-int prioridad (char op1,char op2){
-	int i, j, prioridaad;
-	switch (op1){
-		case '+': i = 0; break;
-		case '-': i = 1; break;
-		case '*': i = 2; break;
-		case '/': i = 3; break;
-		case '^': i = 4; break;
-		case '(': i = 5; break;
-	}
-	switch (op2){
-		case '+': j = 0; break;
-		case '-': j = 1; break;
-		case '*': j = 2; break;
-		case '/': j = 3; break;
-		case '^': j = 4; break;
-		case '(': j = 5; break;
-		case ')': j = 6; break;
-	}
-	prioridaad = priori[i][j];
-	return(prioridaad);
+int prioridad (char op1,char op2)
+{
+	int i,j,prioridaad;
+
+	if (op1=='+') i=0;
+	else if (op1=='-') i=1;
+	else if (op1=='*') i=2;
+	else if (op1=='/') i=3;
+	else if (op1=='^') i=4;
+	else if (op1==224) i=5;
+	else if (op1==225) i=6;
+	else if (op1==226) i=7;
+	else if (op1==227) i=8;
+	else if (op1==228) i=9;
+	else if (op1==229) i=10;
+	else if (op1==230) i=6;
+	else if (op1==231) i=7;
+	else if (op1==232) i=8;
+	else if (op1==233) i=9;
+	else if (op1==234) i=10;
+	else if (op1==235) i=11;
+	else if (op1==236) i=12;
+	else if (op1==')') i=13;
+
+    if (op2=='+') j=0;
+	else if (op2=='-') j=1;
+	else if (op2=='*') j=2;
+	else if (op2=='/') j=3;
+	else if (op2=='^') j=4;
+	else if (op2==224) j=5;
+	else if (op2==225) j=6;
+	else if (op2==226) j=7;
+	else if (op2==227) j=8;
+	else if (op2==228) j=9;
+	else if (op2==229) j=10;
+	else if (op2==230) j=6;
+	else if (op2==231) j=7;
+	else if (op2==232) j=8;
+	else if (op2==233) j=9;
+	else if (op2==234) j=10;
+	else if (op2==235) j=11;
+	else if (op2==236) j=12;
+	else if (op2==')') j=13;
+
+	prioridaad=priori[i][j];
+	return (prioridaad);
 }
 char tope(struct PILAA p){
 	return (p.a[p.t-1]);
@@ -506,7 +547,7 @@ nodo_float *pop_float(float *valor, nodo_float *pila){
     nodo_float *nodo_auxiliar;
     float dato;
     if(pila == NULL){
-        printf("Pila Vacia\n");
+
     }
     else{
         nodo_auxiliar = pila;
@@ -517,6 +558,51 @@ nodo_float *pop_float(float *valor, nodo_float *pila){
     }
     return pila;
 }
+void funciones_trigo(char entrada [1000]){
+        int I = 0;
+        char operador, trig[10];
+        for(int i = 0; entrada[i] != '\0'; i++){
+            if(entrada[i] > 96 && entrada [i] < 123){
+                for(int j = i; entrada[j] != '('; j++){
+                    trig[I] = entrada[j];
+                    I++;
+                }
+
+                if (strcmp(trig, "sin") == 1) operador = 224;
+                else if (strcmp(trig, "cos") == 1) operador = 225;
+                else if (strcmp(trig, "tan") == 1) operador = 226;
+                else if (strcmp(trig, "cot") == 1) operador = 227;
+                else if (strcmp(trig, "sec") == 1) operador = 228;
+                else if (strcmp(trig, "csc") == 1) operador = 229;
+                else if (strcmp(trig, "arcsin") == 1) operador = 230;
+                else if (strcmp(trig, "arccos") == 1) operador = 231;
+                else if (strcmp(trig, "arctan") == 1) operador = 232;
+                else if (strcmp(trig, "arccot") == 1) operador = 233;
+                else if (strcmp(trig, "arcsec") == 1) operador = 234;
+                else if (strcmp(trig, "arccsc") == 1) operador = 235;
+                else if (strcmp(trig, "sqrt") == 1) operador = 236;
+
+                entrada[i] = operador;
+                for(int j = (I+i); entrada[j] != '\0'; j++){
+                   entrada[j-(I-1)] = entrada[j];
+                }
+                I = 0;
+        }
+        if(entrada[i+1] == 10){
+            entrada[i+2] = '\0';
+            entrada[i+3] = '\0';
+            entrada[i+4] = '\0';
+            entrada[i+5] = '\0';
+            entrada[i+6] = '\0';
+        }
+    }
+
+    //printf("\nLa cadena resultado es:\n");
+    for(int j=0; entrada[j] != '\0'; j++){
+        printf("%c", entrada[j]);
+    }
+}
+
 float operacion(float operando1, float operando2, char operador, int *error){
     switch(operador){
         case '+': return operando1 + operando2; break;
