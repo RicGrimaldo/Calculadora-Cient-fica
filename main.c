@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <windows.h>
 #include <string.h>
+#include <math.h>
 
 ///Esta es una prueba de pull request (Git)
 ///Botones
@@ -63,7 +64,7 @@ void conversion_bin (char texto[])
 
  void conversion_grados(char res[]){
     float dec,ope1,ope2,resultado;
-    int num,grados,minutos,segundos;
+    int grados,minutos,segundos;
 	char m[30],s[30];
 	resultado = atof(res);
     grados=trunc(resultado);
@@ -103,6 +104,16 @@ int letras_permitidas (char car){
     switch(car){
         case 'a': case'c': case 'n': case'e': case'i': case 'o': case'r': case 's': case 't': case 'q':resultado=1;
         break;
+    }
+    return resultado;
+}
+
+int Primer_letra_funcion(char a)
+{
+    int resultado = 0;
+    switch(a){
+    case 'a': case 's' : case 'c' : case 't': resultado = 1;
+    break;
     }
     return resultado;
 }
@@ -159,41 +170,78 @@ int Encontrar_cadena (char cad1[],char cad2[]){
 	return resultado;
 }
 
-///Funciones de 'errores'
-int error_lexico(char a[], HWND hwnd){
-    int error=1;
-    for(int i=0;i<strlen(a);i++){
-        if(esDigito(a[i])==1 || es_operador(a[i])==1  && a[i]!='.' || letras_permitidas(a[i])==1){
-                error=0;
-/*Como la condición es falsa si y solo si ambos casos son falsos, entonces el carácter leído es dígito u operaror,
-procediendo a leer el siguiente carácter de la candena*/
-            continue;
+int parentesis_paridad(char a[]){
+    int b=0,c=0,error=0,m; /*Contadores para contar cantidad de paréntesis en la cadena*/
+    m=strlen(a);
+    for(int i=0;i<m;i++){
+        switch(a[i]){
+        case '(': b++;
+        break;
+        case ')': c++;
+        break;
         }
-        else{
-        /*En caso de que el carácter leído no sea dígito u operador, se detectará el error léxico*/
-                error=1;
-                if(a[i]=='.'){ /*Si el carácter inválido es un punto decimal, hará una impresión diferente*/
-                        error = decimal(a,hwnd);
-                        break;
-                }
-                else{
-                MessageBox(hwnd,"No se permiten caracteres inválidos","Error léxico",MB_ICONWARNING | MB_OK);
-            break; /*Saliéndose del bucle*/
-                }
-        }
-    } /*Devolverá 1 en caso de que se haya encontrado un error léxico, 0 en caso contrario*/
+    }
+    if(c!=b)error=1;
     return error;
 }
 
-int Primer_letra_funcion(char a)
-{
-    int resultado = 0;
-    switch(a){
-    case 'a': case 's' : case 'c' : case 't': resultado = 1;
-    break;
+int parentesis_vacio(char a[]){
+    int error=0;
+    for(int i=0;i<strlen(a);i++){
+        if(a[i]=='('&& a[i+1]==')'){
+                error=1; /*Al encontrar un par de paréntesis vacíos, se sale del bucle*/
+                puts("Error al haber dejado un par de paréntesis vacíos");
+                break;
+        }
     }
-    return resultado;
+    return error;
 }
+
+int validacion_caracter(char a[]){
+	int error=0,f;
+	if(es_operador(a[0])==1 && a[0]!='(' && a[0]!='-' && esDigito(a[0])==0){
+		error=1; /*Validará que el primer carácter no sea ningún operador a excepción del '(', y cualquier primer letra de las funciones*/
+		puts("Error con el primer caracter");
+		}
+	else{///Caso especial si es una letra
+		if(letras_permitidas(a[0])==1 && Primer_letra_funcion(a[0])==0){
+			error = 1;
+			puts("Error en el primer catacter");
+		}
+	}
+
+	if(error == 0){
+	f=strlen(a)-1;
+	if(es_operador(a[f])==1 && a[f]!=')' && a[f]!='!' && a[f]!='%'){
+		error=1; /*Validará que el último carácter no sea un operador a excepción de ')', ! y %*/
+		puts("Error con el ultimo caracter");
+	}
+	}
+
+	if(error==0){
+		for(int i=1;i<strlen(a);i++){
+			if(a[i-1]=='(' && es_operador(a[i])==1 && a[i]!='(' && a[i]!='-' && esDigito(a[i])==0){
+				error=1; /*Validará que el primer carácter no sea ningún operador a excepción del '(', y cualquier primer letra de las funciones*/
+				puts("Error con el primer caracter despues del parentesis");
+			}
+			else{///Caso especial si es una letra
+				if(a[i-1]=='(' && letras_permitidas(a[i])==1 && Primer_letra_funcion(a[i])==0){
+					error = 1;
+					puts("Error con el primer caracter despues del parentesis");
+				}
+				else{
+					if(es_operador(a[i-1])==1 && a[i]==')' && a[i-1]!='!' && a[i-1]!='%'){
+						error=1; /*Aquí se verifica que no haya un operador antes de un paréntesis cerrado*/
+						puts("Error con el caracter antes del parentesis cerrado");
+						break;
+					}
+				}
+			}
+			}
+	}
+
+		return error;
+	}
 
 int verificacion_funciones(HWND hwnd,char cad[])
  {
@@ -256,13 +304,84 @@ int verificacion_funciones(HWND hwnd,char cad[])
      return error;
  }
 
+///Funciones de 'errores'
 
+int encontrar_error(char a[],HWND hwnd){
+    int error=0;
+    if(error_lexico(a,hwnd)==1){
+        error=1;
+    }
+    else{
+        if(error_sintatico(a,hwnd)==1)error=1;
+    }
+    return error;
+}
+
+int error_lexico(char a[], HWND hwnd){
+    int error=1;
+    for(int i=0;i<strlen(a);i++){
+        if(esDigito(a[i])==1 || es_operador(a[i])==1  && a[i]!='.' || letras_permitidas(a[i])==1){
+                error=0;
+/*Como la condición es falsa si y solo si ambos casos son falsos, entonces el carácter leído es dígito u operaror,
+procediendo a leer el siguiente carácter de la candena*/
+            continue;
+        }
+        else{
+        /*En caso de que el carácter leído no sea dígito u operador, se detectará el error léxico*/
+                error=1;
+                if(a[i]=='.'){ /*Si el carácter inválido es un punto decimal, hará una impresión diferente*/
+                        error = decimal(a,hwnd);
+                        break;
+                }
+                else{
+                MessageBox(hwnd,"No se permiten caracteres inválidos","Error léxico",MB_ICONWARNING | MB_OK);
+            break; /*Saliéndose del bucle*/
+                }
+        }
+    } /*Devolverá 1 en caso de que se haya encontrado un error léxico, 0 en caso contrario*/
+    return error;
+}
+
+int error_sintatico(char a[],HWND hwnd){
+    int resultado=0;
+    if(parentesis_paridad(a)!=1){ /*Primero, se validará si hay la misma cantidad de pares de paréntesis*/
+    for(int i=0;i<strlen(a);i++){
+
+        if(a[i]=='('||a[i]==')'){
+                continue; /*Ignorará los operadores válidos, en este caso los paréntesis*/
+        }
+        if(es_operador(a[i])==1 && a[i]!='-' && es_operador(a[i+1])==1 && a[i+1]!='('&& a[i+1]!='!' && a[i+1]!='%'){
+            resultado=1; /*Sirve para validar que un operador no sea puesto 2 veces seguidas, pero ignorando los parentesis,
+			factorial, porcentaje o que primero esté un signo negativo*/
+            puts("No es posible calcular con 2 operadores seguidos");
+            break;
+        }
+        else{
+            resultado=0;
+            /*El resultado será 0 en caso de que el carácter leído no haya presentado error*/
+        }
+    }
+    }
+    else{
+        puts("Error debido a falta de un parentesis");
+        resultado=1;
+        /*Habrá error sintático en caso de que la cantidad de pares de paréntesis sea diferente*/
+    }
+    if(resultado==0){
+            if(parentesis_vacio(a)==1) resultado=1;
+    /*Habrá error sintático en caso de haber paréntesis vacíos*/
+            if(validacion_caracter(a)==1) resultado=1;
+    /*Habrá error sintático en caso de haber un operador al inicio o al final de la sentencia*/
+            if(verificacion_funciones(hwnd,a)==1) resultado=1;
+    }
+    return resultado;
+}
 
 
 
 LRESULT CALLBACK winProc(HWND hwnd,UINT msj,WPARAM wParam,LPARAM lParam){
     ///Declaración de cadenas
-    char texto[33],gradtxt[33];
+    char texto[33];
     switch(msj){
 
     case WM_COMMAND: ///Referente a cuando se hace click en algún botón
@@ -495,8 +614,8 @@ LRESULT CALLBACK winProc(HWND hwnd,UINT msj,WPARAM wParam,LPARAM lParam){
                 if(limite_cadena(texto) == 1)
                         MessageBox(hwnd,"Se excedió el límite de carácteres permitido","Error",MB_ICONWARNING | MB_OK);
                 else{///Después de verificar el límite de carácteres permitido...
-                    i=error_lexico(texto,hwnd);
-                    i=verificacion_funciones(hwnd,texto);
+                    i=encontrar_error(texto,hwnd);
+                    printf("%i\n",i);
                     conversion_hex(texto);
                     conversion_oct(texto);
                     conversion_bin(texto);
