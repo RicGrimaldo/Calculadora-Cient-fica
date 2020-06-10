@@ -13,13 +13,6 @@ HWND b0,b1,b2,b3,b4,b5,b6,b7,b8,b9;
 ///Etiquetas estáticas
 HWND tipos_conversion,lbin,binl,loct,octl,lhex,hexl,lgrados,gradosl,font,fun_trigl;
 
-int Longitud_cadena(char cad[]){
-    int i=0;
-    for(i=0;cad[i]!='\0';i++){
-    }
-    return i;
-}
-
 char enteroACaracter(int numero){
     return numero + '0';
 }
@@ -84,6 +77,88 @@ void conversion_bin (char texto[])
 	itoa(segundos,s,10);
 	strcat(res,"° "); strcat(res,m); strcat(res," ' "); strcat(res,s); strcat(res,"''");
 	SetWindowText(gradosl,res);
+}
+
+///Funciones de validación
+int esDigito (char car){
+    int resultado=0;
+    if(car>47 && car<58){
+            resultado=1;
+    }
+    return resultado;
+}
+
+int es_operador(char car){
+    int resultado=0;
+    switch(car){
+    case'+': case'-': case'*': case'/': case '^': case'(': case ')': case '%': case '.': case '!': resultado=1;
+    break;
+    }
+    return resultado;
+}
+
+int letras_permitidas (char car){
+    int resultado = 0;
+
+    switch(car){
+        case 'a': case'c': case'e': case'i': case 'o': case'r': case 's': case 't':resultado=1;
+        break;
+    }
+    return resultado;
+}
+
+int encontrarCaracter(char cad[], char car){
+     int r=0;
+     for(int i=0;i<strlen(cad);i++){
+        if(cad[i]==car){
+            r=i+1;
+            break;
+        }
+     }
+     return r-1;
+ }
+
+int decimal(char a[],HWND hwnd){
+
+    int error = 0,x;
+    x = encontrarCaracter(a,'.');
+    for(int i=x+1;i<strlen(a);i++){
+        if(es_operador(a[i]) == 1 && a[i]!= '.'){
+            break;
+        }
+        else{
+            if(a[i] == '.')
+                MessageBox(hwnd,"El número decimal únicamente debe llevar un solo punto.","Error léxico",MB_ICONWARNING | MB_OK);
+                error = 1;
+        }
+    }
+    return error;
+}
+
+///Funciones de 'errores'
+int error_lexico(char a[], HWND hwnd){
+    int resultado=1;
+    for(int i=0;i<strlen(a);i++){
+        if(esDigito(a[i])==1 || es_operador(a[i])==1 && a[i]!='.' || letras_permitidas(a[i])==1){
+                resultado=0;
+/*Como la condición es falsa si y solo si ambos casos son falsos, entonces el carácter leído es dígito u operaror,
+procediendo a leer el siguiente carácter de la candena*/
+            continue;
+        }
+        else{
+        /*En caso de que el carácter leído no sea dígito u operador, se detectará el error léxico*/
+                resultado=1;
+                if(a[i]=='.'){ /*Si el carácter inválido es un punto decimal, hará una impresión diferente*/
+                        resultado = decimal(a,hwnd);
+                        break;
+                }
+                else{
+                MessageBox(hwnd,"No se permiten caracteres inválidos","Error léxico",MB_ICONWARNING | MB_OK);
+            break; /*Saliéndose del bucle*/
+                }
+        }
+    } /*Devolverá 1 en caso de que se haya encontrado un error léxico, 0 en caso contrario*/
+    return resultado;
 }
 
 
@@ -319,10 +394,12 @@ LRESULT CALLBACK winProc(HWND hwnd,UINT msj,WPARAM wParam,LPARAM lParam){
         ///Funciones que se llevarán a cabo cuando se de click en el botón de "Resultado"
 
         if((HWND)lParam == bresultado){
+                int i;
                 GetWindowText(caja_texto,texto,33);
                 if(limite_cadena(texto) == 1)
                         MessageBox(hwnd,"Se excedió el límite de carácteres permitido","Error",MB_ICONWARNING | MB_OK);
                 else{///Después de verificar el límite de carácteres permitido...
+                    i=error_lexico(texto,hwnd);
                         conversion_hex(texto);
                         conversion_oct(texto);
                         conversion_bin(texto);
