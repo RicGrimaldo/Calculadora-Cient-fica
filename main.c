@@ -202,17 +202,17 @@ int verificacion_funciones(HWND hwnd,char cad[])
      {
          if(esDigito(cad[i])==0 && es_operador(cad[i])==0){
          if(cad[i] == 'a'){
-            if(Encontrar_cadena("arcsec",cad) == 1){ error = 0; break;}
+            if(Encontrar_cadena("arcsec(",cad) == 1){ error = 0; break;}
             else{
-                if(Encontrar_cadena("arccsc",cad) == 1){ error = 0; break;}
+                if(Encontrar_cadena("arccsc(",cad) == 1){ error = 0; break;}
                 else{
-                    if(Encontrar_cadena("arccot",cad) == 1){ error = 0; break;}
+                    if(Encontrar_cadena("arccot(",cad) == 1){ error = 0; break;}
                     else{
-                        if(Encontrar_cadena("arcsin",cad) == 1){ error = 0; break;}
+                        if(Encontrar_cadena("arcsin(",cad) == 1){ error = 0; break;}
                         else{
-                            if(Encontrar_cadena("arccos",cad) == 1){ error = 0; break; }
+                            if(Encontrar_cadena("arccos(",cad) == 1){ error = 0; break; }
                             else{
-                                if(Encontrar_cadena("arctan",cad) == 1){ error = 0; break; }
+                                if(Encontrar_cadena("arctan(",cad) == 1){ error = 0; break; }
                                 else{ error = 1; break;}
                             }
                         }
@@ -222,28 +222,28 @@ int verificacion_funciones(HWND hwnd,char cad[])
             }
             else{
                 if(cad[i] == 's'){
-                    if(Encontrar_cadena("sec",cad) == 1){ error = 0; break;}
+                    if(Encontrar_cadena("sec(",cad) == 1){ error = 0; break;}
                     else{
-                        if(Encontrar_cadena("sin",cad) == 1){ error = 0; break;}
+                        if(Encontrar_cadena("sin(",cad) == 1){ error = 0; break;}
                         else{
-                            if(Encontrar_cadena("sqrt",cad) == 1){ error = 0; break;}
+                            if(Encontrar_cadena("sqrt(",cad) == 1){ error = 0; break;}
                             else{ error = 1; break;}
                         }
                     }
                 }
                 else{
                     if(cad[i] == 'c'){
-                        if(Encontrar_cadena("csc",cad) == 1){ error = 0; break;}
+                        if(Encontrar_cadena("csc(",cad) == 1){ error = 0; break;}
                         else{
-                            if(Encontrar_cadena("cos",cad) == 1){ error = 0; break;}
+                            if(Encontrar_cadena("cos(",cad) == 1){ error = 0; break;}
                             else{
-                                if(Encontrar_cadena("cot",cad) == 1){ error = 0; break;}
+                                if(Encontrar_cadena("cot(",cad) == 1){ error = 0; break;}
                                 else{ error = 1; break;}
                             }
                         }
                     }
                     else{
-                        if (cad[i] == 't' && Encontrar_cadena("tan",cad) == 1){ error = 0; break;}
+                        if (cad[i] == 't' && Encontrar_cadena("tan(",cad) == 1){ error = 0; break;}
                         else{ error = 1; break;}
                     }
                 }
