@@ -15,7 +15,7 @@ int parentesis_operador(char a[]);
 int encontrarCaracter(char cad[], char car);
 int limite_cadena (char cad[]);
 int letras_permitidas(char car);
-
+int verificacion_funciones(char cad[]);
 int main(){
     char a[n];
     int r,m;
@@ -25,7 +25,7 @@ int main(){
     r=encontrar_error(a);
     m=Longitud_cadena(a);
     ///printf("\n\n1 Si se encontr%c error, 0 si no se encontr%c: %i\n\n",o_tilde,o_tilde,r);
-    printf("\n%i",limite_cadena(a));
+    printf("\n%i",verificacion_funciones(a));
     printf("\n\nLongitud: %i",strlen(a));
 
     return 0;
@@ -271,4 +271,90 @@ int encontrarCaracter(char cad[], char car){
         error = 0;
 
     return error;
+ }
+
+
+ int verificacion_funciones(char cad[])
+ {
+     int error = 0;
+     for(int i=0;i<strlen(cad);i++)
+     {
+         if(cad[i]=='s'){
+            if(cad[i+1]=='i' && cad[i+2]=='n')
+            {
+                error = 0;
+                break;
+            }
+            else{
+                if(cad[i+1]=='e' && cad[i+2]=='c'){
+                    error = 0;
+                    break;
+                }
+                else{
+                    if(cad[i+1]=='q'&& cad[i+2]=='r' && cad[i+3]=='t'){
+                        error = 0;
+                        break;
+                    }
+                    else {error = 1; break;}
+                }
+            }
+         }
+         else{
+            if(cad[i]=='c'){
+                if(cad[i+1]=='o' && cad[i+2]=='s' || cad[i+2]=='t'){
+                    error = 0;
+                    break;
+                }
+                else
+                {
+                    if(cad[i+1]=='s' && cad[i+2]=='c'){
+                        error = 0;
+                        break;
+                    }
+                    else{error = 1;}
+                }
+            }
+            else{
+                if(cad[i]=='t' && cad[i+1]=='a' && cad[i+2]=='n'){
+                    error = 0;
+                    break;
+                }
+                else
+                {
+                    if(cad[i]=='a'&& cad[i+1]=='r'&& cad[i+2]=='c'){
+                        if(cad[i+3]=='s' && cad[i+4]=='i' && cad[i+5]=='n' || cad[i+4]=='e' && cad[i+5]=='c'){
+                            error = 0;
+                            break;
+                        }
+                        else{
+                            if(cad[i+3]=='c'&& cad[i+4]=='s' && cad[i+5]=='c' || cad[i+4]=='o' && cad[i+5]=='t'){
+                                error = 0;
+                                break;
+                            }
+                            else{
+                                if(cad[i+4]=='o' && cad[i+5]=='s'){
+                                    error = 0;
+                                    break;
+                                }
+                            else{
+                                if(cad[i+3]=='t' && cad[i+4]=='a' && cad[i+5]=='n'){
+                                    error = 0;
+                                    break;
+                                }
+                                else{
+                                    error = 1;
+                                    break;
+                                }
+                            }
+                            }
+                        }
+                    }
+                }
+            }
+         }
+
+     }
+     if(error == 1)
+        puts("Es necesario escribir las funciones con la sintaxis correcta");
+     return error;
  }
