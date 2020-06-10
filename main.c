@@ -35,8 +35,10 @@ int limite_cadena(char cad[])
     return error;
  }
 
+
 LRESULT CALLBACK winProc(HWND hwnd,UINT msj,WPARAM wParam,LPARAM lParam){
-    char texto[33];
+    ///Declaración de cadenas
+    char texto[33],hextxt[33],octtxt[33],bintxt[50],gradtxt[33];
     switch(msj){
 
     case WM_COMMAND: ///Referente a cuando se hace click en algún botón
@@ -270,6 +272,10 @@ LRESULT CALLBACK winProc(HWND hwnd,UINT msj,WPARAM wParam,LPARAM lParam){
                 if(limite_cadena(texto) == 1)
                         MessageBox(hwnd,"Se excedió el límite de carácteres permitido","Error",MB_ICONWARNING | MB_OK);
                 else{///Después de verificar el límite de carácteres permitido...
+                        itoa(atoi(texto), hextxt, 16);SetWindowText(hexl,hextxt);
+                        itoa(atoi(texto), octtxt, 8);SetWindowText(octl,octtxt);
+                        itoa(atoi(texto), bintxt, 2);SetWindowText(binl,bintxt);
+                        SetWindowText(gradosl,"8° 0'0''");
                         /*Validación de errores
                   Conversión de bin, oct, hex, grad
                   Resultado final

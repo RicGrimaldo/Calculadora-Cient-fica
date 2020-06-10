@@ -122,6 +122,15 @@ int es_operador(char car){
     return resultado;
 }
 
+int letras_permitidas (char car){
+    int resultado = 0;
+
+    switch(char){
+
+    }
+
+}
+
 int Longitud_cadena(char a[]){
     int i=0;
     for(i=0;a[i]!='\0';i++){
