@@ -207,12 +207,13 @@ int parentesis_especial(char a[],HWND hwnd)
     for(int i=0;i<strlen(a);i++)
     {
         if(a[i]==')'){
-            b=1;
+            b=1;///Si hay un ')' primero, cambiaremos la bandera a true
         }
-        if(b==1 && a[i]=='(')
+        if(b==1 && a[i]=='('){
             error = 1;
             MessageBox(hwnd,"Error de paréntesis","Error sintáctico",MB_ICONWARNING | MB_OK);
             break;
+        }
     }
     return error;
 }
