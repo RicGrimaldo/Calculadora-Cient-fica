@@ -101,7 +101,7 @@ int letras_permitidas (char car){
     int resultado = 0;
 
     switch(car){
-        case 'a': case'c': case'e': case'i': case 'o': case'r': case 's': case 't':resultado=1;
+        case 'a': case'c': case 'n': case'e': case'i': case 'o': case'r': case 's': case 't': case 'q':resultado=1;
         break;
     }
     return resultado;
@@ -139,7 +139,7 @@ int decimal(char a[],HWND hwnd){
 int error_lexico(char a[], HWND hwnd){
     int resultado=1;
     for(int i=0;i<strlen(a);i++){
-        if(esDigito(a[i])==1 || es_operador(a[i])==1 && a[i]!='.' || letras_permitidas(a[i])==1){
+        if(esDigito(a[i])==1 || es_operador(a[i])==1 || letras_permitidas(a[i])==1 && a[i]!='.'){
                 resultado=0;
 /*Como la condición es falsa si y solo si ambos casos son falsos, entonces el carácter leído es dígito u operaror,
 procediendo a leer el siguiente carácter de la candena*/
@@ -160,6 +160,89 @@ procediendo a leer el siguiente carácter de la candena*/
     } /*Devolverá 1 en caso de que se haya encontrado un error léxico, 0 en caso contrario*/
     return resultado;
 }
+
+int Primer_letra_funcion(char a)
+{
+    int error = 0;
+    switch(a){
+    case 'a': case 's' : case 'c' : case 't': break;
+    default : error = 1;
+    }
+    return error;
+}
+
+int verificacion_funciones(HWND hwnd,char cad[])
+ {
+     int error = 0;
+     for(int i=0;i<strlen(cad);i++)
+     {
+         if(Primer_letra_funcion(cad[i]) == 1){
+            error = 1;break;
+         }
+         if(cad[i]=='s'){
+            if(cad[i+1]=='i' && cad[i+2]=='n')
+            {error = 0;break;}
+
+            else{
+                if(cad[i+1]=='e' && cad[i+2]=='c'){
+                    error = 0; break;
+                }
+                else{
+                    if(cad[i+1]=='q'&& cad[i+2]=='r' && cad[i+3]=='t'){
+                        error = 0; break;
+                    }
+                    else {error = 1; break;}
+                }
+            }
+         }
+         else{
+            if(cad[i]=='c'){
+                if(cad[i+1]=='o' && cad[i+2]=='s' || cad[i+2]=='t'){
+                    error = 0;break;
+                }
+                else
+                {
+                    if(cad[i+1]=='s' && cad[i+2]=='c'){
+                        error = 0;break;
+                    }
+                    else{error = 1;}
+                }
+            }
+            else{
+                if(cad[i]=='t' && cad[i+1]=='a' && cad[i+2]=='n'){
+                    error = 0;break;
+                }
+                else
+                {
+                    if(cad[i]=='a'&& cad[i+1]=='r'&& cad[i+2]=='c'){
+                        if(cad[i+3]=='s' && cad[i+4]=='i' && cad[i+5]=='n' || cad[i+4]=='e' && cad[i+5]=='c'){
+                            error = 0;break;
+                        }
+                        else{
+                            if(cad[i+3]=='c'&& cad[i+4]=='s' && cad[i+5]=='c' || cad[i+4]=='o' && cad[i+5]=='t'){
+                                error = 0; break;
+                            }
+                            else{
+                                if(cad[i+4]=='o' && cad[i+5]=='s'){
+                                    error = 0; break;
+                                }
+                            else{
+                                if(cad[i+3]=='t' && cad[i+4]=='a' && cad[i+5]=='n'){
+                                    error = 0; break;
+                                }
+                                else{error = 1;break;}
+                            }
+                            }
+                        }
+                    }
+                }
+            }
+         }
+     }
+     if(error == 1)
+        MessageBox(hwnd,"Es necesario escribir las funciones con la sintaxis correcta","Error sintáctico",MB_ICONWARNING | MB_OK);
+     return error;
+ }
 
 
 LRESULT CALLBACK winProc(HWND hwnd,UINT msj,WPARAM wParam,LPARAM lParam){
@@ -211,7 +294,7 @@ LRESULT CALLBACK winProc(HWND hwnd,UINT msj,WPARAM wParam,LPARAM lParam){
 
      if((HWND)lParam == bsec ){
             GetWindowText(caja_texto,texto,33);
-            strcat(texto,"bsec(");
+            strcat(texto,"sec(");
             SetWindowText(caja_texto,texto);
         }
 
@@ -398,6 +481,7 @@ LRESULT CALLBACK winProc(HWND hwnd,UINT msj,WPARAM wParam,LPARAM lParam){
                         MessageBox(hwnd,"Se excedió el límite de carácteres permitido","Error",MB_ICONWARNING | MB_OK);
                 else{///Después de verificar el límite de carácteres permitido...
                     i=error_lexico(texto,hwnd);
+                    i=verificacion_funciones(hwnd,texto);
                         conversion_hex(texto);
                         conversion_oct(texto);
                         conversion_bin(texto);
