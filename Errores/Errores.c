@@ -14,6 +14,7 @@ int decimal(char a[]);
 int parentesis_operador(char a[]);
 int encontrarCaracter(char cad[], char car);
 int limite_cadena (char cad[]);
+int letras_permitidas(char car);
 
 int main(){
     char a[n];
@@ -21,7 +22,7 @@ int main(){
     char e_tilde = 130,o_tilde = 162;
     printf("Ingrese expresi%cn aritm%ctica: \n",o_tilde,e_tilde);
     fgets(a,n,stdin);
-    //r=encontrar_error(a);
+    r=encontrar_error(a);
     m=Longitud_cadena(a);
     ///printf("\n\n1 Si se encontr%c error, 0 si no se encontr%c: %i\n\n",o_tilde,o_tilde,r);
     printf("\n%i",limite_cadena(a));
@@ -42,11 +43,10 @@ int encontrar_error(char a[]){
 }
 
 int error_lexico(char a[]){
-    int resultado=1,m;
+    int resultado=1;
     char a_tilde = 160,e_tilde = 130,o_tilde = 162;
-    m=Longitud_cadena(a);
-    for(int i=0;i<m;i++){
-        if(esDigito(a[i])==1 || es_operador(a[i])==1 && a[i]!='.'){
+    for(int i=0;i<strlen(a);i++){
+        if(esDigito(a[i])==1 || es_operador(a[i])==1 && a[i]!='.' || letras_permitidas(a[i])==1){
                 resultado=0;
 /*Como la condición es falsa si y solo si ambos casos son falsos, entonces el carácter leído es dígito u operaror,
 procediendo a leer el siguiente carácter de la candena*/
@@ -60,7 +60,7 @@ procediendo a leer el siguiente carácter de la candena*/
                         break;
                 }
                 else{
-                printf("Observaci%cn.\nError en el car%cter inv%clido '%c'\n",o_tilde,a_tilde,a_tilde,a[i]);
+                ///printf("Observaci%cn.\nError en el car%cter inv%clido '%c'\n",o_tilde,a_tilde,a_tilde,a[i]);
             break; /*Saliéndose del bucle*/
                 }
         }
@@ -125,10 +125,11 @@ int es_operador(char car){
 int letras_permitidas (char car){
     int resultado = 0;
 
-    switch(char){
-
+    switch(car){
+        case 'a': case'c': case'e': case'i': case 'o': case'r': case 's': case 't':resultado=1;
+        break;
     }
-
+    return resultado;
 }
 
 int Longitud_cadena(char a[]){
