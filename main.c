@@ -155,24 +155,25 @@ int Encontrar_cadena (char cad1[],char cad2[]){
 			break;}
 		break;
 	}
+	printf("%i\n",resultado);
 	return resultado;
 }
 
 ///Funciones de 'errores'
 int error_lexico(char a[], HWND hwnd){
-    int resultado=1;
+    int error=1;
     for(int i=0;i<strlen(a);i++){
-        if(esDigito(a[i])==1 || es_operador(a[i])==1 || letras_permitidas(a[i])==1 && a[i]!='.'){
-                resultado=0;
+        if(esDigito(a[i])==1 || es_operador(a[i])==1  && a[i]!='.' || letras_permitidas(a[i])==1){
+                error=0;
 /*Como la condición es falsa si y solo si ambos casos son falsos, entonces el carácter leído es dígito u operaror,
 procediendo a leer el siguiente carácter de la candena*/
             continue;
         }
         else{
         /*En caso de que el carácter leído no sea dígito u operador, se detectará el error léxico*/
-                resultado=1;
+                error=1;
                 if(a[i]=='.'){ /*Si el carácter inválido es un punto decimal, hará una impresión diferente*/
-                        resultado = decimal(a,hwnd);
+                        error = decimal(a,hwnd);
                         break;
                 }
                 else{
@@ -181,37 +182,37 @@ procediendo a leer el siguiente carácter de la candena*/
                 }
         }
     } /*Devolverá 1 en caso de que se haya encontrado un error léxico, 0 en caso contrario*/
-    return resultado;
+    return error;
 }
 
 int Primer_letra_funcion(char a)
 {
-    int error = 0;
+    int resultado = 0;
     switch(a){
-    case 'a': case 's' : case 'c' : case 't': break;
-    default : error = 1;
+    case 'a': case 's' : case 'c' : case 't': resultado = 1;
+    break;
     }
-    return error;
+    return resultado;
 }
 
 int verificacion_funciones(HWND hwnd,char cad[])
  {
      int error = 0;
-     printf("%i",Encontrar_cadena("arcsec(",cad));
      for(int i=0;i<strlen(cad);i++)
      {
+         if(esDigito(cad[i])==0 && es_operador(cad[i])==0){
          if(cad[i] == 'a'){
-            if(Encontrar_cadena("arcsec(",cad) == 1){ error = 0; break;}
+            if(Encontrar_cadena("arcsec",cad) == 1){ error = 0; break;}
             else{
-                if(Encontrar_cadena("arccsc(",cad) == 1){ error = 0; break;}
+                if(Encontrar_cadena("arccsc",cad) == 1){ error = 0; break;}
                 else{
-                    if(Encontrar_cadena("arccot(",cad) == 1){ error = 0; break;}
+                    if(Encontrar_cadena("arccot",cad) == 1){ error = 0; break;}
                     else{
-                        if(Encontrar_cadena("arcsin(",cad) == 1){ error = 0; break;}
+                        if(Encontrar_cadena("arcsin",cad) == 1){ error = 0; break;}
                         else{
-                            if(Encontrar_cadena("arccos(",cad) == 1){ error = 0; break; }
+                            if(Encontrar_cadena("arccos",cad) == 1){ error = 0; break; }
                             else{
-                                if(Encontrar_cadena("arctan(",cad) == 1){ error = 0; break; }
+                                if(Encontrar_cadena("arctan",cad) == 1){ error = 0; break; }
                                 else{ error = 1; break;}
                             }
                         }
@@ -221,33 +222,35 @@ int verificacion_funciones(HWND hwnd,char cad[])
             }
             else{
                 if(cad[i] == 's'){
-                    if(Encontrar_cadena("sec(",cad) == 1){ error = 0; break;}
+                    if(Encontrar_cadena("sec",cad) == 1){ error = 0; break;}
                     else{
-                        if(Encontrar_cadena("sin(",cad) == 1){ error = 0; break;}
+                        if(Encontrar_cadena("sin",cad) == 1){ error = 0; break;}
                         else{
-                            if(Encontrar_cadena("sqrt(",cad) == 1){ error = 0; break;}
+                            if(Encontrar_cadena("sqrt",cad) == 1){ error = 0; break;}
                             else{ error = 1; break;}
                         }
                     }
                 }
                 else{
                     if(cad[i] == 'c'){
-                        if(Encontrar_cadena("csc(",cad) == 1){ error = 0; break;}
+                        if(Encontrar_cadena("csc",cad) == 1){ error = 0; break;}
                         else{
-                            if(Encontrar_cadena("cos(",cad) == 1){ error = 0; break;}
+                            if(Encontrar_cadena("cos",cad) == 1){ error = 0; break;}
                             else{
-                                if(Encontrar_cadena("cot(",cad) == 1){ error = 0; break;}
+                                if(Encontrar_cadena("cot",cad) == 1){ error = 0; break;}
                                 else{ error = 1; break;}
                             }
                         }
                     }
                     else{
-                        if (cad[i] == 't' && Encontrar_cadena("tan(",cad) == 1){ error = 0; break;}
+                        if (cad[i] == 't' && Encontrar_cadena("tan",cad) == 1){ error = 0; break;}
                         else{ error = 1; break;}
                     }
                 }
             }
      }
+     }
+
      if(error == 1) MessageBox(hwnd,"Es necesario escribir las funciones con la sintaxis correcta","Error sintáctico",
                                MB_ICONWARNING | MB_OK);
      return error;
@@ -494,10 +497,10 @@ LRESULT CALLBACK winProc(HWND hwnd,UINT msj,WPARAM wParam,LPARAM lParam){
                 else{///Después de verificar el límite de carácteres permitido...
                     i=error_lexico(texto,hwnd);
                     i=verificacion_funciones(hwnd,texto);
-                        conversion_hex(texto);
-                        conversion_oct(texto);
-                        conversion_bin(texto);
-                        conversion_grados(texto);
+                    conversion_hex(texto);
+                    conversion_oct(texto);
+                    conversion_bin(texto);
+                    conversion_grados(texto);
                         /*Validación de errores
                   Conversión de bin, oct, hex, grad
                   Resultado final
