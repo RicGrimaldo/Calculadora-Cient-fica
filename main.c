@@ -34,11 +34,62 @@ int limite_cadena(char cad[])
 
     return error;
  }
+///Funciones de conversiones
+
+void conversion_hex(char texto[]){
+    char hextxt[33];
+    int res;
+    float resultado;
+    resultado = atof(texto);
+    res=trunc(resultado);
+    ltoa(res, hextxt,16);
+    SetWindowText(hexl,hextxt);
+}
+
+void conversion_oct (char texto[])
+{
+    char octtxt[33];
+    int res;
+    float resultado;
+    resultado = atof(texto);
+    res=trunc(resultado);
+    ltoa(res, octtxt, 8);
+    SetWindowText(octl,octtxt);
+}
+
+void conversion_bin (char texto[])
+{
+    char bintxt[50];
+    int res;
+    float resultado;
+    resultado = atof(texto);
+    res = trunc(resultado);
+    ltoa(res,bintxt,2);
+    SetWindowText(binl,bintxt);
+}
+
+ void conversion_grados(char res[]){
+    float dec,ope1,ope2,resultado;
+    int num,grados,minutos,segundos;
+	char m[30],s[30];
+	resultado = atof(res);
+    grados=trunc(resultado);
+    dec=resultado-grados;
+    ope1=dec*60;
+    minutos=trunc(ope1);
+    ope2=ope1-minutos;
+    segundos=ope2*60;
+	itoa(grados,res,10);
+	itoa(minutos,m,10);
+	itoa(segundos,s,10);
+	strcat(res,"° "); strcat(res,m); strcat(res," ' "); strcat(res,s); strcat(res,"''");
+	SetWindowText(gradosl,res);
+}
 
 
 LRESULT CALLBACK winProc(HWND hwnd,UINT msj,WPARAM wParam,LPARAM lParam){
     ///Declaración de cadenas
-    char texto[33],hextxt[33],octtxt[33],bintxt[50],gradtxt[33];
+    char texto[33],gradtxt[33];
     switch(msj){
 
     case WM_COMMAND: ///Referente a cuando se hace click en algún botón
@@ -272,10 +323,10 @@ LRESULT CALLBACK winProc(HWND hwnd,UINT msj,WPARAM wParam,LPARAM lParam){
                 if(limite_cadena(texto) == 1)
                         MessageBox(hwnd,"Se excedió el límite de carácteres permitido","Error",MB_ICONWARNING | MB_OK);
                 else{///Después de verificar el límite de carácteres permitido...
-                        itoa(atoi(texto), hextxt, 16);SetWindowText(hexl,hextxt);
-                        itoa(atoi(texto), octtxt, 8);SetWindowText(octl,octtxt);
-                        itoa(atoi(texto), bintxt, 2);SetWindowText(binl,bintxt);
-                        SetWindowText(gradosl,"8° 0'0''");
+                        conversion_hex(texto);
+                        conversion_oct(texto);
+                        conversion_bin(texto);
+                        conversion_grados(texto);
                         /*Validación de errores
                   Conversión de bin, oct, hex, grad
                   Resultado final
@@ -322,7 +373,7 @@ int WINAPI WinMain(HINSTANCE ins,HINSTANCE ins2,LPSTR cmd, int estado){
     ventana = CreateWindow(app,"Calculadora científica",WS_OVERLAPPED | WS_CAPTION | WS_SYSMENU | WS_MINIMIZEBOX,CW_USEDEFAULT,CW_USEDEFAULT,640,380,HWND_DESKTOP,NULL,ins,NULL);
 
 ///Caja de texto
-    caja_texto = CreateWindow("EDIT","",WS_CHILD | WS_VISIBLE  | ES_LOWERCASE | WS_BORDER | ES_RIGHT,6,12,610,34,ventana,NULL,ins,NULL);
+    caja_texto = CreateWindow("STATIC","",WS_CHILD | WS_VISIBLE | SS_RIGHT,6,12,610,34,ventana,NULL,ins,NULL);
 
 ///Creación de etiquetas
 
