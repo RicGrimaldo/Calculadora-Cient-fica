@@ -5,11 +5,12 @@
 	<windows.h>
 	<windowsx.h>
 
-1591809141 source:c:\users\ricardo grimaldo\downloads\calculadora_científica\main.c
+1591819958 source:c:\users\ricardo grimaldo\downloads\calculadora_científica\main.c
 	<stdio.h>
 	<stdlib.h>
 	<windows.h>
 	<string.h>
+	<math.h>
 
 1591130752 source:c:\users\eduar\onedrive\escritorio\calculadora-cient-fica\main.c
 	<stdio.h>

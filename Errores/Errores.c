@@ -46,7 +46,7 @@ int encontrar_error(char a[]){
 
 	int error_lexico(char a[]){
 		int error=1;
-		for(int i=0;i<strlen(a)-1;i++){
+		for(int i=0;i<strlen(a);i++){
 			printf("%i: %c\n",i,a[i]);
 			if(esDigito(a[i])==1 || es_operador(a[i])==1  && a[i]!='.' || letras_permitidas(a[i])==1){
 				error=0;
@@ -194,8 +194,7 @@ int parentesis_vacio(char a[]){
 }
 
 int validacion_caracter(char a[]){
-	int error=0,f,m;
-	char a_tilde = 160,e_tilde = 130,o_tilde = 162;
+	int error=0,f;
 	if(es_operador(a[0])==1 && a[0]!='(' && a[0]!='-' && esDigito(a[0])==0){
 		error=1; /*Validará que el primer carácter no sea ningún operador a excepción del '(', y cualquier primer letra de las funciones*/
 		puts("Error con el primer caracter");
@@ -216,8 +215,7 @@ int validacion_caracter(char a[]){
 	}
 	
 	if(error==0){
-		m=strlen(a);
-		for(int i=1;i<m;i++){
+		for(int i=1;i<strlen(a);i++){
 			if(a[i-1]=='(' && es_operador(a[i])==1 && a[i]!='(' && a[i]!='-' && esDigito(a[i])==0){
 				error=1; /*Validará que el primer carácter no sea ningún operador a excepción del '(', y cualquier primer letra de las funciones*/
 				puts("Error con el primer caracter despues del parentesis");

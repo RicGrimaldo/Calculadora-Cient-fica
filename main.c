@@ -14,6 +14,8 @@ HWND b0,b1,b2,b3,b4,b5,b6,b7,b8,b9;
 ///Etiquetas estáticas
 HWND tipos_conversion,lbin,binl,loct,octl,lhex,hexl,lgrados,gradosl,font,fun_trigl;
 
+///Funciones necesarias
+
 char enteroACaracter(int numero){
     return numero + '0';
 }
@@ -146,6 +148,8 @@ int decimal(char a[],HWND hwnd){
     return error;
 }
 
+///Funciones de 'errores' secundarias
+
 int Encontrar_cadena (char cad1[],char cad2[]){
 	int resultado=0,i=0;
 	///Si no se encuentra cadena, devuelve 0.
@@ -166,7 +170,6 @@ int Encontrar_cadena (char cad1[],char cad2[]){
 			break;}
 		break;
 	}
-	printf("%i\n",resultado);
 	return resultado;
 }
 
@@ -185,36 +188,36 @@ int parentesis_paridad(char a[]){
     return error;
 }
 
-int parentesis_vacio(char a[]){
+int parentesis_vacio(char a[], HWND hwnd){
     int error=0;
     for(int i=0;i<strlen(a);i++){
         if(a[i]=='('&& a[i+1]==')'){
                 error=1; /*Al encontrar un par de paréntesis vacíos, se sale del bucle*/
-                puts("Error al haber dejado un par de paréntesis vacíos");
+                MessageBox(hwnd,"Error al haber dejado un par de paréntesis vacíos","Error sintáctico",MB_ICONWARNING | MB_OK);
                 break;
         }
     }
     return error;
 }
 
-int validacion_caracter(char a[]){
+int validacion_caracter(char a[],HWND hwnd){
 	int error=0,f;
 	if(es_operador(a[0])==1 && a[0]!='(' && a[0]!='-' && esDigito(a[0])==0){
 		error=1; /*Validará que el primer carácter no sea ningún operador a excepción del '(', y cualquier primer letra de las funciones*/
-		puts("Error con el primer caracter");
+        MessageBox(hwnd,"Error con el primer carácter","Error sintáctico",MB_ICONWARNING | MB_OK);
 		}
 	else{///Caso especial si es una letra
 		if(letras_permitidas(a[0])==1 && Primer_letra_funcion(a[0])==0){
 			error = 1;
-			puts("Error en el primer catacter");
+			MessageBox(hwnd,"Error en el primer carácter","Error sintáctico",MB_ICONWARNING | MB_OK);
 		}
 	}
 
 	if(error == 0){
 	f=strlen(a)-1;
-	if(es_operador(a[f])==1 && a[f]!=')' && a[f]!='!' && a[f]!='%'){
+	if(a[f]!=')' && a[f]!='!' && a[f]!='%' && es_operador(a[f])==1 || letras_permitidas(a[f])==1 ){
 		error=1; /*Validará que el último carácter no sea un operador a excepción de ')', ! y %*/
-		puts("Error con el ultimo caracter");
+		MessageBox(hwnd,"Error con el último carácter","Error sintáctico",MB_ICONWARNING | MB_OK);
 	}
 	}
 
@@ -222,17 +225,17 @@ int validacion_caracter(char a[]){
 		for(int i=1;i<strlen(a);i++){
 			if(a[i-1]=='(' && es_operador(a[i])==1 && a[i]!='(' && a[i]!='-' && esDigito(a[i])==0){
 				error=1; /*Validará que el primer carácter no sea ningún operador a excepción del '(', y cualquier primer letra de las funciones*/
-				puts("Error con el primer caracter despues del parentesis");
+                MessageBox(hwnd,"Error con el primer carácter después del paréntesis","Error sintáctico",MB_ICONWARNING | MB_OK);
 			}
 			else{///Caso especial si es una letra
 				if(a[i-1]=='(' && letras_permitidas(a[i])==1 && Primer_letra_funcion(a[i])==0){
 					error = 1;
-					puts("Error con el primer caracter despues del parentesis");
+					MessageBox(hwnd,"Error con el primer carácter después del paréntesis","Error sintáctico",MB_ICONWARNING | MB_OK);
 				}
 				else{
 					if(es_operador(a[i-1])==1 && a[i]==')' && a[i-1]!='!' && a[i-1]!='%'){
 						error=1; /*Aquí se verifica que no haya un operador antes de un paréntesis cerrado*/
-						puts("Error con el caracter antes del parentesis cerrado");
+						MessageBox(hwnd,"Error con el carácter antes del paréntesis cerrado","Error sintáctico",MB_ICONWARNING | MB_OK);
 						break;
 					}
 				}
@@ -304,7 +307,7 @@ int verificacion_funciones(HWND hwnd,char cad[])
      return error;
  }
 
-///Funciones de 'errores'
+///Funciones de 'errores' principales
 
 int encontrar_error(char a[],HWND hwnd){
     int error=0;
@@ -353,7 +356,7 @@ int error_sintatico(char a[],HWND hwnd){
         if(es_operador(a[i])==1 && a[i]!='-' && es_operador(a[i+1])==1 && a[i+1]!='('&& a[i+1]!='!' && a[i+1]!='%'){
             resultado=1; /*Sirve para validar que un operador no sea puesto 2 veces seguidas, pero ignorando los parentesis,
 			factorial, porcentaje o que primero esté un signo negativo*/
-            puts("No es posible calcular con 2 operadores seguidos");
+			MessageBox(hwnd,"No es posible calcular con 2 operadores seguidos","Error sintáctico",MB_ICONWARNING | MB_OK);
             break;
         }
         else{
@@ -363,16 +366,21 @@ int error_sintatico(char a[],HWND hwnd){
     }
     }
     else{
-        puts("Error debido a falta de un parentesis");
+        MessageBox(hwnd,"Error debido a falta de un parentesis","Error sintáctico",MB_ICONWARNING | MB_OK);
         resultado=1;
         /*Habrá error sintático en caso de que la cantidad de pares de paréntesis sea diferente*/
     }
     if(resultado==0){
-            if(parentesis_vacio(a)==1) resultado=1;
-    /*Habrá error sintático en caso de haber paréntesis vacíos*/
-            if(validacion_caracter(a)==1) resultado=1;
+            if(parentesis_vacio(a,hwnd)==1) resultado=1;
+            /*Habrá error sintático en caso de haber paréntesis vacíos*/
+            if(resultado != 1){
+                if(validacion_caracter(a,hwnd)==1) resultado=1;
     /*Habrá error sintático en caso de haber un operador al inicio o al final de la sentencia*/
-            if(verificacion_funciones(hwnd,a)==1) resultado=1;
+            }
+            if(resultado!=1){
+                if(verificacion_funciones(hwnd,a)==1 && resultado==0) resultado=1;
+            }
+            else resultado = 0;
     }
     return resultado;
 }
@@ -615,7 +623,6 @@ LRESULT CALLBACK winProc(HWND hwnd,UINT msj,WPARAM wParam,LPARAM lParam){
                         MessageBox(hwnd,"Se excedió el límite de carácteres permitido","Error",MB_ICONWARNING | MB_OK);
                 else{///Después de verificar el límite de carácteres permitido...
                     i=encontrar_error(texto,hwnd);
-                    printf("%i\n",i);
                     conversion_hex(texto);
                     conversion_oct(texto);
                     conversion_bin(texto);
