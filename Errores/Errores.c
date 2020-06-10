@@ -17,6 +17,7 @@ int limite_cadena (char cad[]);
 int letras_permitidas(char car);
 int verificacion_funciones(char cad[]);
 int Primer_letra_funcion(char a);
+int Encontrar_cadena (char cad1[],char cad2[]);
 int main(){
     char a[n];
     int r,m;
@@ -34,47 +35,46 @@ int main(){
 
 int encontrar_error(char a[]){
     int error=0;
-/*    if(error_lexico(a)==1){*/
-/*        error=1;*/
-/*    }*/
-/*    else{*/
+    if(error_lexico(a)==1){
+        error=1;
+    }
+    else{
         if(error_sintatico(a)==1)error=1;
-   // }
+    }
     return error;
 }
 
-int error_lexico(char a[]){
-    int resultado=1;
-    char a_tilde = 160,e_tilde = 130,o_tilde = 162;
-    for(int i=0;i<strlen(a);i++){
-        if(esDigito(a[i])==1 || es_operador(a[i])==1 && a[i]!='.' || letras_permitidas(a[i])==1){
-                resultado=0;
-/*Como la condición es falsa si y solo si ambos casos son falsos, entonces el carácter leído es dígito u operaror,
-procediendo a leer el siguiente carácter de la candena*/
-            continue;
-        }
-        else{
-        /*En caso de que el carácter leído no sea dígito u operador, se detectará el error léxico*/
-                resultado=1;
-                if(a[i]=='.'){ /*Si el carácter inválido es un punto decimal, hará una impresión diferente*/
-                        resultado = decimal(a);
-                        break;
-                }
-                else{
-                ///printf("Observaci%cn.\nError en el car%cter inv%clido '%c'\n",o_tilde,a_tilde,a_tilde,a[i]);
-            break; /*Saliéndose del bucle*/
-                }
-        }
-    } /*Devolverá 1 en caso de que se haya encontrado un error léxico, 0 en caso contrario*/
-    return resultado;
-}
+	int error_lexico(char a[]){
+		int error=1;
+		for(int i=0;i<strlen(a)-1;i++){
+			printf("%i: %c\n",i,a[i]);
+			if(esDigito(a[i])==1 || es_operador(a[i])==1  && a[i]!='.' || letras_permitidas(a[i])==1){
+				error=0;
+				/*Como la condición es falsa si y solo si ambos casos son falsos, entonces el carácter leído es dígito u operaror,
+				procediendo a leer el siguiente carácter de la candena*/
+				continue;
+			}
+			else{
+				/*En caso de que el carácter leído no sea dígito u operador, se detectará el error léxico*/
+				error=1;
+				if(a[i]=='.'){ /*Si el carácter inválido es un punto decimal, hará una impresión diferente*/
+					error = decimal(a);
+					break;
+				}
+				else{
+					puts("No se permiten caracteres inválidos");
+					printf("Caracter invalido: %c\n",a[i]);
+					break; /*Saliéndose del bucle*/
+				}
+			}
+		} /*Devolverá 1 en caso de que se haya encontrado un error léxico, 0 en caso contrario*/
+		return error;
+	}
 
 int error_sintatico(char a[]){
-    int resultado=0,m;
-    char a_tilde = 160,e_tilde = 130,o_tilde = 162;
-    m=Longitud_cadena(a);
+    int resultado=0;
     if(parentesis_paridad(a)!=1){ /*Primero, se validará si hay la misma cantidad de pares de paréntesis*/
-    for(int i=0;i<m;i++){
+    for(int i=0;i<strlen(a);i++){
 
         if(a[i]=='('||a[i]==')'){
                 continue; /*Ignorará los operadores válidos, en este caso los paréntesis*/
@@ -150,20 +150,21 @@ int Longitud_cadena(char a[]){
 }
 
 int decimal(char a[]){
-
-    int error = 0,x;
-    x = encontrarCaracter(a,'.');
-    for(int i=x+1;i<strlen(a);i++){
-        if(es_operador(a[i]) == 1 && a[i]!= '.'){
-            break;
-        }
-        else{
-            if(a[i] == '.')
-                error = 1;
-        }
-    }
-    return error;
-}
+		
+	int error = 0,x;
+	x = encontrarCaracter(a,'.');
+	for(int i=x+1;i<strlen(a);i++){
+		if(es_operador(a[i]) == 1 && a[i]!= '.'){
+			break;
+		}
+		else{
+			if(a[i] == '.')
+				puts("El número decimal únicamente debe llevar un solo punto.");
+				error = 1;
+			}
+		}
+		return error;
+	}
 
 int parentesis_paridad(char a[]){
     int b=0,c=0,error=0,m; /*Contadores para contar cantidad de paréntesis en la cadena*/
@@ -262,89 +263,88 @@ int encontrarCaracter(char cad[], char car){
 
     return error;
  }
+ 
+ int Encontrar_cadena (char cad1[],char cad2[]){
+	 int resultado=0,i=0;
+	 ///Si no se encuentra cadena, devuelve 0.
+	 while(i<strlen(cad1)){
+		 for(int j=0;j<strlen(cad2);j++){
+			 if(cad1[i]=='\0')break;
+			 if(cad1[i]==cad2[j]){
+				 i++;
+				 resultado=1;
+			 }
+			 else{
+				 if(i>0){
+					 resultado=0;
+					 break;}
+			 }
+		 }
+		 if(cad1[i]=='\0'){
+			 break;}
+		 break;
+	 }
+	 printf("%i\n",resultado);
+	 return resultado;
+ }
 
 
  int verificacion_funciones(char cad[])
  {
-     int error = 0;
-     for(int i=0;i<strlen(cad);i++)
-     {
-         if(cad[i]=='s'){
-            if(cad[i+1]=='i' && cad[i+2]=='n')
-            {
-                error = 0;
-                break;
-            }
-            else{
-                if(cad[i+1]=='e' && cad[i+2]=='c'){
-                    error = 0;
-                    break;
-                }
-                else{
-                    if(cad[i+1]=='q'&& cad[i+2]=='r' && cad[i+3]=='t'){
-                        error = 0;
-                        break;
-                    }
-                    else {error = 1; break;}
-                }
-            }
-         }
-         else{
-            if(cad[i]=='c'){
-                if(cad[i+1]=='o' && cad[i+2]=='s' || cad[i+2]=='t'){
-                    error = 0;
-                    break;
-                }
-                else
-                {
-                    if(cad[i+1]=='s' && cad[i+2]=='c'){
-                        error = 0;
-                        break;
-                    }
-                    else{error = 1;}
-                }
-            }
-            else{
-                if(cad[i]=='t' && cad[i+1]=='a' && cad[i+2]=='n'){
-                    error = 0;
-                    break;
-                }
-                else
-                {
-                    if(cad[i]=='a'&& cad[i+1]=='r'&& cad[i+2]=='c'){
-                        if(cad[i+3]=='s' && cad[i+4]=='i' && cad[i+5]=='n' || cad[i+4]=='e' && cad[i+5]=='c'){
-                            error = 0;
-                            break;
-                        }
-                        else{
-                            if(cad[i+3]=='c'&& cad[i+4]=='s' && cad[i+5]=='c' || cad[i+4]=='o' && cad[i+5]=='t'){
-                                error = 0;
-                                break;
-                            }
-                            else{
-                                if(cad[i+4]=='o' && cad[i+5]=='s'){
-                                    error = 0;
-                                    break;
-                                }
-                            else{
-                                if(cad[i+3]=='t' && cad[i+4]=='a' && cad[i+5]=='n'){
-                                    error = 0;
-                                    break;
-                                }
-                                else{
-                                    error = 1;
-                                    break;
-                                }
-                            }
-                            }
-                        }
-                    }
-                }
-            }
-         }
-
-     }
-     if(error == 1)
-        puts("Es necesario escribir las funciones con la sintaxis correcta");
-     return error;
+	 int error = 0;
+	 for(int i=0;i<strlen(cad);i++)
+	 {
+		 if(esDigito(cad[i])==0 && es_operador(cad[i])==0){
+			 if(cad[i] == 'a'){
+				 if(Encontrar_cadena("arcsec(",cad) == 1){ error = 0; break;}
+				 else{
+					 if(Encontrar_cadena("arccsc(",cad) == 1){ error = 0; break;}
+					 else{
+						 if(Encontrar_cadena("arccot(",cad) == 1){ error = 0; break;}
+						 else{
+							 if(Encontrar_cadena("arcsin(",cad) == 1){ error = 0; break;}
+							 else{
+								 if(Encontrar_cadena("arccos(",cad) == 1){ error = 0; break; }
+								 else{
+									 if(Encontrar_cadena("arctan(",cad) == 1){ error = 0; break; }
+									 else{ error = 1; break;}
+								 }
+							 }
+						 }
+					 }
+				 }
+			 }
+			 else{
+				 if(cad[i] == 's'){
+					 if(Encontrar_cadena("sec(",cad) == 1){ error = 0; break;}
+					 else{
+						 if(Encontrar_cadena("sin(",cad) == 1){ error = 0; break;}
+						 else{
+							 if(Encontrar_cadena("sqrt(",cad) == 1){ error = 0; break;}
+							 else{ error = 1; break;}
+						 }
+					 }
+				 }
+				 else{
+					 if(cad[i] == 'c'){
+						 if(Encontrar_cadena("csc(",cad) == 1){ error = 0; break;}
+						 else{
+							 if(Encontrar_cadena("cos(",cad) == 1){ error = 0; break;}
+							 else{
+								 if(Encontrar_cadena("cot(",cad) == 1){ error = 0; break;}
+								 else{ error = 1; break;}
+							 }
+						 }
+					 }
+					 else{
+						 if (cad[i] == 't' && Encontrar_cadena("tan(",cad) == 1){ error = 0; break;}
+						 else{ error = 1; break;}
+					 }
+				 }
+			 }
+		 }
+	 }
+	 
+	 if(error == 1) puts("Es necesario escribir las funciones con la sintaxis correcta");
+	 return error;
  }
