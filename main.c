@@ -135,6 +135,29 @@ int decimal(char a[],HWND hwnd){
     return error;
 }
 
+int Encontrar_cadena (char cad1[],char cad2[]){
+	int resultado=0,i=0;
+	///Si no se encuentra cadena, devuelve 0.
+	while(i<strlen(cad1)){
+		for(int j=0;j<strlen(cad2);j++){
+			if(cad1[i]=='\0')break;
+			if(cad1[i]==cad2[j]){
+				i++;
+				resultado=1;
+			}
+			else{
+				if(i>0){
+					resultado=0;
+					break;}
+			}
+		}
+		if(cad1[i]=='\0'){
+			break;}
+		break;
+	}
+	return resultado;
+}
+
 ///Funciones de 'errores'
 int error_lexico(char a[], HWND hwnd){
     int resultado=1;
@@ -174,75 +197,64 @@ int Primer_letra_funcion(char a)
 int verificacion_funciones(HWND hwnd,char cad[])
  {
      int error = 0;
+     printf("%i",Encontrar_cadena("arcsec(",cad));
      for(int i=0;i<strlen(cad);i++)
      {
-         if(Primer_letra_funcion(cad[i]) == 1){
-            error = 1;break;
-         }
-         if(cad[i]=='s'){
-            if(cad[i+1]=='i' && cad[i+2]=='n')
-            {error = 0;break;}
-
+         if(cad[i] == 'a'){
+            if(Encontrar_cadena("arcsec(",cad) == 1){ error = 0; break;}
             else{
-                if(cad[i+1]=='e' && cad[i+2]=='c'){
-                    error = 0; break;
+                if(Encontrar_cadena("arccsc(",cad) == 1){ error = 0; break;}
+                else{
+                    if(Encontrar_cadena("arccot(",cad) == 1){ error = 0; break;}
+                    else{
+                        if(Encontrar_cadena("arcsin(",cad) == 1){ error = 0; break;}
+                        else{
+                            if(Encontrar_cadena("arccos(",cad) == 1){ error = 0; break; }
+                            else{
+                                if(Encontrar_cadena("arctan(",cad) == 1){ error = 0; break; }
+                                else{ error = 1; break;}
+                            }
+                        }
+                    }
+                }
+            }
+            }
+            else{
+                if(cad[i] == 's'){
+                    if(Encontrar_cadena("sec(",cad) == 1){ error = 0; break;}
+                    else{
+                        if(Encontrar_cadena("sin(",cad) == 1){ error = 0; break;}
+                        else{
+                            if(Encontrar_cadena("sqrt(",cad) == 1){ error = 0; break;}
+                            else{ error = 1; break;}
+                        }
+                    }
                 }
                 else{
-                    if(cad[i+1]=='q'&& cad[i+2]=='r' && cad[i+3]=='t'){
-                        error = 0; break;
-                    }
-                    else {error = 1; break;}
-                }
-            }
-         }
-         else{
-            if(cad[i]=='c'){
-                if(cad[i+1]=='o' && cad[i+2]=='s' || cad[i+2]=='t'){
-                    error = 0;break;
-                }
-                else
-                {
-                    if(cad[i+1]=='s' && cad[i+2]=='c'){
-                        error = 0;break;
-                    }
-                    else{error = 1;}
-                }
-            }
-            else{
-                if(cad[i]=='t' && cad[i+1]=='a' && cad[i+2]=='n'){
-                    error = 0;break;
-                }
-                else
-                {
-                    if(cad[i]=='a'&& cad[i+1]=='r'&& cad[i+2]=='c'){
-                        if(cad[i+3]=='s' && cad[i+4]=='i' && cad[i+5]=='n' || cad[i+4]=='e' && cad[i+5]=='c'){
-                            error = 0;break;
-                        }
+                    if(cad[i] == 'c'){
+                        if(Encontrar_cadena("csc(",cad) == 1){ error = 0; break;}
                         else{
-                            if(cad[i+3]=='c'&& cad[i+4]=='s' && cad[i+5]=='c' || cad[i+4]=='o' && cad[i+5]=='t'){
-                                error = 0; break;
-                            }
+                            if(Encontrar_cadena("cos(",cad) == 1){ error = 0; break;}
                             else{
-                                if(cad[i+4]=='o' && cad[i+5]=='s'){
-                                    error = 0; break;
-                                }
-                            else{
-                                if(cad[i+3]=='t' && cad[i+4]=='a' && cad[i+5]=='n'){
-                                    error = 0; break;
-                                }
-                                else{error = 1;break;}
-                            }
+                                if(Encontrar_cadena("cot(",cad) == 1){ error = 0; break;}
+                                else{ error = 1; break;}
                             }
                         }
                     }
+                    else{
+                        if (cad[i] == 't' && Encontrar_cadena("tan(",cad) == 1){ error = 0; break;}
+                        else{ error = 1; break;}
+                    }
                 }
             }
-         }
      }
-     if(error == 1)
-        MessageBox(hwnd,"Es necesario escribir las funciones con la sintaxis correcta","Error sintáctico",MB_ICONWARNING | MB_OK);
+     if(error == 1) MessageBox(hwnd,"Es necesario escribir las funciones con la sintaxis correcta","Error sintáctico",
+                               MB_ICONWARNING | MB_OK);
      return error;
  }
+
+
+
 
 
 LRESULT CALLBACK winProc(HWND hwnd,UINT msj,WPARAM wParam,LPARAM lParam){
