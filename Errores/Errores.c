@@ -73,16 +73,16 @@ int error_sintatico(char a[]){
     int resultado=0,m;
     char a_tilde = 160,e_tilde = 130,o_tilde = 162;
     m=Longitud_cadena(a);
-    if(parentesis_paridad(a)!=0){ /*Primero, se validará si hay la misma cantidad de pares de paréntesis*/
+    if(parentesis_paridad(a)!=1){ /*Primero, se validará si hay la misma cantidad de pares de paréntesis*/
     for(int i=0;i<m;i++){
 
         if(a[i]=='('||a[i]==')'){
                 continue; /*Ignorará los operadores válidos, en este caso los paréntesis*/
         }
-        if(es_operador(a[i])==1 && es_operador(a[i+1])==1 && a[i+1]!='('&& a[i+1]!=')'){
-            resultado=1; /*Sirve para validar que un operador no sea puesto 2 veces seguidas, pero ignorando los parentesis*/
-            printf("Error sint%ctico. \n",a_tilde);
-            printf("Observaci%cn. \nError en la secuencia '%c%c'\n",o_tilde,a[i],a[i+1]);
+        if(es_operador(a[i])==1 && a[i]!='-' && es_operador(a[i+1])==1 && a[i+1]!='('&& a[i+1]!='!' && a[i+1]!='%'){
+            resultado=1; /*Sirve para validar que un operador no sea puesto 2 veces seguidas, pero ignorando los parentesis,
+			factorial, porcentaje o que primero esté un signo negativo*/
+            puts("No es posible calcular con 2 operadores seguidos");
             break;
         }
         else{
@@ -92,8 +92,7 @@ int error_sintatico(char a[]){
     }
     }
     else{
-        printf("Error sint%ctico. \n",a_tilde);
-        printf("Observaci%cn. \nError debido a falta de un par%cntesis.\n",o_tilde,e_tilde);
+        puts("Error debido a falta de un parentesis");
         resultado=1;
         /*Habrá error sintático en caso de que la cantidad de pares de paréntesis sea diferente*/
     }
@@ -167,7 +166,7 @@ int decimal(char a[]){
 }
 
 int parentesis_paridad(char a[]){
-    int b=0,c=0,resultado=0,m; /*Contadores para contar cantidad de paréntesis en la cadena*/
+    int b=0,c=0,error=0,m; /*Contadores para contar cantidad de paréntesis en la cadena*/
     m=Longitud_cadena(a);
     for(int i=0;i<m;i++){
         switch(a[i]){
@@ -177,23 +176,20 @@ int parentesis_paridad(char a[]){
         break;
         }
     }
-    if(c==b)resultado=1;
-    return resultado;
+    if(c!=b)error=1;
+    return error;
 }
 
 int parentesis_vacio(char a[]){
-    int m,resultado=0;
-    char a_tilde = 160,e_tilde = 130,o_tilde = 162;
-    m=Longitud_cadena(a);
-    for(int i=0;i<m;i++){
+    int error=0;
+    for(int i=0;i<strlen(a);i++){
         if(a[i]=='('&& a[i+1]==')'){
-                resultado=1; /*Al encontrar un par de paréntesis vacíos, se sale del bucle*/
-                printf("Error sint%ctico. \n",a_tilde);
-                printf("Observaci%cn.\nError en la secuencia '()'\n",o_tilde);
+                error=1; /*Al encontrar un par de paréntesis vacíos, se sale del bucle*/
+                puts("Error al haber dejado un par de paréntesis vacíos");
                 break;
         }
     }
-    return resultado;
+    return error;
 }
 
 int validacion_caracter(char a[]){
@@ -221,53 +217,29 @@ int validacion_caracter(char a[]){
 	if(error==0){
 		m=strlen(a);
 		for(int i=1;i<m;i++){
-			if(es_operador(a[i])==1 && a[i]!='('&& a[i]!=')' && a[i-1]=='(' && a[i+1]==')'){
-				error=1; /*Aquí se verifica que no haya un operador sólo entre paréntesis*/
-				printf("Error sint%ctico. \n",a_tilde);
-				printf("Observaci%cn. \nError en la secuencia '%c%c%c'\n",o_tilde,a[i-1],a[i],a[i+1]);
-				break;
+			if(a[i-1]=='(' && es_operador(a[i])==1 && a[i]!='(' && a[i]!='-' && esDigito(a[i])==0){
+				error=1; /*Validará que el primer carácter no sea ningún operador a excepción del '(', y cualquier primer letra de las funciones*/
+				puts("Error con el primer caracter despues del parentesis");
+			}
+			else{///Caso especial si es una letra
+				if(a[i-1]=='(' && letras_permitidas(a[i])==1 && Primer_letra_funcion(a[i])==0){
+					error = 1;
+					puts("Error con el primer caracter despues del parentesis");
 				}
 				else{
-					if(es_operador(a[i])==1 && a[i]!='('&& a[i]!=')'&& a[i+1]==')'){
+					if(es_operador(a[i-1])==1 && a[i]==')' && a[i-1]!='!' && a[i-1]!='%'){
 						error=1; /*Aquí se verifica que no haya un operador antes de un paréntesis cerrado*/
-						printf("Error sint%ctico. \n",a_tilde);
-						printf("Observaci%cn. \nError en la secuencia '%c%c'\n",o_tilde,a[i],a[i+1]);
+						puts("Error con el caracter antes del parentesis cerrado");
 						break;
 					}
 				}
 			}
-			if(error==0 && parentesis_operador(a)==1)error=1;
-			
-		}
+			}
+	}
+
 		return error;
 	}
 
-int parentesis_operador(char a[]){
-    int m,resultado=0;
-    char a_tilde = 160,e_tilde = 130,o_tilde = 162;
-    m=Longitud_cadena(a);
-    for(int i=1;i<m;i++){
-        if(a[i]=='('){
-           if(a[i-1]==')' || esDigito(a[i-1])==1){
-            resultado=1; /*Aquí se verifica que no haya un número o paréntesis izquierdo antes de un paréntesis derecho*/
-            printf("Error sint%ctico. \n",a_tilde);
-            printf("Observaci%cn. \nError en la secuencia '%c%c'\nEs necesario la presencia de un operador antes del par%cntesis.\n",o_tilde,a[i-1],a[i],e_tilde);
-            break;
-            }
-        }
-        else{
-            if(a[i]==')'){
-                if(a[i+1]=='('|| esDigito(a[i+1])==1){
-                    resultado=1; /*Aquí se verifica que no haya un número o paréntesis derecho antes de un paréntesis izquierdo*/
-                    printf("Error sint%ctico. \n",a_tilde);
-                    printf("Observaci%cn. \nError en la secuencia '%c%c'\nEs necesario la presencia de un operador despu%cs del par%cntesis.\n",o_tilde,a[i],a[i+1],e_tilde,e_tilde);
-                    break;
-                   }
-            }
-        }
-    }
-        return resultado;
-}
 
 int encontrarCaracter(char cad[], char car){
      int r=0;
