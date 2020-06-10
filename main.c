@@ -200,6 +200,23 @@ int parentesis_vacio(char a[], HWND hwnd){
     return error;
 }
 
+int parentesis_especial(char a[],HWND hwnd)
+{
+    ///Sólo ocurre en el caso de poner, por ejemplo, 4)(5.
+    int error = 0,b=0;
+    for(int i=0;i<strlen(a);i++)
+    {
+        if(a[i]==')'){
+            b=1;
+        }
+        if(b==1 && a[i]=='(')
+            error = 1;
+            MessageBox(hwnd,"Error de paréntesis","Error sintáctico",MB_ICONWARNING | MB_OK);
+            break;
+    }
+    return error;
+}
+
 int validacion_caracter(char a[],HWND hwnd){
 	int error=0,f;
 	if(es_operador(a[0])==1 && a[0]!='(' && a[0]!='-' && esDigito(a[0])==0){
@@ -379,6 +396,9 @@ int error_sintatico(char a[],HWND hwnd){
             }
             if(resultado!=1){
                 if(verificacion_funciones(hwnd,a)==1 && resultado==0) resultado=1;
+            }
+            if(resultado!=1){
+                if(parentesis_especial(a,hwnd)==1) resultado=1;
             }
             else resultado = 0;
     }
