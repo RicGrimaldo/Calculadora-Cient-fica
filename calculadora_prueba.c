@@ -342,7 +342,7 @@ void ConversionInfijaAPostfija(char entrada[n], char postfija[n]){
 	printf("\n");
 }
 void pos(char entrada[n], char postfija[n]){
-	struct PILAA pila;
+    struct PILAA pila;
 	int i, j;
 	char elemento;
 	int operando (char c);
@@ -356,24 +356,23 @@ void pos(char entrada[n], char postfija[n]){
 	j = -1;
 	init_pila (&pila);
 	while(entrada[i] != '.') {
-	   if(operando(entrada[i]) )
-		   postfija [++j] = entrada[i++];
-	   else{
-		     while (!pila_vacia (&pila)  &&
-			 prioridad (tope (pila), entrada[i] ) )  {
-			     retira_pila (&pila, &elemento);
-			     postfija[++j] = elemento;
-		      }
-		      if(isdigit(postfija[j]) == 1){
-                    postfija[++j] = ',';
-		      }
-		      if (entrada[i] == ')')
-			   retira_pila(&pila, &elemento);
-		      else ins_pila(&pila, entrada[i]);
-		      i++;
+        if(operando(entrada[i]) )
+            postfija [++j] = entrada[i++];
+        else{
+            while (!pila_vacia (&pila)  &&
+            prioridad(tope(pila), entrada[i])){
+                retira_pila (&pila, &elemento);
+                postfija[++j] = elemento;
+            }
+            if(isdigit(postfija[j]) == 1){
+                postfija[++j] = ',';
+            }
+            if(entrada[i] == ')') retira_pila(&pila, &elemento);
+            else ins_pila(&pila, entrada[i]);
+            i++;
 		}
 	}
-	while (!pila_vacia (&pila) ) {
+	while(!pila_vacia(&pila)){
 		retira_pila (&pila, &elemento);
 		postfija[++j] = elemento;
 	}
