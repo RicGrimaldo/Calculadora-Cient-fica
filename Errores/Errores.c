@@ -197,46 +197,50 @@ int parentesis_vacio(char a[]){
 }
 
 int validacion_caracter(char a[]){
-    int error=0,f,m;
-    char a_tilde = 160,e_tilde = 130,o_tilde = 162;
-    if(es_operador(a[0])==1 && a[0]!='(' && a[0]!='-' || Primer_letra_funcion(a[0])==0){
-        error=1; /*Validará que el primer carácter no sea ningún operador a excepción del '(', y cualquier primer letra de las funciones*/
-        printf("Error sint%ctico. \n",a_tilde);
-        printf("Observaci%cn.\nError en la secuencia '%c%c'\n",o_tilde,a[0],a[1]);
-    }
-    else{
-    f=strlen(a)-1;
-    if(es_operador(a[f])==1 && a[f]!=')' && a[f]!='!' && a[f]!='%'){
-            error=1; /*Validará que el último carácter no sea un operador a excepción de ')', ! y %*/
-            printf("Error sint%ctico. \n",a_tilde);
-            printf("Observaci%cn.\nError en la secuencia '%c%c'\n",o_tilde,a[f-1],a[f]);
-    }else{
-		error = 1;
+	int error=0,f,m;
+	char a_tilde = 160,e_tilde = 130,o_tilde = 162;
+	if(es_operador(a[0])==1 && a[0]!='(' && a[0]!='-' && esDigito(a[0])==0){
+		error=1; /*Validará que el primer carácter no sea ningún operador a excepción del '(', y cualquier primer letra de las funciones*/
+		puts("Error con el primer caracter");
+		}
+	else{///Caso especial si es una letra
+		if(letras_permitidas(a[0])==1 && Primer_letra_funcion(a[0])==0){
+			error = 1;
+			puts("Error en el primer catacter");
+		}
 	}
-    }
-		
-    if(error==0){
-        m=strlen(a);
-    for(int i=1;i<m;i++){
-        if(es_operador(a[i])==1 && a[i]!='('&& a[i]!=')' && a[i-1]=='(' && a[i+1]==')'){
-            error=1; /*Aquí se verifica que no haya un operador sólo entre paréntesis*/
-            printf("Error sint%ctico. \n",a_tilde);
-            printf("Observaci%cn. \nError en la secuencia '%c%c%c'\n",o_tilde,a[i-1],a[i],a[i+1]);
-            break;
-        }
-        else{
-            if(es_operador(a[i])==1 && a[i]!='('&& a[i]!=')'&& a[i+1]==')'){
-                error=1; /*Aquí se verifica que no haya un operador antes de un paréntesis cerrado*/
-                printf("Error sint%ctico. \n",a_tilde);
-                printf("Observaci%cn. \nError en la secuencia '%c%c'\n",o_tilde,a[i],a[i+1]);
-                break;
-        }
-    }
-    }
-    if(error==0 && parentesis_operador(a)==1)error=1;
-    return error;
-}
-}
+	
+	if(error == 0){
+	f=strlen(a)-1;
+	if(es_operador(a[f])==1 && a[f]!=')' && a[f]!='!' && a[f]!='%'){
+		error=1; /*Validará que el último carácter no sea un operador a excepción de ')', ! y %*/
+		puts("Error con el ultimo caracter");
+	}
+	}
+	
+	if(error==0){
+		m=strlen(a);
+		for(int i=1;i<m;i++){
+			if(es_operador(a[i])==1 && a[i]!='('&& a[i]!=')' && a[i-1]=='(' && a[i+1]==')'){
+				error=1; /*Aquí se verifica que no haya un operador sólo entre paréntesis*/
+				printf("Error sint%ctico. \n",a_tilde);
+				printf("Observaci%cn. \nError en la secuencia '%c%c%c'\n",o_tilde,a[i-1],a[i],a[i+1]);
+				break;
+				}
+				else{
+					if(es_operador(a[i])==1 && a[i]!='('&& a[i]!=')'&& a[i+1]==')'){
+						error=1; /*Aquí se verifica que no haya un operador antes de un paréntesis cerrado*/
+						printf("Error sint%ctico. \n",a_tilde);
+						printf("Observaci%cn. \nError en la secuencia '%c%c'\n",o_tilde,a[i],a[i+1]);
+						break;
+					}
+				}
+			}
+			if(error==0 && parentesis_operador(a)==1)error=1;
+			
+		}
+		return error;
+	}
 
 int parentesis_operador(char a[]){
     int m,resultado=0;
