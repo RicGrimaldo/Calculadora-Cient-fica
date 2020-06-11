@@ -9,6 +9,8 @@ int DetectarErrores(char entrada[n]);
 void ConversionInfijaAPostfija(char entrada[n], char postfija[n]);
 float ObtenerResultado(char postfija[n], int *);
 void funciones_tri(char entrada[n]);
+void multi_parentesis(char entrada [n], int *);
+void eliminar_comas(char postfija[n]);
 ///Funciones secundarias pertenecientes a la función 'DetectarErrores'
 int error_sintactico(char entrada[n]);
 int error_lexico(char entrada[n]);
@@ -32,7 +34,7 @@ struct struct_nodo_float{
     struct struct_nodo_float *siguiente;
 };
 typedef struct struct_nodo_float nodo_float;
-void funciones_trigo(char entrada [1000]);
+void funciones_trigo(char entrada [n]);
 nodo_float *crear_pila_float(nodo_float *pila);
 nodo_float *push_float(float valor, nodo_float *pila);
 nodo_float *pop_float(float *valor, nodo_float *pila);
@@ -48,8 +50,7 @@ char a_tilde = 160, o_tilde = 162;
 int main(){
     printf("Ingrese la expresi%cn:\n", o_tilde);
     fflush(stdin);
-    //fgets(entrada, n, stdin);
-    fgets(entrada,1000,stdin);
+    fgets(entrada, n ,stdin);
     fflush(stdin);
     Procedimiento(entrada, postfija);
     return 0;
@@ -61,18 +62,60 @@ int potencia(int x, int y){
     }
     return pot;
 }
+void multi_parentesis(char entrada [n], int *func_multi){
+    int longitud = strlen(entrada);
+    for(int i = 0; entrada[i] != '\0'; i++){
+        if(entrada[i] == ')' && (entrada[i+1] == '(' || entrada[i+1] > 47 && entrada[i+1] < 58)){
+            for(int j = longitud-1; j > i; j--){
+                entrada[j+1] = entrada[j];
+            }
+            entrada[i+1] = '*';
+            *func_multi = 1;
+        }else{
+            if(i != 0 && entrada[i] == '(' && entrada[i-1] > 47 && entrada[i-1] < 58){
+            for(int j = longitud-1; j >= i; j--){
+                entrada[j+1] = entrada[j];
+            }
+            entrada[i] = '*';
+            *func_multi = 1;
+            }
+        }
+    }
+    printf("\nLa cadena resultado es:\n");
+    for(int j=0; entrada[j] != '\0'; j++){
+        printf("%c", entrada[j]);
+    }
+}
+void eliminar_comas(char postfija[n]){
+    for(int i=0; postfija[i] != '\0'; i++){
+        if(postfija[i] == ',' && postfija[i+1]  == '+' || postfija[i+1]  == '-' || postfija[i+1]  == '*' || postfija[i+1]  == '/' || postfija[i+1]  == '^'){
+            for(int j=i+1; postfija[j] != '\0'; j++){
+                postfija[j-1] = postfija[j];
+            }
+        }
+    }
+    printf("\n\nLa cadena resultante es: ");
+    for(int i=0; postfija[i] != '\0'; i++){
+        printf("%c", postfija[i]);
+    }
+    printf("\n");
+}
 void Procedimiento(char entrada[n], char postfija[n]){
     float resultado = 0;
-    int error = 0;
+    int error = 0, func_multi = 0;
     char o_tilde = 162;
     if(DetectarErrores(entrada) == 0){
         funciones_tri(entrada);
+        multi_parentesis(entrada, &func_multi);
         ConversionInfijaAPostfija(entrada, postfija);
         printf("Conversion infija: ");
         for(int i=0; postfija[i] != '\0'; i++){
             printf("%c", postfija[i]);
         }
         printf("\n");
+        if(func_multi == 1){
+            eliminar_comas(postfija);
+        }
         resultado = ObtenerResultado(postfija, &error);
         if(error == 0){
             printf("El resultado es: %.0f", resultado);
@@ -567,7 +610,6 @@ void funciones_trigo(char entrada [1000]){
                     trig[I] = entrada[j];
                     I++;
                 }
-
                 if (strcmp(trig, "sin") == 1) operador = 224;
                 else if (strcmp(trig, "cos") == 1) operador = 225;
                 else if (strcmp(trig, "tan") == 1) operador = 226;
