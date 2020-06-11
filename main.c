@@ -173,7 +173,7 @@ int Encontrar_cadena (char cad1[],char cad2[]){
 	return resultado;
 }
 
-int parentesis_paridad(char a[]){
+int parentesis_paridad(char a[],HWND hwnd){
     int b=0,c=0,error=0,m; /*Contadores para contar cantidad de paréntesis en la cadena*/
     m=strlen(a);
     for(int i=0;i<m;i++){
@@ -183,36 +183,25 @@ int parentesis_paridad(char a[]){
         case ')': c++;
         break;
         }
+        if(c>b){
+            error = 1;
+            MessageBox(hwnd,"Error de paréntesis","Error sintáctico",MB_ICONWARNING | MB_OK);
+            return error;
+        }
     }
-    if(c!=b)error=1;
+    if(c!=b){
+            error=1;
+            MessageBox(hwnd,"Error debido a falta de un parentesis","Error sintáctico",MB_ICONWARNING | MB_OK);
+    }
     return error;
 }
 
 int parentesis_vacio(char a[], HWND hwnd){
     int error=0;
     for(int i=0;i<strlen(a);i++){
-        if(a[i]=='('&& a[i+1]==')'){
-                error=1; /*Al encontrar un par de paréntesis vacíos, se sale del bucle*/
+        if(a[i]=='('&& a[i+1]==')'){/*Al encontrar un par de paréntesis vacíos, se sale del bucle*/
                 MessageBox(hwnd,"Error al haber dejado un par de paréntesis vacíos","Error sintáctico",MB_ICONWARNING | MB_OK);
-                break;
-        }
-    }
-    return error;
-}
-
-int parentesis_especial(char a[],HWND hwnd)
-{
-    ///Sólo ocurre en el caso de poner, por ejemplo, 4)(5.
-    int error = 0,b=0;
-    for(int i=0;i<strlen(a);i++)
-    {
-        if(a[i]==')'){
-            b=1;///Si hay un ')' primero, cambiaremos la bandera a true
-        }
-        if(b==1 && a[i]=='('){
-            error = 1;
-            MessageBox(hwnd,"Error de paréntesis","Error sintáctico",MB_ICONWARNING | MB_OK);
-            break;
+                return error=1;
         }
     }
     return error;
@@ -354,7 +343,7 @@ procediendo a leer el siguiente carácter de la candena*/
 
 int error_sintatico(char a[],HWND hwnd){
     int resultado=0;
-    if(parentesis_paridad(a)!=1){ /*Primero, se validará si hay la misma cantidad de pares de paréntesis*/
+    if(parentesis_paridad(a,hwnd)!=1){ /*Primero, se validará si hay la misma cantidad de pares de paréntesis*/
     for(int i=0;i<strlen(a);i++){
 
         if(a[i]=='('||a[i]==')'){
@@ -373,7 +362,6 @@ int error_sintatico(char a[],HWND hwnd){
     }
     }
     else{
-        MessageBox(hwnd,"Error debido a falta de un parentesis","Error sintáctico",MB_ICONWARNING | MB_OK);
         resultado=1;
         /*Habrá error sintático en caso de que la cantidad de pares de paréntesis sea diferente*/
     }
@@ -387,9 +375,9 @@ int error_sintatico(char a[],HWND hwnd){
             if(resultado!=1){
                 if(verificacion_funciones(hwnd,a)==1 && resultado==0) resultado=1;
             }
-            if(resultado!=1){
+            /*if(resultado!=1){
                 if(parentesis_especial(a,hwnd)==1) resultado=1;
-            }
+            }*/
             else resultado = 0;
     }
     return resultado;
