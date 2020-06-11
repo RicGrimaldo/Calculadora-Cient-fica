@@ -2,6 +2,7 @@
 #include<string.h>
 #include<stdlib.h>
 #include<math.h>
+#include<ctype.h>
 #define n 40
 ///Funciones PRINCIPALES
 void Procedimiento(char entrada[n], char postfija[n]);
