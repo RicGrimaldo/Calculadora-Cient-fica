@@ -113,12 +113,12 @@ void Procedimiento(char entrada[n], char postfija[n]){
             printf("%c", postfija[i]);
         }
         printf("\n");
-        if(func_multi == 1){
+        /*if(func_multi == 1){
             eliminar_comas(postfija);
-        }
+        }*/
         resultado = ObtenerResultado(postfija, &error);
         if(error == 0){
-            printf("El resultado es: %.0f", resultado);
+            printf("El resultado es: %.4f", resultado);
         }else{
             printf("ERROR: Divisi%cn entre cero", o_tilde);
         }
