@@ -335,48 +335,45 @@ int Encontrar_cadena (char cad1[],char cad2[]){
 }
 
 void funciones_tri(char entrada [n]){
-        int I = 0;
-        char operador, trig[10];
-        for(int i = 0; entrada[i] != '\0'; i++){
-            if(entrada[i] > 96 && entrada [i] < 123){
-                for(int j = i; entrada[j] != '('; j++){
-                    trig[I] = entrada[j];
-                    I++;
-                }
-                if (strcmp("sqrt",trig) == 1) operador = 'a';
-                else if (strcmp("arccsc",trig) == 1) operador = 'b';
-                else if (strcmp("arcsec",trig ) == 1) operador = 'c';
-                else if (strcmp("arccot",trig) == 1) operador = 'd';
-                else if (strcmp("arctan",trig ) == 1) operador = 'e';
-                else if (strcmp("arccos",trig ) == 1) operador = 'f';
-                else if (strcmp("arcsin",trig) == 1) operador = 'g';
-                else if (strcmp("csc",trig) == 1) operador = 'h';
-                else if (strcmp("sec",trig) == 1) operador = 'i';
-                else if (strcmp("cot",trig) == 1) operador = 'j';
-                else if (strcmp("tan",trig) == 1) operador = 'k';
-                else if (strcmp("cos",trig) == 1) operador = 'l';
-                else if (strcmp("sin",trig ) == 1) operador = 'm';
-                entrada[i] = operador;
-                printf("Se supone que %c y %c son iguales",entrada[i],operador);
-                for(int j = (I+i); entrada[j] != '\0'; j++){
-                    entrada[j-(I-1)] = entrada[j];
-                }
-                I = 0;
+    int I = 0;
+    char operador, trig[10];
+    for(int i = 0; entrada[i] != '\0'; i++){
+        if(entrada[i] > 96 && entrada [i] < 123){
+            for(int j = i; entrada[j] != '('; j++){
+                trig[I] = entrada[j];
+                I++;
+            }
+            if (Encontrar_cadena("sqrt",trig) == 1) operador = 'a';
+            else if (Encontrar_cadena("sin",trig ) == 1) operador = 'b';
+            else if (Encontrar_cadena("cos",trig) == 1) operador = 'c';
+            else if (Encontrar_cadena("tan",trig) == 1) operador = 'd';
+            else if (Encontrar_cadena("cot",trig) == 1) operador = 'e';
+            else if (Encontrar_cadena("sec",trig) == 1) operador = 'f';
+            else if (Encontrar_cadena("csc",trig) == 1) operador = 'g';
+            else if (Encontrar_cadena("arcsin",trig) == 1) operador = 'h';
+            else if (Encontrar_cadena("arccos",trig ) == 1) operador = 'i';
+            else if (Encontrar_cadena("arctan",trig ) == 1) operador = 'j';
+            else if (Encontrar_cadena("arccot",trig) == 1) operador = 'k';
+            else if (Encontrar_cadena("arcsec",trig ) == 1) operador = 'l';
+            else if (Encontrar_cadena("arccsc",trig) == 1) operador = 'm';
+            entrada[i] = operador;
+            printf("Se supone que %c y %c son iguales",entrada[i],operador);
+            for(int j = (I+i); entrada[j] != '\0'; j++){
+                entrada[j-(I-1)] = entrada[j];
+            }
+            I = 0;
         }
         if(entrada[i+1] == 10){
             entrada[i+2] = '\0';
             entrada[i+3] = '\0';
-            entrada[i+4] = '\0';
-            entrada[i+5] = '\0';
-            entrada[i+6] = '\0';
         }
     }
 }
 void ConversionInfijaAPostfija(char entrada[n], char postfija[n]){
     int longitud;
     longitud = strlen(entrada);
-	entrada[longitud] = '\0';
-	//entrada[longitud+1] = '\0';
+	entrada[longitud] = '_';
+	entrada[longitud+1] = '\0';
 	pos(entrada, postfija);
 	for(int i=0; postfija[i] != '\0'; i++){
         if(postfija[i] == 10){
@@ -396,7 +393,7 @@ void pos(char entrada[n], char postfija[n]){
 	int i, j;
 	char elemento;
 	int operando (char c);
-	int prioridad (char op1,char op2);
+	int prioridad (char op1, char op2);
 	char tope (struct PILAA p);
 	void init_pila (struct PILAA *p);
 	int pila_vacia (struct PILAA *p);
@@ -405,18 +402,18 @@ void pos(char entrada[n], char postfija[n]){
 	i = 0;
 	j = -1;
 	init_pila (&pila);
-	while(entrada[i] != '\0') {
-	   if(operando(entrada[i]))
-		   postfija [++j] = entrada[i++];
+	while(entrada[i] != '_') {
+	   if(operando(entrada[i]) == 1){
+            postfija [++j] = entrada[i++];
+	   }
 	   else{
-		     while (!pila_vacia (&pila)  &&
-			 prioridad (tope (pila), entrada[i] ) )  {
+		     while (!pila_vacia (&pila) && prioridad(tope (pila), entrada[i])){
 			     retira_pila (&pila, &elemento);
 			     postfija[++j] = elemento;
 		      }
 		      if(operando(postfija[j]) == 1){
-                    postfija[++j] = ',';
-		      }
+                postfija[++j] = ',';
+                }
 		      if (entrada[i] == ')')
 			   retira_pila(&pila, &elemento);
 		      else ins_pila(&pila, entrada[i]);
@@ -430,7 +427,7 @@ void pos(char entrada[n], char postfija[n]){
 	postfija[++j] = '\0';
 }
 int operando (char c){
-	return ( c != '+' &&
+	if  (c != '+' &&
          c != '-' &&
          c != '*' &&
 		 c != '/' &&
@@ -449,8 +446,12 @@ int operando (char c){
          c != 'j' &&
          c != 'k' &&
          c != 'l' &&
-         c != 'm'
-    );
+         c != 'm' &&
+         c != ','
+    ){
+        return 1;
+    }
+    return 0;
 }
 int priori[6][7] ={
 	{ 1,1,0,0,0,0,1 },
@@ -460,7 +461,7 @@ int priori[6][7] ={
 	{ 1,1,1,1,1,0,1 },
 	{ 0,0,0,0,0,0,0 }
 };
-int prioridad (char op1,char op2)
+int prioridad (char op1, char op2)
 {
 	int i,j,prioridaad;
 
@@ -469,40 +470,45 @@ int prioridad (char op1,char op2)
 	else if (op1=='*') i=2;
 	else if (op1=='/') i=3;
 	else if (op1=='^') i=4;
-	else if (op1=='a') i=5;
-	else if (op1=='b') i=6;
-	else if (op1=='c') i=7;
-	else if (op1=='d') i=8;
-	else if (op1=='e') i=9;
-	else if (op1=='f') i=10;
-	else if (op1=='g') i=6;
-	else if (op1=='h') i=7;
-	else if (op1=='i') i=8;
-	else if (op1=='j') i=9;
-	else if (op1=='k') i=10;
-	else if (op1=='l') i=11;
-	else if (op1=='m') i=12;
-	else if (op1==')') i=13;
+	else if (op1=='!') i=5;
+	else if (op1=='%') i=6;
+	else if (op1=='a') i=7;
+	else if (op1=='b') i=8;
+	else if (op1=='c') i=9;
+	else if (op1=='d') i=10;
+	else if (op1=='e') i=11;
+	else if (op1=='f') i=12;
+	else if (op1=='g') i=13;
+	else if (op1=='h') i=14;
+	else if (op1=='i') i=15;
+	else if (op1=='j') i=16;
+	else if (op1=='k') i=17;
+	else if (op1=='l') i=18;
+	else if (op1=='m') i=19;
+	else if (op1=='(') i=20;
+	else if (op1==')') j=21;
 
     if (op2=='+') j=0;
 	else if (op2=='-') j=1;
 	else if (op2=='*') j=2;
 	else if (op2=='/') j=3;
 	else if (op2=='^') j=4;
-	else if (op2=='a') j=5;
-	else if (op2=='b') j=6;
-	else if (op2=='c') j=7;
-	else if (op2=='d') j=8;
-	else if (op2=='e') j=9;
-	else if (op2=='f') j=10;
-	else if (op2=='g') j=6;
-	else if (op2=='h') j=7;
-	else if (op2=='i') j=8;
-	else if (op2=='j') j=9;
-	else if (op2=='k') j=10;
-	else if (op2=='l') j=11;
-	else if (op2=='m') j=12;
-	else if (op2==')') j=13;
+	else if (op2=='!') j=5;
+	else if (op2=='%') j=6;
+	else if (op2=='a') j=7;
+	else if (op2=='b') j=8;
+	else if (op2=='c') j=9;
+	else if (op2=='d') j=10;
+	else if (op2=='e') j=11;
+	else if (op2=='f') j=12;
+	else if (op2=='g') j=13;
+	else if (op2=='h') j=14;
+	else if (op2=='i') j=15;
+	else if (op2=='j') j=16;
+	else if (op2=='k') j=17;
+	else if (op2=='l') j=18;
+	else if (op2=='m') j=19;
+	else if (op2=='(') j=20;
 
 	prioridaad=priori[i][j];
 	return (prioridaad);
@@ -528,7 +534,7 @@ void ins_pila(struct PILAA *p, char s){
 void retira_pila(struct PILAA *p, char *s){
     if(pila_vacia(p)){
         printf ("Pila vacia");
-		//*s = '.';
+		*s = '_';
 	}else{
 	    *s = p->a [p->t - 1];
         p->t--;
@@ -634,18 +640,18 @@ float operacion_trig(float operando1, char operador, int *error){
     puts("Estamos en los trigonometricos");
     printf("%f\n\n",1/(asin(operando1)));
         if (operador == 'a') return sqrt(operando1);
-        else if (operador == 'b') return 1/(asin(operando1));
-        else if (operador == 'c') return 1/acos(operando1);
-        else if (operador == 'd') return 1/atan(operando1);
-        else if (operador == 'e') return atan(operando1);
-        else if (operador == 'f') return acos(operando1);
-        else if (operador == 'g') return asin(operando1);
-        else if (operador == 'h') return 1/sin(operando1);
-        else if (operador == 'i') return 1/cos(operando1);
-        else if (operador == 'j') return 1/tan(operando1);
-        else if (operador == 'k') return tan(operando1);
-        else if (operador == 'l') return cos(operando1);
-        else if (operador == 'm') return sin(operando1);
+        else if (operador == 'b') return sin(operando1);
+        else if (operador == 'c') return cos(operando1);
+        else if (operador == 'd') return tan(operando1);
+        else if (operador == 'e') return 1/tan(operando1);
+        else if (operador == 'f') return 1/cos(operando1);
+        else if (operador == 'g') return 1/sin(operando1);
+        else if (operador == 'h') return asin(operando1);
+        else if (operador == 'i') return acos(operando1);
+        else if (operador == 'j') return atan(operando1);
+        else if (operador == 'k') return 1/atan(operando1);
+        else if (operador == 'l') return 1/acos(operando1);
+        else if (operador == 'm') return 1/(asin(operando1));
         else if (operador == '!') return factorial(operando1);
         else if (operador == '%') return operando1/100;
 }
