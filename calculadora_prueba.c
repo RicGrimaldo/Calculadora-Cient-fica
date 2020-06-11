@@ -183,11 +183,28 @@ int es_digito(char car){
     return resultado;
 }
 int es_operador(char car){
-    int resultado = 0;
-    switch(car){
-        case'+': case'-': case'*': case'/': case '^': case'(': case ')': resultado = 1; break;
+    if(car == '+' ||
+       car == '-' ||
+       car == '*' ||
+       car == '/' ||
+       car == '^' ||
+       car == 236 ||
+       car == '!' ||
+       car == '%' ||
+       car == 225 ||
+       car == 226 ||
+       car == 227 ||
+       car == 228 ||
+       car == 229 ||
+       car == 230 ||
+       car == 231 ||
+       car == 232 ||
+       car == 233 ||
+       car == 234 ||
+       car == 235){
+        return 1;
     }
-    return resultado;
+    return 0;
 }
 int longitud_cadena_errores(char entrada[n]){
     /*int i = 0;
@@ -349,8 +366,8 @@ void funciones_tri(char entrada [n]){
 void ConversionInfijaAPostfija(char entrada[n], char postfija[n]){
     int longitud;
     longitud = strlen(entrada);
-	entrada[longitud] = '.';
-	entrada[longitud+1] = '\0';
+	entrada[longitud] = '\0';
+	//entrada[longitud+1] = '\0';
 	pos(entrada, postfija);
 	for(int i=0; postfija[i] != '\0'; i++){
         if(postfija[i] == 10){
@@ -370,7 +387,7 @@ void pos(char entrada[n], char postfija[n]){
 	int i, j;
 	char elemento;
 	int operando (char c);
-	int prioridad (char op1,char op2);
+	int prioridad (char op1);
 	char tope (struct PILAA p);
 	void init_pila (struct PILAA *p);
 	int pila_vacia (struct PILAA *p);
@@ -379,16 +396,19 @@ void pos(char entrada[n], char postfija[n]){
 	i = 0;
 	j = -1;
 	init_pila (&pila);
-	while(entrada[i] != '.') {
-	   if(operando(entrada[i]) )
-		   postfija [++j] = entrada[i++];
+	while(entrada[i] != '\0'){
+	   if(operando(entrada[i]) == 1){
+	       postfija [++j] = entrada[i++];
+	       /*if(operando(postfija[j]) == 1){
+                postfija[++j] = ',';
+            }*/
+	   }
 	   else{
-		     while (!pila_vacia (&pila)  &&
-			 prioridad (tope (pila), entrada[i] ) )  {
+		     while (!pila_vacia (&pila) && prioridad(tope(pila)) >= prioridad(entrada[i])){
 			     retira_pila (&pila, &elemento);
 			     postfija[++j] = elemento;
 		      }
-		      if(isdigit(postfija[j]) == 1){
+		      if(operando(postfija[j]) == 1){
                     postfija[++j] = ',';
 		      }
 		      if (entrada[i] == ')')
@@ -397,14 +417,14 @@ void pos(char entrada[n], char postfija[n]){
 		      i++;
 		}
 	}
-	while (!pila_vacia (&pila) ) {
+	while (!pila_vacia (&pila)){
 		retira_pila (&pila, &elemento);
 		postfija[++j] = elemento;
 	}
 	postfija[++j] = '\0';
 }
 int operando (char c){
-	return ( c != '+' &&
+    if  (c != '+' &&
          c != '-' &&
          c != '*' &&
 		 c != '/' &&
@@ -423,42 +443,47 @@ int operando (char c){
          c != 233 &&
          c != 234 &&
          c != 235 &&
-         c != 236
-    );
+         c != 236 &&
+         c != '!' &&
+         c != '%' &&
+         c != ',') {
+        return 1;
+    }
+    return 0;
 }
-int priori[6][7] ={
+/*int priori[6][7] ={
 	{ 1,1,0,0,0,0,1 },
 	{ 1,1,0,0,0,0,1 },
 	{ 1,1,1,1,0,0,1 },
 	{ 1,1,1,1,0,0,1 },
 	{ 1,1,1,1,1,0,1 },
 	{ 0,0,0,0,0,0,0 }
-};
-int prioridad (char op1,char op2)
+};*/
+int prioridad (char op1)
 {
-	int i,j,prioridaad;
-
-	if (op1=='+') i=0;
-	else if (op1=='-') i=1;
-	else if (op1=='*') i=2;
-	else if (op1=='/') i=3;
-	else if (op1=='^') i=4;
-	else if (op1==224) i=5;
+	//int i,j,prioridaad;
+	int i;
+	if(op1==225 || op1==226 || op1==227 || op1==228 || op1==229 || op1==230 || op1==231 || op1==232 || op1==233 || op1==234 || op1==235); return i=4;
+	if (op1=='^' || op1==236 || op1=='!' || op1=='%') return i=3;
+	if (op1=='*' || op1=='/') return i=2;
+	if (op1=='+' || op1=='-') return i=1;
+	if (op1==')') return i=0;
+	/*else if () i=4;
+	else if () i=5;
 	else if (op1==225) i=6;
-	else if (op1==226) i=7;
-	else if (op1==227) i=8;
-	else if (op1==228) i=9;
-	else if (op1==229) i=10;
-	else if (op1==230) i=6;
-	else if (op1==231) i=7;
-	else if (op1==232) i=8;
-	else if (op1==233) i=9;
-	else if (op1==234) i=10;
-	else if (op1==235) i=11;
-	else if (op1==236) i=12;
-	else if (op1==')') i=13;
+	else if () i=7;
+	else if () i=8;
+	else if () i=9;
+	else if () i=10;
+	else if () i=6;
+	else if () i=7;
+	else if () i=8;
+	else if () i=9;
+	else if () i=10;
+	else if () i=11;
+	else if () i=13;*/
 
-    if (op2=='+') j=0;
+    /*if (op2=='+') j=0;
 	else if (op2=='-') j=1;
 	else if (op2=='*') j=2;
 	else if (op2=='/') j=3;
@@ -478,8 +503,7 @@ int prioridad (char op1,char op2)
 	else if (op2==236) j=12;
 	else if (op2==')') j=13;
 
-	prioridaad=priori[i][j];
-	return (prioridaad);
+	prioridaad=priori[i][j];*/
 }
 char tope(struct PILAA p){
 	return (p.a[p.t-1]);
@@ -502,7 +526,7 @@ void ins_pila(struct PILAA *p, char s){
 void retira_pila(struct PILAA *p, char *s){
     if(pila_vacia(p)){
         printf ("Pila vacia");
-		*s = '.';
+		//*s = '';
 	}else{
 	    *s = p->a [p->t - 1];
         p->t--;
@@ -515,12 +539,12 @@ float ObtenerResultado(char postfija[n], int *error){
     float operando1, operando2, resultado, valor_float;
     pila = crear_pila_float(pila);
     for(int i=0; postfija[i] != '\0'; i++){
-        if(postfija[i] >= 48 && postfija[i] <=57 || postfija == '.'){
+        if(postfija[i] >= 48 && postfija[i] <=57 || postfija[i] == '.'){
             for(int j = i; postfija[j] >= 48 && postfija[j] <=57 || postfija[j] == '.'; j++){
                 valor[I] = postfija[j];
                 I++;
-                if(postfija[j+1] < 48 && postfija[j+1] > 57){
-                    i = j;
+                if(postfija[j+1] >= 48 && postfija[j+1] <= 57 || postfija[j+1] == '.'){
+                    i++;
                 }
             }
             printf("\n\nLa cadena char valor es: ");
