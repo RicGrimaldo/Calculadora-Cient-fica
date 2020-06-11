@@ -327,17 +327,6 @@ int verificacion_funciones(HWND hwnd,char cad[])
 
 ///Funciones de 'errores' principales
 
-int encontrar_error(char a[],HWND hwnd){
-    int error=0;
-    if(error_lexico(a,hwnd)==1){
-        error=1;
-    }
-    else{
-        if(error_sintatico(a,hwnd)==1)error=1;
-    }
-    return error;
-}
-
 int error_lexico(char a[], HWND hwnd){
     int error=1;
     for(int i=0;i<strlen(a);i++){
@@ -406,7 +395,16 @@ int error_sintatico(char a[],HWND hwnd){
     return resultado;
 }
 
-
+int encontrar_error(char a[],HWND hwnd){
+	int error=0;
+	if(error_lexico(a,hwnd)==1){
+		error=1;
+	}
+	else{
+		if(error_sintatico(a,hwnd)==1)error=1;
+	}
+	return error;
+}
 
 LRESULT CALLBACK winProc(HWND hwnd,UINT msj,WPARAM wParam,LPARAM lParam){
     ///Declaración de cadenas
