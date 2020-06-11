@@ -9,8 +9,7 @@ int DetectarErrores(char entrada[n]);
 void ConversionInfijaAPostfija(char entrada[n], char postfija[n]);
 float ObtenerResultado(char postfija[n], int *);
 void funciones_tri(char entrada[n]);
-void multi_parentesis(char entrada [n], int *);
-void eliminar_comas(char postfija[n]);
+void multi_parentesis(char entrada [n]);
 ///Funciones secundarias pertenecientes a la función 'DetectarErrores'
 int error_sintactico(char entrada[n]);
 int error_lexico(char entrada[n]);
@@ -34,7 +33,6 @@ struct struct_nodo_float{
     struct struct_nodo_float *siguiente;
 };
 typedef struct struct_nodo_float nodo_float;
-void funciones_trigo(char entrada [n]);
 nodo_float *crear_pila_float(nodo_float *pila);
 nodo_float *push_float(float valor, nodo_float *pila);
 nodo_float *pop_float(float *valor, nodo_float *pila);
@@ -62,7 +60,7 @@ int potencia(int x, int y){
     }
     return pot;
 }
-void multi_parentesis(char entrada [n], int *func_multi){
+void multi_parentesis(char entrada [n]){
     int longitud = strlen(entrada);
     for(int i = 0; entrada[i] != '\0'; i++){
         if(entrada[i] == ')' && (entrada[i+1] == '(' || entrada[i+1] > 47 && entrada[i+1] < 58)){
@@ -70,14 +68,12 @@ void multi_parentesis(char entrada [n], int *func_multi){
                 entrada[j+1] = entrada[j];
             }
             entrada[i+1] = '*';
-            *func_multi = 1;
         }else{
             if(i != 0 && entrada[i] == '(' && entrada[i-1] > 47 && entrada[i-1] < 58){
             for(int j = longitud-1; j >= i; j--){
                 entrada[j+1] = entrada[j];
             }
             entrada[i] = '*';
-            *func_multi = 1;
             }
         }
     }
@@ -86,36 +82,19 @@ void multi_parentesis(char entrada [n], int *func_multi){
         printf("%c", entrada[j]);
     }
 }
-void eliminar_comas(char postfija[n]){
-    for(int i=0; postfija[i] != '\0'; i++){
-        if(postfija[i] == ',' && postfija[i+1]  == '+' || postfija[i+1]  == '-' || postfija[i+1]  == '*' || postfija[i+1]  == '/' || postfija[i+1]  == '^'){
-            for(int j=i+1; postfija[j] != '\0'; j++){
-                postfija[j-1] = postfija[j];
-            }
-        }
-    }
-    printf("\n\nLa cadena resultante es: ");
-    for(int i=0; postfija[i] != '\0'; i++){
-        printf("%c", postfija[i]);
-    }
-    printf("\n");
-}
 void Procedimiento(char entrada[n], char postfija[n]){
     float resultado = 0;
     int error = 0, func_multi = 0;
     char o_tilde = 162;
     if(DetectarErrores(entrada) == 0){
         funciones_tri(entrada);
-        multi_parentesis(entrada, &func_multi);
+        multi_parentesis(entrada);
         ConversionInfijaAPostfija(entrada, postfija);
         printf("Conversion infija: ");
         for(int i=0; postfija[i] != '\0'; i++){
             printf("%c", postfija[i]);
         }
         printf("\n");
-        /*if(func_multi == 1){
-            eliminar_comas(postfija);
-        }*/
         resultado = ObtenerResultado(postfija, &error);
         if(error == 0){
             printf("El resultado es: %.4f", resultado);
@@ -367,7 +346,6 @@ void funciones_tri(char entrada [n]){
     }
 }
 void ConversionInfijaAPostfija(char entrada[n], char postfija[n]){
-    funciones_trigo(entrada);
     int longitud;
     longitud = strlen(entrada);
 	entrada[longitud] = '.';
@@ -531,20 +509,24 @@ void retira_pila(struct PILAA *p, char *s){
 }
 float ObtenerResultado(char postfija[n], int *error){
     nodo_float *pila;
-    int longitud, I = 0;
+    int I = 0;
     char valor[n];
     float operando1, operando2, resultado, valor_float;
     pila = crear_pila_float(pila);
-    longitud = strlen(postfija);
-    for(int i=0; i<longitud; i++){
-        if(postfija[i] >= 48 && postfija[i] <=57){
-            for(int j = i; postfija[j] >=  48 && postfija[j] <= 57 || postfija[j] == '.'; j++){
+    for(int i=0; postfija[i] != '\0'; i++){
+        if(postfija[i] >= 48 && postfija[i] <=57 || postfija == '.'){
+            for(int j = i; postfija[j] >= 48 && postfija[j] <=57 || postfija[j] == '.'; j++){
                 valor[I] = postfija[j];
                 I++;
+                if(postfija[j+1] < 48 && postfija[j+1] > 57){
+                    i = j;
+                }
             }
-            for(int j = (I+i); postfija[j] != '\0'; j++){
-                postfija[j-(I-1)] = postfija[j];
+            printf("\n\nLa cadena char valor es: ");
+            for(int j=0; valor[j] != '\0'; j++){
+                printf("%c", valor[j]);
             }
+            printf("\n\n\n\n\n");
             valor_float = atof(valor);
             pila = push_float(valor_float, pila);
             for(int j=0; j<40; j++){
@@ -558,9 +540,15 @@ float ObtenerResultado(char postfija[n], int *error){
                 resultado = operacion(operando1, operando2, postfija[i], &*error);
                 pila = push_float(resultado, pila);
             }else{
-                pila = pop_float(&operando2, pila);
-                resultado = operacion_trig(operando2, postfija[i], &*error);
-                pila = push_float(resultado, pila);
+                if(postfija[i] == 224 || postfija[i] == 225 || postfija[i] == 226 || postfija[i] == 227 || postfija[i] == 228
+                   || postfija[i] == 229 || postfija[i] == 230 || postfija[i] == 231 || postfija[i] == 232 || postfija[i] == 233
+                   || postfija[i] == 234 || postfija[i] == 235 || postfija[i] == 236 || postfija[i] == '!' || postfija[i] == '%'){
+                    pila = pop_float(&operando2, pila);
+                    resultado = operacion_trig(operando2, postfija[i], &*error);
+                    pila = push_float(resultado, pila);
+                }else{
+                    continue;
+                }
             }
         }
         if(postfija[i+1] == 10){
@@ -601,50 +589,6 @@ nodo_float *pop_float(float *valor, nodo_float *pila){
     }
     return pila;
 }
-void funciones_trigo(char entrada [1000]){
-        int I = 0;
-        char operador, trig[10];
-        for(int i = 0; entrada[i] != '\0'; i++){
-            if(entrada[i] > 96 && entrada [i] < 123){
-                for(int j = i; entrada[j] != '('; j++){
-                    trig[I] = entrada[j];
-                    I++;
-                }
-                if (strcmp(trig, "sin") == 1) operador = 224;
-                else if (strcmp(trig, "cos") == 1) operador = 225;
-                else if (strcmp(trig, "tan") == 1) operador = 226;
-                else if (strcmp(trig, "cot") == 1) operador = 227;
-                else if (strcmp(trig, "sec") == 1) operador = 228;
-                else if (strcmp(trig, "csc") == 1) operador = 229;
-                else if (strcmp(trig, "arcsin") == 1) operador = 230;
-                else if (strcmp(trig, "arccos") == 1) operador = 231;
-                else if (strcmp(trig, "arctan") == 1) operador = 232;
-                else if (strcmp(trig, "arccot") == 1) operador = 233;
-                else if (strcmp(trig, "arcsec") == 1) operador = 234;
-                else if (strcmp(trig, "arccsc") == 1) operador = 235;
-                else if (strcmp(trig, "sqrt") == 1) operador = 236;
-
-                entrada[i] = operador;
-                for(int j = (I+i); entrada[j] != '\0'; j++){
-                   entrada[j-(I-1)] = entrada[j];
-                }
-                I = 0;
-        }
-        if(entrada[i+1] == 10){
-            entrada[i+2] = '\0';
-            entrada[i+3] = '\0';
-            entrada[i+4] = '\0';
-            entrada[i+5] = '\0';
-            entrada[i+6] = '\0';
-        }
-    }
-
-    //printf("\nLa cadena resultado es:\n");
-    for(int j=0; entrada[j] != '\0'; j++){
-        printf("%c", entrada[j]);
-    }
-}
-
 float operacion(float operando1, float operando2, char operador, int *error){
     switch(operador){
         case '+': return operando1 + operando2; break;
