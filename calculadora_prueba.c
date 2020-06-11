@@ -23,6 +23,7 @@ int validacion_caracter(char entrada[n]);
 void decimal(char entrada[n]);
 int parentesis_operador(char entrada[n]);
 ///Funciones secundarias pertenecientes a la función 'ConvertirInfijaAPostfija'
+int Encontrar_cadena (char cad1[],char cad2[]);
 struct PILAA {
 	int t;
 	char a[n];
@@ -183,28 +184,11 @@ int es_digito(char car){
     return resultado;
 }
 int es_operador(char car){
-    if(car == '+' ||
-       car == '-' ||
-       car == '*' ||
-       car == '/' ||
-       car == '^' ||
-       car == 236 ||
-       car == '!' ||
-       car == '%' ||
-       car == 225 ||
-       car == 226 ||
-       car == 227 ||
-       car == 228 ||
-       car == 229 ||
-       car == 230 ||
-       car == 231 ||
-       car == 232 ||
-       car == 233 ||
-       car == 234 ||
-       car == 235){
-        return 1;
+    int resultado = 0;
+    switch(car){
+        case'+': case'-': case'*': case'/': case '^': case'(': case ')': resultado = 1; break;
     }
-    return 0;
+    return resultado;
 }
 int longitud_cadena_errores(char entrada[n]){
     /*int i = 0;
@@ -326,6 +310,30 @@ int parentesis_operador(char entrada[n]){
     }*/
     return resultado;
 }
+
+int Encontrar_cadena (char cad1[],char cad2[]){
+	int resultado=0,i=0;
+	///Si no se encuentra cadena, devuelve 0.
+	while(i<strlen(cad1)){
+		for(int j=0;j<strlen(cad2);j++){
+			if(cad1[i]=='\0')break;
+			if(cad1[i]==cad2[j]){
+				i++;
+				resultado=1;
+			}
+			else{
+				if(i>0){
+					resultado=0;
+					break;}
+			}
+		}
+		if(cad1[i]=='\0'){
+			break;}
+		break;
+	}
+	return resultado;
+}
+
 void funciones_tri(char entrada [n]){
         int I = 0;
         char operador, trig[10];
@@ -335,20 +343,21 @@ void funciones_tri(char entrada [n]){
                     trig[I] = entrada[j];
                     I++;
                 }
-                if (strcmp(trig, "sin") == 1) operador = 224;
-                else if (strcmp(trig, "cos") == 1) operador = 225;
-                else if (strcmp(trig, "tan") == 1) operador = 226;
-                else if (strcmp(trig, "cot") == 1) operador = 227;
-                else if (strcmp(trig, "sec") == 1) operador = 228;
-                else if (strcmp(trig, "csc") == 1) operador = 229;
-                else if (strcmp(trig, "arcsin") == 1) operador = 230;
-                else if (strcmp(trig, "arccos") == 1) operador = 231;
-                else if (strcmp(trig, "arctan") == 1) operador = 232;
-                else if (strcmp(trig, "arccot") == 1) operador = 233;
-                else if (strcmp(trig, "arcsec") == 1) operador = 234;
-                else if (strcmp(trig, "arccsc") == 1) operador = 235;
-                else if (strcmp(trig, "sqrt") == 1) operador = 236;
+                if (strcmp("sqrt",trig) == 1) operador = 'a';
+                else if (strcmp("arccsc",trig) == 1) operador = 'b';
+                else if (strcmp("arcsec",trig ) == 1) operador = 'c';
+                else if (strcmp("arccot",trig) == 1) operador = 'd';
+                else if (strcmp("arctan",trig ) == 1) operador = 'e';
+                else if (strcmp("arccos",trig ) == 1) operador = 'f';
+                else if (strcmp("arcsin",trig) == 1) operador = 'g';
+                else if (strcmp("csc",trig) == 1) operador = 'h';
+                else if (strcmp("sec",trig) == 1) operador = 'i';
+                else if (strcmp("cot",trig) == 1) operador = 'j';
+                else if (strcmp("tan",trig) == 1) operador = 'k';
+                else if (strcmp("cos",trig) == 1) operador = 'l';
+                else if (strcmp("sin",trig ) == 1) operador = 'm';
                 entrada[i] = operador;
+                printf("Se supone que %c y %c son iguales",entrada[i],operador);
                 for(int j = (I+i); entrada[j] != '\0'; j++){
                     entrada[j-(I-1)] = entrada[j];
                 }
@@ -387,7 +396,7 @@ void pos(char entrada[n], char postfija[n]){
 	int i, j;
 	char elemento;
 	int operando (char c);
-	int prioridad (char op1);
+	int prioridad (char op1,char op2);
 	char tope (struct PILAA p);
 	void init_pila (struct PILAA *p);
 	int pila_vacia (struct PILAA *p);
@@ -396,15 +405,12 @@ void pos(char entrada[n], char postfija[n]){
 	i = 0;
 	j = -1;
 	init_pila (&pila);
-	while(entrada[i] != '\0'){
-	   if(operando(entrada[i]) == 1){
-	       postfija [++j] = entrada[i++];
-	       /*if(operando(postfija[j]) == 1){
-                postfija[++j] = ',';
-            }*/
-	   }
+	while(entrada[i] != '\0') {
+	   if(operando(entrada[i]))
+		   postfija [++j] = entrada[i++];
 	   else{
-		     while (!pila_vacia (&pila) && prioridad(tope(pila)) >= prioridad(entrada[i])){
+		     while (!pila_vacia (&pila)  &&
+			 prioridad (tope (pila), entrada[i] ) )  {
 			     retira_pila (&pila, &elemento);
 			     postfija[++j] = elemento;
 		      }
@@ -424,86 +430,82 @@ void pos(char entrada[n], char postfija[n]){
 	postfija[++j] = '\0';
 }
 int operando (char c){
-    if  (c != '+' &&
+	return ( c != '+' &&
          c != '-' &&
          c != '*' &&
 		 c != '/' &&
 		 c != '^' &&
 		 c != ')' &&
 		 c != '(' &&
-         c != 224 &&
-         c != 225 &&
-         c != 226 &&
-         c != 227 &&
-         c != 228 &&
-         c != 229 &&
-         c != 230 &&
-         c != 231 &&
-         c != 232 &&
-         c != 233 &&
-         c != 234 &&
-         c != 235 &&
-         c != 236 &&
-         c != '!' &&
-         c != '%' &&
-         c != ',') {
-        return 1;
-    }
-    return 0;
+         c != 'a' &&
+         c != 'b' &&
+         c != 'c' &&
+         c != 'd' &&
+         c != 'e' &&
+         c != 'f' &&
+         c != 'g' &&
+         c != 'h' &&
+         c != 'i' &&
+         c != 'j' &&
+         c != 'k' &&
+         c != 'l' &&
+         c != 'm'
+    );
 }
-/*int priori[6][7] ={
+int priori[6][7] ={
 	{ 1,1,0,0,0,0,1 },
 	{ 1,1,0,0,0,0,1 },
 	{ 1,1,1,1,0,0,1 },
 	{ 1,1,1,1,0,0,1 },
 	{ 1,1,1,1,1,0,1 },
 	{ 0,0,0,0,0,0,0 }
-};*/
-int prioridad (char op1)
+};
+int prioridad (char op1,char op2)
 {
-	//int i,j,prioridaad;
-	int i;
-	if(op1==225 || op1==226 || op1==227 || op1==228 || op1==229 || op1==230 || op1==231 || op1==232 || op1==233 || op1==234 || op1==235); return i=4;
-	if (op1=='^' || op1==236 || op1=='!' || op1=='%') return i=3;
-	if (op1=='*' || op1=='/') return i=2;
-	if (op1=='+' || op1=='-') return i=1;
-	if (op1==')') return i=0;
-	/*else if () i=4;
-	else if () i=5;
-	else if (op1==225) i=6;
-	else if () i=7;
-	else if () i=8;
-	else if () i=9;
-	else if () i=10;
-	else if () i=6;
-	else if () i=7;
-	else if () i=8;
-	else if () i=9;
-	else if () i=10;
-	else if () i=11;
-	else if () i=13;*/
+	int i,j,prioridaad;
 
-    /*if (op2=='+') j=0;
+	if (op1=='+') i=0;
+	else if (op1=='-') i=1;
+	else if (op1=='*') i=2;
+	else if (op1=='/') i=3;
+	else if (op1=='^') i=4;
+	else if (op1=='a') i=5;
+	else if (op1=='b') i=6;
+	else if (op1=='c') i=7;
+	else if (op1=='d') i=8;
+	else if (op1=='e') i=9;
+	else if (op1=='f') i=10;
+	else if (op1=='g') i=6;
+	else if (op1=='h') i=7;
+	else if (op1=='i') i=8;
+	else if (op1=='j') i=9;
+	else if (op1=='k') i=10;
+	else if (op1=='l') i=11;
+	else if (op1=='m') i=12;
+	else if (op1==')') i=13;
+
+    if (op2=='+') j=0;
 	else if (op2=='-') j=1;
 	else if (op2=='*') j=2;
 	else if (op2=='/') j=3;
 	else if (op2=='^') j=4;
-	else if (op2==224) j=5;
-	else if (op2==225) j=6;
-	else if (op2==226) j=7;
-	else if (op2==227) j=8;
-	else if (op2==228) j=9;
-	else if (op2==229) j=10;
-	else if (op2==230) j=6;
-	else if (op2==231) j=7;
-	else if (op2==232) j=8;
-	else if (op2==233) j=9;
-	else if (op2==234) j=10;
-	else if (op2==235) j=11;
-	else if (op2==236) j=12;
+	else if (op2=='a') j=5;
+	else if (op2=='b') j=6;
+	else if (op2=='c') j=7;
+	else if (op2=='d') j=8;
+	else if (op2=='e') j=9;
+	else if (op2=='f') j=10;
+	else if (op2=='g') j=6;
+	else if (op2=='h') j=7;
+	else if (op2=='i') j=8;
+	else if (op2=='j') j=9;
+	else if (op2=='k') j=10;
+	else if (op2=='l') j=11;
+	else if (op2=='m') j=12;
 	else if (op2==')') j=13;
 
-	prioridaad=priori[i][j];*/
+	prioridaad=priori[i][j];
+	return (prioridaad);
 }
 char tope(struct PILAA p){
 	return (p.a[p.t-1]);
@@ -526,7 +528,7 @@ void ins_pila(struct PILAA *p, char s){
 void retira_pila(struct PILAA *p, char *s){
     if(pila_vacia(p)){
         printf ("Pila vacia");
-		//*s = '';
+		//*s = '.';
 	}else{
 	    *s = p->a [p->t - 1];
         p->t--;
@@ -565,11 +567,11 @@ float ObtenerResultado(char postfija[n], int *error){
                 resultado = operacion(operando1, operando2, postfija[i], &*error);
                 pila = push_float(resultado, pila);
             }else{
-                if(postfija[i] == 224 || postfija[i] == 225 || postfija[i] == 226 || postfija[i] == 227 || postfija[i] == 228
-                   || postfija[i] == 229 || postfija[i] == 230 || postfija[i] == 231 || postfija[i] == 232 || postfija[i] == 233
-                   || postfija[i] == 234 || postfija[i] == 235 || postfija[i] == 236 || postfija[i] == '!' || postfija[i] == '%'){
-                    pila = pop_float(&operando2, pila);
-                    resultado = operacion_trig(operando2, postfija[i], &*error);
+                if(postfija[i] == 'a' || postfija[i] == 'b' || postfija[i] == 'c' || postfija[i] == 'd' || postfija[i] == 'e'
+                   || postfija[i] == 'f' || postfija[i] == 'g' || postfija[i] == 'h' || postfija[i] == 'i' || postfija[i] == 'j'
+                   || postfija[i] == 'k' || postfija[i] == 'l' || postfija[i] == 'm' || postfija[i] == '!' || postfija[i] == '%'){
+                    pila = pop_float(&operando1, pila);
+                    resultado = operacion_trig(operando1, postfija[i], &*error);
                     pila = push_float(resultado, pila);
                 }else{
                     continue;
@@ -629,19 +631,21 @@ float operacion(float operando1, float operando2, char operador, int *error){
     }
 }
 float operacion_trig(float operando1, char operador, int *error){
-        if (operador == 224) return sin(operando1);
-        else if (operador == 225) return cos(operando1);
-        else if (operador == 226) return tan(operando1);
-        else if (operador == 227) return 1/tan(operando1);
-        else if (operador == 228) return 1/cos(operando1);
-        else if (operador == 229) return 1/sin(operando1);
-        else if (operador == 230) return asin(operando1);
-        else if (operador == 231) return acos(operando1);
-        else if (operador == 232) return atan(operando1);
-        else if (operador == 233) return 1/atan(operando1);
-        else if (operador == 234) return 1/acos(operando1);
-        else if (operador == 235) return 1/asin(operando1);
-        else if (operador == 236) return sqrt(operando1);
+    puts("Estamos en los trigonometricos");
+    printf("%f\n\n",1/(asin(operando1)));
+        if (operador == 'a') return sqrt(operando1);
+        else if (operador == 'b') return 1/(asin(operando1));
+        else if (operador == 'c') return 1/acos(operando1);
+        else if (operador == 'd') return 1/atan(operando1);
+        else if (operador == 'e') return atan(operando1);
+        else if (operador == 'f') return acos(operando1);
+        else if (operador == 'g') return asin(operando1);
+        else if (operador == 'h') return 1/sin(operando1);
+        else if (operador == 'i') return 1/cos(operando1);
+        else if (operador == 'j') return 1/tan(operando1);
+        else if (operador == 'k') return tan(operando1);
+        else if (operador == 'l') return cos(operando1);
+        else if (operador == 'm') return sin(operando1);
         else if (operador == '!') return factorial(operando1);
         else if (operador == '%') return operando1/100;
 }
