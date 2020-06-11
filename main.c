@@ -240,7 +240,7 @@ int validacion_caracter(char a[],HWND hwnd){
 					MessageBox(hwnd,"Error con el primer carácter después del paréntesis","Error sintáctico",MB_ICONWARNING | MB_OK);
 				}
 				else{
-					if(es_operador(a[i-1])==1 && a[i]==')' && a[i-1]!='!' && a[i-1]!='%'){
+					if(es_operador(a[i-1])==1 && a[i]==')' && a[i-1]!='!' && a[i-1]!='%' && a[i-1]!=')'){
 						error=1; /*Aquí se verifica que no haya un operador antes de un paréntesis cerrado*/
 						MessageBox(hwnd,"Error con el carácter antes del paréntesis cerrado","Error sintáctico",MB_ICONWARNING | MB_OK);
 						break;
