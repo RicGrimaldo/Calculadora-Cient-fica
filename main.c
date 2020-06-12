@@ -25,7 +25,7 @@ int limite_cadena(char cad[],HWND hwnd)
      int error = 0;
      if(strlen(cad) >= 31)
      {
-        MessageBox(hwnd,"Se excedió el límite de carácteres permitido","Error",MB_ICONWARNING | MB_OK);
+        MessageBox(hwnd,"Se excedió el límite de carácteres permitido","Error de límite de carácteres",MB_ICONWARNING | MB_OK);
         return error = 1;
      }
     else
@@ -38,9 +38,12 @@ void conversion_hex(char texto[]){
     int res;
     float resultado;
     resultado = atof(texto);
+    if(resultado<=999999999){
     res=trunc(resultado);
     ltoa(res, hextxt,16);
     SetWindowText(hexl,hextxt);
+    }
+    else SetWindowText(octl,"Límite rebasado");
 }
 
 void conversion_oct (char texto[])
@@ -54,9 +57,7 @@ void conversion_oct (char texto[])
     ltoa(res, octtxt, 8);
     SetWindowText(octl,octtxt);
     }
-    else{
-        SetWindowText(octl,"Límite rebasado");
-    }
+    else SetWindowText(octl,"Límite rebasado");
 }
 
 void conversion_bin (char texto[])
@@ -66,8 +67,11 @@ void conversion_bin (char texto[])
     float resultado;
     resultado = atof(texto);
     res = trunc(resultado);
+    if(resultado<=16300){
     ltoa(res,bintxt,2);
     SetWindowText(binl,bintxt);
+    }
+    else SetWindowText(binl,"Límite rebasado");
 }
 
  void conversion_grados(char res[]){
@@ -75,6 +79,7 @@ void conversion_bin (char texto[])
     int grados,minutos,segundos;
 	char m[30],s[30];
 	resultado = atof(res);
+	if(resultado<=9999999){
     grados=trunc(resultado);
     dec=resultado-grados;
     ope1=dec*60;
@@ -86,6 +91,8 @@ void conversion_bin (char texto[])
 	itoa(segundos,s,10);
 	strcat(res,"° "); strcat(res,m); strcat(res," ' "); strcat(res,s); strcat(res,"''");
 	SetWindowText(gradosl,res);
+	}
+	else SetWindowText(gradosl,"Límite rebasado");
 }
 
 ///Funciones de validación
@@ -661,8 +668,8 @@ int WINAPI WinMain(HINSTANCE ins,HINSTANCE ins2,LPSTR cmd, int estado){
 ///Creación de etiquetas
 
     tipos_conversion = CreateWindow("STATIC","Tipos de conversion",WS_CHILD | WS_VISIBLE | SS_LEFT ,6,62,140,30,ventana,NULL,ins,NULL);
-    lbin = CreateWindow("STATIC","Bin:",WS_CHILD | WS_VISIBLE | SS_NOTIFY | SS_LEFT,6,116,34.25,29.75,ventana,NULL,ins,NULL);
-    binl = CreateWindow("STATIC","",WS_CHILD | WS_VISIBLE | SS_NOTIFY | SS_RIGHT,40.25,116,105,29.75,ventana,NULL,ins,NULL);
+    lbin = CreateWindow("STATIC","Bin:",WS_CHILD | WS_VISIBLE | SS_NOTIFY | SS_LEFT,6,116,30.1,29.75,ventana,NULL,ins,NULL);
+    binl = CreateWindow("STATIC","",WS_CHILD | WS_VISIBLE | SS_NOTIFY | SS_RIGHT,36.1,116,113.5,29.75,ventana,NULL,ins,NULL);
     loct = CreateWindow("STATIC","Oct:",WS_CHILD | WS_VISIBLE | SS_NOTIFY | SS_LEFT,6,166,34.25,29.75,ventana,NULL,ins,NULL);
     octl = CreateWindow("STATIC","",WS_CHILD | WS_VISIBLE | SS_NOTIFY | SS_RIGHT,40.25,166,105,29.75,ventana,NULL,ins,NULL);
     lhex = CreateWindow("STATIC","Hex:",WS_CHILD | WS_VISIBLE | SS_NOTIFY | SS_LEFT,6,216,34.25,29.75,ventana,NULL,ins,NULL);
