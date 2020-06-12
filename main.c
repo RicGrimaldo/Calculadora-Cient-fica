@@ -20,15 +20,16 @@ char enteroACaracter(int numero){
     return numero + '0';
 }
 
-int limite_cadena(char cad[])
+int limite_cadena(char cad[],HWND hwnd)
  {
      int error = 0;
      if(strlen(cad) >= 31)
-        error = 1;
+     {
+        MessageBox(hwnd,"Se excedió el límite de carácteres permitido","Error",MB_ICONWARNING | MB_OK);
+        return error = 1;
+     }
     else
-        error = 0;
-
-    return error;
+        return error = 0;
  }
 ///Funciones de conversiones
 
@@ -54,7 +55,7 @@ void conversion_oct (char texto[])
     SetWindowText(octl,octtxt);
     }
     else{
-        SetWindowText(octl,"Límite rebasado.");
+        SetWindowText(octl,"Límite rebasado");
     }
 }
 
@@ -364,12 +365,9 @@ int error_sintatico(char a[],HWND hwnd){
 
 int encontrar_error(char a[],HWND hwnd){
 	int error=0;
-	if(error_lexico(a,hwnd)==1){
-		error=1;
-	}
-	else{
-		if(error_sintatico(a,hwnd)==1)error=1;
-	}
+	if(limite_cadena(a,hwnd)==1) return error = 1;
+	if(error_lexico(a,hwnd)==1) return error = 1;
+	if(error_sintatico(a,hwnd)==1)return error = 1;
 	return error;
 }
 
@@ -605,10 +603,9 @@ LRESULT CALLBACK winProc(HWND hwnd,UINT msj,WPARAM wParam,LPARAM lParam){
         if((HWND)lParam == bresultado){
                 int i;
                 GetWindowText(caja_texto,texto,33);
-                if(limite_cadena(texto) == 1)
-                        MessageBox(hwnd,"Se excedió el límite de carácteres permitido","Error",MB_ICONWARNING | MB_OK);
+                if(encontrar_error(texto,hwnd) == 1)
+                        SetWindowText(caja_texto,texto);
                 else{///Después de verificar el límite de carácteres permitido...
-                    i=encontrar_error(texto,hwnd);
                     conversion_hex(texto);
                     conversion_oct(texto);
                     conversion_bin(texto);
