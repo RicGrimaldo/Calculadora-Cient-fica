@@ -86,7 +86,7 @@ void conversion_bin (char texto[])
 int esDigito (char car){
     int resultado=0;
     if(car>47 && car<58){
-            resultado=1;
+            return resultado=1;
     }
     return resultado;
 }
@@ -199,7 +199,8 @@ int parentesis_vacio(char a[], HWND hwnd){
     int error=0;
     for(int i=0;i<strlen(a);i++){
         if(a[i]=='('&& a[i+1]==')' && a[i+1]!='\0'){/*Al encontrar un par de paréntesis vacíos, se sale del bucle*/
-                MessageBox(hwnd,"Error al haber dejado un par de paréntesis vacíos","Error sintáctico",MB_ICONWARNING | MB_OK);
+                MessageBox(hwnd,"Error al haber dejado un par de paréntesis vacíos","Error sintáctico",
+                           MB_ICONWARNING | MB_OK);
                 return error=1;
         }
     }
@@ -230,19 +231,23 @@ int validacion_caracter(char a[],HWND hwnd){
 	if(error==0){
 		for(int i=1;i<strlen(a),a[i+1]!='\0';i++){
 			if(a[i-1]=='(' && es_operador(a[i])==1 && a[i]!='(' && a[i]!='-' && esDigito(a[i])==0){
-				error=1; /*Validará que el primer carácter no sea ningún operador a excepción del '(', y cualquier primer letra de las funciones*/
-                MessageBox(hwnd,"Error con el primer carácter después del paréntesis","Error sintáctico",MB_ICONWARNING | MB_OK);
+				/*Validará que el primer carácter no sea ningún operador a excepción del '(', y cualquier primer letra de las funciones*/
+                MessageBox(hwnd,"Error con el primer carácter después del paréntesis","Error sintáctico",
+                           MB_ICONWARNING | MB_OK);
+                           return error = 1;
 			}
-			else{///Caso especial si es una letra
+			else{///Caso especial si es una letra errónea con la que se empieza una función
 				if(a[i-1]=='(' && letras_permitidas(a[i])==1 && Primer_letra_funcion(a[i])==0){
-					error = 1;
-					MessageBox(hwnd,"Error con el primer carácter después del paréntesis","Error sintáctico",MB_ICONWARNING | MB_OK);
+					MessageBox(hwnd,"Error con el primer carácter después del paréntesis","Error sintáctico",
+                               MB_ICONWARNING | MB_OK);
+                    return error = 1;
 				}
 				else{
 					if(es_operador(a[i-1])==1 && a[i]==')' && a[i-1]!='!' && a[i-1]!='%' && a[i-1]!=')'){
-						error=1; /*Aquí se verifica que no haya un operador antes de un paréntesis cerrado*/
-						MessageBox(hwnd,"Error con el carácter antes del paréntesis cerrado","Error sintáctico",MB_ICONWARNING | MB_OK);
-						break;
+                    /*Aquí se verifica que no haya un operador antes de un paréntesis cerrado*/
+						MessageBox(hwnd,"Error con el carácter antes del paréntesis cerrado","Error sintáctico",
+                                   MB_ICONWARNING | MB_OK);
+						return error = 1;
 					}
 				}
 			}
