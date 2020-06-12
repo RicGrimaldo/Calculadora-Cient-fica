@@ -172,6 +172,7 @@ int Encontrar_cadena (char cad1[],char cad2[]){
 			break;}
 		break;
 	}
+	if(i==1) return resultado=0;
 	return resultado;
 }
 
