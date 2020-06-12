@@ -313,7 +313,7 @@ procediendo a leer el siguiente carácter de la candena*/
 }
 
 int error_sintatico(char a[],HWND hwnd){
-    int resultado=0;
+    int error=0;
     if(parentesis_paridad(a,hwnd)!=1){ /*Primero, se validará si hay la misma cantidad de pares de paréntesis*/
     for(int i=0;i<strlen(a);i++){
 
@@ -321,37 +321,34 @@ int error_sintatico(char a[],HWND hwnd){
                 continue; /*Ignorará los operadores válidos, en este caso los paréntesis*/
         }
         if(es_operador(a[i])==1 && a[i]!='-' && es_operador(a[i+1])==1 && a[i+1]!='('&& a[i+1]!='!' && a[i+1]!='%'){
-            resultado=1; /*Sirve para validar que un operador no sea puesto 2 veces seguidas, pero ignorando los parentesis,
+            /*Sirve para validar que un operador no sea puesto 2 veces seguidas, pero ignorando los parentesis,
 			factorial, porcentaje o que primero esté un signo negativo*/
 			MessageBox(hwnd,"No es posible calcular con 2 operadores seguidos","Error sintáctico",MB_ICONWARNING | MB_OK);
-            break;
+			return error = 1;
         }
         else{
-            resultado=0;
-            /*El resultado será 0 en caso de que el carácter leído no haya presentado error*/
+                if(i>=2 && a[i]=='-' && a[i-1]=='(' && a[i-2]==')'||a[i-2]=='*'){
+                    MessageBox(hwnd,"Error con la ubicación del '-'","Error sintáctico",MB_ICONWARNING | MB_OK);
+                    return error = 1;
+                }
+                else
+            error = 0;
+            /*El error será 0 en caso de que el carácter leído no haya presentado error*/
         }
     }
     }
     else{
-        resultado=1;
+        return error = 1;
         /*Habrá error sintático en caso de que la cantidad de pares de paréntesis sea diferente*/
     }
-    if(resultado==0){
-            if(parentesis_vacio(a,hwnd)==1) resultado=1;
+    if (parentesis_vacio(a,hwnd)==1) return error=1;
             /*Habrá error sintático en caso de haber paréntesis vacíos*/
-            if(resultado != 1){
-                if(validacion_caracter(a,hwnd)==1) resultado=1;
+    if(validacion_caracter(a,hwnd)==1) return error=1;
     /*Habrá error sintático en caso de haber un operador al inicio o al final de la sentencia*/
-            }
-            if(resultado!=1){
-                if(verificacion_funciones(hwnd,a)==1 && resultado==0) resultado=1;
-            }
-            /*if(resultado!=1){
-                if(parentesis_especial(a,hwnd)==1) resultado=1;
-            }*/
-            else resultado = 0;
-    }
-    return resultado;
+    if(verificacion_funciones(hwnd,a)==1) return error=1;
+        else error = 0;
+
+    return error;
 }
 
 int encontrar_error(char a[],HWND hwnd){
