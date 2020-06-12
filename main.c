@@ -48,9 +48,14 @@ void conversion_oct (char texto[])
     int res;
     float resultado;
     resultado = atof(texto);
+    if(resultado<=99999990){
     res=trunc(resultado);
     ltoa(res, octtxt, 8);
     SetWindowText(octl,octtxt);
+    }
+    else{
+        SetWindowText(octl,"");
+    }
 }
 
 void conversion_bin (char texto[])
