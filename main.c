@@ -54,7 +54,7 @@ void conversion_oct (char texto[])
     SetWindowText(octl,octtxt);
     }
     else{
-        SetWindowText(octl,"");
+        SetWindowText(octl,"Límite rebasado");
     }
 }
 
