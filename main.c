@@ -136,15 +136,17 @@ int decimal(char a[],HWND hwnd){
     int error = 0,x;
     x = encontrarCaracter(a,'.');
     for(int i=x+1;i<strlen(a);i++){
+            if(esDigito(a[i])==1) continue;
         if(es_operador(a[i]) == 1 && a[i]!= '.'){
             break;
         }
         else{
             if(a[i] == '.')
                 MessageBox(hwnd,"El número decimal únicamente debe llevar un solo punto.","Error léxico",MB_ICONWARNING | MB_OK);
-                error = 1;
+                return error = 1;
         }
     }
+
     return error;
 }
 
@@ -176,19 +178,15 @@ int Encontrar_cadena (char cad1[],char cad2[]){
 int parentesis_paridad(char a[],HWND hwnd){
     int b=0,c=0,error=0,m; /*Contadores para contar cantidad de paréntesis en la cadena*/
     m=strlen(a);
-    for(int i=0;i<m,a[i+1]!='\0';i++){
-        switch(a[i]){
-        case '(': b++;
-        break;
-        case ')': c++;
-        break;
+    for(int i=0;i<m;i++){
+        if(a[i]=='(') b++;
+        if(a[i]==')') c++;
         }
         if(c>b){
             error = 1;
             MessageBox(hwnd,"Error de paréntesis","Error sintáctico",MB_ICONWARNING | MB_OK);
             return error;
         }
-    }
     if(c!=b){
             error=1;
             MessageBox(hwnd,"Error debido a falta de un parentesis","Error sintáctico",MB_ICONWARNING | MB_OK);
@@ -295,12 +293,19 @@ procediendo a leer el siguiente carácter de la candena*/
         /*En caso de que el carácter leído no sea dígito u operador, se detectará el error léxico*/
                 error=1;
                 if(a[i]=='.'){ /*Si el carácter inválido es un punto decimal, hará una impresión diferente*/
+                    if(esDigito(a[i-1])==1 && esDigito(a[i+1])==1){
                         error = decimal(a,hwnd);
                         break;
+                    }
+                else{
+                    MessageBox(hwnd,"Error en ubicación del punto decimal.","Error léxico",MB_ICONWARNING | MB_OK);
+                    return error = 1;
+                }
                 }
                 else{
                 MessageBox(hwnd,"No se permiten caracteres inválidos","Error léxico",MB_ICONWARNING | MB_OK);
-            break; /*Saliéndose del bucle*/
+                return error = 1;
+            /*Saliéndose del bucle*/
                 }
         }
     } /*Devolverá 1 en caso de que se haya encontrado un error léxico, 0 en caso contrario*/
