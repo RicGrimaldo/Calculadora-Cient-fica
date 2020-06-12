@@ -100,8 +100,6 @@ void Procedimiento(char entrada[n], char postfija[n]){
         resultado = ObtenerResultado(postfija, &error);
         if(error == 0){
             printf("El resultado es: %.4f", resultado);
-        }else{
-            printf("ERROR: Divisi%cn entre cero", o_tilde);
         }
     }
 }
@@ -312,28 +310,15 @@ int parentesis_operador(char entrada[n]){
 }
 
 int Encontrar_cadena (char cad1[],char cad2[]){
-	int resultado=0,i=0;
-	///Si no se encuentra cadena, devuelve 0.
-	while(i<strlen(cad1)){
-		for(int j=0;j<strlen(cad2);j++){
-			if(cad1[i]=='\0')break;
-			if(cad1[i]==cad2[j]){
-				i++;
-				resultado=1;
-			}
-			else{
-				if(i>0){
-					resultado=0;
-					break;}
-			}
-		}
-		if(cad1[i]=='\0'){
-			break;}
-		break;
-	}
+	int resultado = 1;
+	for(int i=0; cad1[i] != '\0'; i++){
+        if(cad1[i] != cad2[i]){
+            resultado = 0;
+            break;
+        }
+    }
 	return resultado;
 }
-
 void funciones_tri(char entrada [n]){
     int I = 0;
     char operador, trig[10];
@@ -398,7 +383,7 @@ void pos(char entrada[n], char postfija[n]){
 	void init_pila (struct PILAA *p);
 	int pila_vacia (struct PILAA *p);
 	void ins_pila (struct PILAA *p,char s);
-	void retira_pila (struct PILAA *p,char *s);
+	void retira_pila (struct PILAA *p, char *s);
 	i = 0;
 	j = -1;
 	init_pila (&pila);
