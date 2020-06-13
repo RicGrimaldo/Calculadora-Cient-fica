@@ -379,7 +379,7 @@ int error_sintatico(char a[],HWND hwnd){
     return error;
 }
 
-int encontrar_error(char a[],HWND hwnd){
+int Detectar_Errores(char a[],HWND hwnd){
 	int error=0;
 	if(limite_cadena(a,hwnd)==1) return error = 1;
 	if(error_lexico(a,hwnd)==1) return error = 1;
@@ -623,7 +623,7 @@ LRESULT CALLBACK winProc(HWND hwnd,UINT msj,WPARAM wParam,LPARAM lParam){
         if((HWND)lParam == bresultado){
                 int i;
                 GetWindowText(caja_texto,texto,33);
-                if(encontrar_error(texto,hwnd) == 1)
+                if(Detectar_Errores(texto,hwnd) == 1)
                         SetWindowText(caja_texto,texto);
                 else{///Después de verificar el límite de carácteres permitido...
                     conversion_hex(texto);
