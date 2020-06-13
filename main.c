@@ -533,6 +533,10 @@ LRESULT CALLBACK winProc(HWND hwnd,UINT msj,WPARAM wParam,LPARAM lParam){
         GetWindowText(caja_texto,texto,33);
         strcpy(texto,"");
         SetWindowText(caja_texto,texto);
+        SetWindowText(octl,texto);
+        SetWindowText(binl,texto);
+        SetWindowText(hexl,texto);
+        SetWindowText(gradosl,texto);
         }
 
     //Función especial
