@@ -1,8 +1,9 @@
-#include <stdio.h>
-#include <stdlib.h>
 #include <windows.h>
-#include <string.h>
-#include <math.h>
+#include<stdio.h>
+#include<string.h>
+#include<stdlib.h>
+#include<math.h>
+#include<ctype.h>
 #define n 40
 
 ///Esta es una prueba de pull request (Git)
@@ -23,25 +24,212 @@ void Ocultar_pantalla(void)
     console = FindWindowA("ConsoleWindowClass",NULL);
     ShowWindow(console,0);
 }
-
 struct PILAA {
 	int t;
 	char a[n];
 };
-
 struct struct_nodo_float{
     float valor;
     struct struct_nodo_float *siguiente;
 };
 typedef struct struct_nodo_float nodo_float;
 
-
 ///Funciones necesarias
+char enteroACaracter(int numero);
+int limite_cadena(char cad[],HWND hwnd);
+int Encontrar_cadena2 (char cad1[],char cad2[]);
+int factorial(float operando);
 
-char enteroACaracter(int numero){
-    return numero + '0';
+///Funciones de conversiones
+
+void conversion_hex(float resultado);
+void conversion_oct (float resultado);
+void conversion_bin (float resultado);
+ void conversion_grados(float resultado);
+
+///Funciones de validación
+int esDigito (char car);
+int es_operador(char car);
+int letras_permitidas (char car);
+int Primer_letra_funcion(char a);
+int encontrarCaracter(char cad[], char car);
+int decimal(char a[],HWND hwnd);
+
+///Funciones de 'errores' secundarias
+
+int Encontrar_cadena (char cad1[],char cad2[]);
+int parentesis_paridad(char a[],HWND hwnd);
+int parentesis_vacio(char a[], HWND hwnd);
+int validacion_caracter(char a[],HWND hwnd);
+int verificacion_funciones(HWND hwnd,char cad[]);
+
+///Funciones de 'errores' principales
+
+int error_lexico(char a[], HWND hwnd);
+int error_sintatico(char a[],HWND hwnd);
+int Detectar_Errores(char a[],HWND hwnd);
+
+///Funciones pertenecientes para calcular el resultado
+
+int potencia(int x, int y);
+void multi_parentesis(char entrada [n]);
+void funciones_tri(char entrada [n]);
+int operando (char c);
+int priori[21][22]={
+    {1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},  ///Suma
+    {1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},  ///Resta
+    {1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},  ///Multiplicacion
+    {1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},  ///Division
+    {1,1,1,1,1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0},  ///Exponente
+    {1,1,1,1,1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0},  ///SQRT
+    {1,1,1,1,1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0},  ///Factorial
+    {1,1,1,1,1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0},  ///Porcentaje
+    {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,1},  ///Sin
+    {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,1},  ///Cos
+    {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,1},  ///Tan
+    {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,1},  ///Cot
+    {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,1},  ///Sec
+    {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,1},  ///Csc
+    {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,1},  ///arcsin
+    {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,1},  ///arccos
+    {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,1},  ///arctan
+    {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,1},  ///arccot
+    {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,1},  ///arcsec
+    {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,1},  ///arccsc
+    {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},  ///Parentesis izquierdo
+};
+int prioridad (char op1, char op2);
+
+///Funciones para la pila
+char tope(struct PILAA p);
+void init_pila(struct PILAA *p);
+int pila_vacia (struct PILAA *p);
+void ins_pila(struct PILAA *p, char s);
+void retira_pila(struct PILAA *p, char *s);
+nodo_float *crear_pila_float(nodo_float *pila);
+nodo_float *push_float(float valor, nodo_float *pila);
+nodo_float *pop_float(float *valor, nodo_float *pila);
+
+///Funciones para el resultado
+void pos(char entrada[n], char postfija[n]);
+void ConversionInfijaAPostfija(char entrada[n], char postfija[n]);
+float operacion(float operando1, float operando2, char operador, int *error,HWND hwnd);
+float operacion_trig(float operando1, char operador, int *error,HWND hwnd);
+float ObtenerResultado(char postfija[n], int *error, HWND hwnd);
+
+///Función principal
+void Procedimiento(char entrada[n], char postfija[n], HWND hwnd);
+
+///Interfaz gráfica
+LRESULT CALLBACK winProc(HWND hwnd,UINT msj,WPARAM wParam,LPARAM lParam);
+
+char app[] = "Mi clase";
+int WINAPI WinMain(HINSTANCE ins,HINSTANCE ins2,LPSTR cmd, int estado){
+    //Ocultar_pantalla();
+    WNDCLASSEX vtn;
+    vtn.cbClsExtra=0;
+    vtn.cbSize=sizeof(WNDCLASSEX);
+    vtn.cbWndExtra = 0;
+    vtn.hbrBackground = (HBRUSH) (COLOR_HIGHLIGHT+1);
+    vtn.hCursor = LoadCursor(NULL,IDC_ARROW);
+    vtn.hIcon = NULL;
+    vtn.hIconSm = NULL;
+    vtn.hInstance = ins;
+    vtn.lpfnWndProc = winProc;
+    vtn.lpszClassName = app;
+    vtn.lpszMenuName = NULL;
+    vtn.style = CS_HREDRAW | CS_VREDRAW;
+
+    if(!RegisterClassEx(&vtn)){
+        MessageBox(HWND_DESKTOP,"Error al crear la clase","Error",MB_ICONERROR|MB_OK);
+    }
+
+///Ventana principal
+
+    ventana = CreateWindow(app,"Calculadora Científica basada en Win32 API",WS_OVERLAPPED | WS_CAPTION | WS_SYSMENU | WS_MINIMIZEBOX,CW_USEDEFAULT,CW_USEDEFAULT,640,380,HWND_DESKTOP,NULL,ins,NULL);
+
+///Caja de texto
+    caja_texto = CreateWindow("EDIT","",WS_CHILD | WS_VISIBLE  | ES_LOWERCASE | WS_BORDER | ES_RIGHT,6,12,610,34,ventana,NULL,ins,NULL);
+
+///Creación de etiquetas
+
+    tipos_conversion = CreateWindow("STATIC","Tipos de conversion",WS_CHILD | WS_VISIBLE | SS_LEFT ,6,62,140,30,ventana,NULL,ins,NULL);
+    lbin = CreateWindow("STATIC","Bin:",WS_CHILD | WS_VISIBLE | SS_NOTIFY | SS_LEFT,6,116,30.1,29.75,ventana,NULL,ins,NULL);
+    binl = CreateWindow("STATIC","",WS_CHILD | WS_VISIBLE | SS_NOTIFY | SS_RIGHT,36.1,116,113.5,29.75,ventana,NULL,ins,NULL);
+    loct = CreateWindow("STATIC","Oct:",WS_CHILD | WS_VISIBLE | SS_NOTIFY | SS_LEFT,6,166,34.25,29.75,ventana,NULL,ins,NULL);
+    octl = CreateWindow("STATIC","",WS_CHILD | WS_VISIBLE | SS_NOTIFY | SS_RIGHT,40.25,166,105,29.75,ventana,NULL,ins,NULL);
+    lhex = CreateWindow("STATIC","Hex:",WS_CHILD | WS_VISIBLE | SS_NOTIFY | SS_LEFT,6,216,34.25,29.75,ventana,NULL,ins,NULL);
+    hexl = CreateWindow("STATIC","",WS_CHILD | WS_VISIBLE | SS_NOTIFY | SS_RIGHT,40.25,216,105,29.75,ventana,NULL,ins,NULL);
+    lgrados = CreateWindow("STATIC","Grad:",WS_CHILD | WS_VISIBLE | SS_NOTIFY | SS_LEFT,6,266,34.25,29.75,ventana,NULL,ins,NULL);
+    gradosl = CreateWindow("STATIC","",WS_CHILD | WS_VISIBLE | SS_NOTIFY | SS_RIGHT,40.25,266,105,29.75,ventana,NULL,ins,NULL);
+    fun_trigl = CreateWindow("STATIC","Funciones trigonométricas",WS_CHILD | WS_VISIBLE | SS_LEFT | SS_CENTER ,166,62,228,30,ventana,NULL,ins,NULL);
+
+///Creación de botones
+
+    //Funciones trigonométricas
+
+    barcsec = CreateWindow("BUTTON","arcsec",WS_CHILD | WS_VISIBLE | SS_CENTER ,170,116,55,50,ventana,NULL,ins,NULL);
+    barccsc = CreateWindow("BUTTON","arccsc",WS_CHILD | WS_VISIBLE | SS_CENTER ,170,166,55,50,ventana,NULL,ins,NULL);
+    barccot = CreateWindow("BUTTON","arccot",WS_CHILD | WS_VISIBLE | SS_CENTER ,170,216,55,50,ventana,NULL,ins,NULL);
+    barcsin = CreateWindow("BUTTON","arcsin",WS_CHILD | WS_VISIBLE | SS_CENTER ,225,116,55,50,ventana,NULL,ins,NULL);
+    barccos = CreateWindow("BUTTON","arccos",WS_CHILD | WS_VISIBLE | SS_CENTER ,225,166,55,50,ventana,NULL,ins,NULL);
+    barctan = CreateWindow("BUTTON","arctan",WS_CHILD | WS_VISIBLE | SS_CENTER ,225,216,55,50,ventana,NULL,ins,NULL);
+    bsec = CreateWindow("BUTTON","sec",WS_CHILD | WS_VISIBLE | SS_CENTER ,280,116,55,50,ventana,NULL,ins,NULL);
+    bcsc = CreateWindow("BUTTON","csc",WS_CHILD | WS_VISIBLE | SS_CENTER ,280,166,55,50,ventana,NULL,ins,NULL);
+    bcot = CreateWindow("BUTTON","cot",WS_CHILD | WS_VISIBLE | SS_CENTER ,280,216,55,50,ventana,NULL,ins,NULL);
+    bsin = CreateWindow("BUTTON","sin",WS_CHILD | WS_VISIBLE | SS_CENTER ,335,116,55,50,ventana,NULL,ins,NULL);
+    bcos = CreateWindow("BUTTON","cos",WS_CHILD | WS_VISIBLE | SS_CENTER ,335,166,55,50,ventana,NULL,ins,NULL);
+    btan = CreateWindow("BUTTON","tan",WS_CHILD | WS_VISIBLE | SS_CENTER ,335,216,55,50,ventana,NULL,ins,NULL);
+
+
+    //Operaciones principales y básicas
+
+    bpot = CreateWindow("BUTTON","^",WS_CHILD | WS_VISIBLE | SS_CENTER ,405,65,45,45,ventana,NULL,ins,NULL);
+    braiz = CreateWindow("BUTTON","sqrt(x)",WS_CHILD | WS_VISIBLE | SS_CENTER ,405,110,45,45,ventana,NULL,ins,NULL);
+    bfact = CreateWindow("BUTTON","x!",WS_CHILD | WS_VISIBLE | SS_CENTER ,405,155,45,45,ventana,NULL,ins,NULL);
+    bporc = CreateWindow("BUTTON","%",WS_CHILD | WS_VISIBLE | SS_CENTER ,405,200,45,45,ventana,NULL,ins,NULL);
+    bpariz = CreateWindow("BUTTON","(",WS_CHILD | WS_VISIBLE | SS_CENTER ,405,245,45,45,ventana,NULL,ins,NULL);
+    bmul = CreateWindow("BUTTON","*",WS_CHILD | WS_VISIBLE | SS_CENTER ,450,65,45,45,ventana,NULL,ins,NULL);
+    b7 = CreateWindow("BUTTON","7",WS_CHILD | WS_VISIBLE | SS_CENTER ,450,110,45,45,ventana,NULL,ins,NULL);
+    b4 = CreateWindow("BUTTON","4",WS_CHILD | WS_VISIBLE | SS_CENTER ,450,155,45,45,ventana,NULL,ins,NULL);
+    b1 = CreateWindow("BUTTON","1",WS_CHILD | WS_VISIBLE | SS_CENTER ,450,200,45,45,ventana,NULL,ins,NULL);
+    bparder = CreateWindow("BUTTON",")",WS_CHILD | WS_VISIBLE | SS_CENTER ,450,245,45,45,ventana,NULL,ins,NULL);
+    bdiv = CreateWindow("BUTTON","/",WS_CHILD | WS_VISIBLE | SS_CENTER ,495,65,45,45,ventana,NULL,ins,NULL);
+    b8 = CreateWindow("BUTTON","8",WS_CHILD | WS_VISIBLE | SS_CENTER ,495,110,45,45,ventana,NULL,ins,NULL);
+    b5 = CreateWindow("BUTTON","5",WS_CHILD | WS_VISIBLE | SS_CENTER ,495,155,45,45,ventana,NULL,ins,NULL);
+    b2 = CreateWindow("BUTTON","2",WS_CHILD | WS_VISIBLE | SS_CENTER ,495,200,45,45,ventana,NULL,ins,NULL);
+    b0 = CreateWindow("BUTTON","0",WS_CHILD | WS_VISIBLE | SS_CENTER ,495,245,45,45,ventana,NULL,ins,NULL);
+    boff = CreateWindow("BUTTON","OFF",WS_CHILD | WS_VISIBLE | SS_CENTER ,540,65,45,45,ventana,NULL,ins,NULL);
+    b9 = CreateWindow("BUTTON","9",WS_CHILD | WS_VISIBLE | SS_CENTER ,540,110,45,45,ventana,NULL,ins,NULL);
+    b6 = CreateWindow("BUTTON","6",WS_CHILD | WS_VISIBLE | SS_CENTER ,540,155,45,45,ventana,NULL,ins,NULL);
+    b3 = CreateWindow("BUTTON","3",WS_CHILD | WS_VISIBLE | SS_CENTER ,540,200,45,45,ventana,NULL,ins,NULL);
+    bpunto = CreateWindow("BUTTON",".",WS_CHILD | WS_VISIBLE | SS_CENTER ,540,245,45,45,ventana,NULL,ins,NULL);
+    bac = CreateWindow("BUTTON","AC",WS_CHILD | WS_VISIBLE | SS_CENTER ,585,65,45,45,ventana,NULL,ins,NULL);
+    bsum = CreateWindow("BUTTON","+",WS_CHILD | WS_VISIBLE | SS_CENTER ,585,110,45,45,ventana,NULL,ins,NULL);
+    bresta = CreateWindow("BUTTON","-",WS_CHILD | WS_VISIBLE | SS_CENTER ,585,155,45,45,ventana,NULL,ins,NULL);
+    bresultado = CreateWindow("BUTTON","=",WS_CHILD | WS_VISIBLE | SS_CENTER ,585,200,45,90,ventana,NULL,ins,NULL);
+
+
+    if(!ventana){
+        MessageBox(HWND_DESKTOP,"Error al crear la ventana","Error",MB_ICONERROR|MB_OK);
+
+    }
+
+    ShowWindow(ventana,SW_SHOWNORMAL);
+    MSG msj;
+
+    while(GetMessage(&msj,NULL,0,0)){
+        DispatchMessage(&msj);
+        TranslateMessage(&msj);
+
+    }
+
+    return (int) msj.wParam;
+
 }
-
+char enteroACaracter(int numero){
+	return numero + '0';
+}
 int limite_cadena(char cad[],HWND hwnd)
  {
      int error = 0;
@@ -53,7 +241,6 @@ int limite_cadena(char cad[],HWND hwnd)
     else
         return error = 0;
  }
-
  int Encontrar_cadena2 (char cad1[],char cad2[]){
 	int resultado = 1;
 	for(int i=0; cad1[i] != '\0'; i++){
@@ -64,7 +251,6 @@ int limite_cadena(char cad[],HWND hwnd)
     }
 	return resultado;
 }
-
 int factorial(float operando){
     int fact = 1;
     for(int i=1; i<=operando; i++){
@@ -72,10 +258,6 @@ int factorial(float operando){
     }
     return fact;
 }
-
-
-///Funciones de conversiones
-
 void conversion_hex(float resultado){
     char hextxt[33];
     int res;
@@ -86,7 +268,6 @@ void conversion_hex(float resultado){
     }
     else SetWindowText(octl,"Límite rebasado");
 }
-
 void conversion_oct (float resultado)
 {
     char octtxt[33];
@@ -130,8 +311,6 @@ void conversion_bin (float resultado)
 	}
 	else SetWindowText(gradosl,"Límite rebasado");
 }
-
-///Funciones de validación
 int esDigito (char car){
     int resultado=0;
     if(car>47 && car<58){
@@ -198,9 +377,6 @@ int decimal(char a[],HWND hwnd){
 
     return error;
 }
-
-///Funciones de 'errores' secundarias
-
 int Encontrar_cadena (char cad1[],char cad2[]){
 	int resultado=0,i=0;
 	///Si no se encuentra cadena, devuelve 0.
@@ -309,7 +485,7 @@ int validacion_caracter(char a[],HWND hwnd){
 int verificacion_funciones(HWND hwnd,char cad[])
  {
      int error = 0;
-     for(int i=0;i<strlen(cad);i++)
+    /* for(int i=0;i<strlen(cad);i++)
      {
          if(esDigito(cad[i])==0 && es_operador(cad[i])==0){
                 if (Encontrar_cadena("sqrt(",cad) == 1)  error=0;
@@ -329,12 +505,9 @@ int verificacion_funciones(HWND hwnd,char cad[])
      }
      }
      if(error == 1) MessageBox(hwnd,"Es necesario escribir las funciones con la sintaxis correcta","Error sintáctico",
-                               MB_ICONWARNING | MB_OK);
+                               MB_ICONWARNING | MB_OK);*/
      return error;
  }
-
-///Funciones de 'errores' principales
-
 int error_lexico(char a[], HWND hwnd){
     int error=1;
     for(int i=0;i<strlen(a);i++){
@@ -375,15 +548,15 @@ int error_sintatico(char a[],HWND hwnd){
         if(a[i]=='('||a[i]==')'){
                 continue; /*Ignorará los operadores válidos, en este caso los paréntesis*/
         }
-        if(es_operador(a[i])==1 && a[i]!='-' && es_operador(a[i+1])==1 && a[i+1]!='('&& a[i+1]!='!' && a[i+1]!='%'){
+        if(es_operador(a[i])==1 && es_operador(a[i+1])==1 && a[i+1]!='('&& a[i+1]!='!' && a[i+1]!='%'){
             /*Sirve para validar que un operador no sea puesto 2 veces seguidas, pero ignorando los parentesis,
 			factorial, porcentaje o que primero esté un signo negativo*/
 			MessageBox(hwnd,"No es posible calcular con 2 operadores seguidos","Error sintáctico",MB_ICONWARNING | MB_OK);
 			return error = 1;
         }
         else{
-                if(i>=2 && a[i]=='-' && a[i-1]=='(' && a[i-2]==')'||a[i-2]=='*'){
-                    MessageBox(hwnd,"Error con la ubicación del '-'","Error sintáctico",MB_ICONWARNING | MB_OK);
+                if(i>=2 && a[i]=='-' && a[i-1]=='('  && esDigito(a[i-1])==0 && a[i-2]==')'){
+                    MessageBox(hwnd,"Error con la ubicación del '-' ss","Error sintáctico",MB_ICONWARNING | MB_OK);
                     return error = 1;
                 }
                 else
@@ -413,9 +586,6 @@ int Detectar_Errores(char a[],HWND hwnd){
 	if(error_sintatico(a,hwnd)==1)return error = 1;
 	return error;
 }
-
-///Funciones pertenecientes para calcular el resultado
-
 int potencia(int x, int y){
     float pot = 1;
     for(int i = 0; i<y; i++){
@@ -465,6 +635,7 @@ void funciones_tri(char entrada [n]){
             else if (Encontrar_cadena2("arcsec",trig ) == 1) operador = 'l';
             else if (Encontrar_cadena2("arccsc",trig) == 1) operador = 'm';
             entrada[i] = operador;
+			printf("Se supone que %c y %c son iguales\n",entrada[i],operador);
             for(int j = (I+i); entrada[j] != '\0'; j++){
                 entrada[j-(I-1)] = entrada[j];
             }
@@ -475,20 +646,6 @@ void funciones_tri(char entrada [n]){
             entrada[i+3] = '\0';
         }
     }
-}
-void ConversionInfijaAPostfija(char entrada[n], char postfija[n]){
-    int longitud;
-    longitud = strlen(entrada);
-	entrada[longitud] = '_';
-	entrada[longitud+1] = '\0';
-	pos(entrada, postfija);
-	for(int i=0; postfija[i] != '\0'; i++){
-        if(postfija[i] == 10){
-            for(int j=i; postfija[j] != '\0'; j++){
-                postfija[j] = postfija[j+1];
-            }
-        }
-	}
 }
 
 int operando (char c){
@@ -518,30 +675,6 @@ int operando (char c){
     }
     return 0;
 }
-
-int priori[21][22]={
-    {1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},  ///Suma
-    {1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},  ///Resta
-    {1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},  ///Multiplicacion
-    {1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},  ///Division
-    {1,1,1,1,1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0},  ///Exponente
-    {1,1,1,1,1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0},  ///SQRT
-    {1,1,1,1,1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0},  ///Factorial
-    {1,1,1,1,1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0},  ///Porcentaje
-    {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,1},  ///Sin
-    {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,1},  ///Cos
-    {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,1},  ///Tan
-    {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,1},  ///Cot
-    {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,1},  ///Sec
-    {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,1},  ///Csc
-    {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,1},  ///arcsin
-    {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,1},  ///arccos
-    {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,1},  ///arctan
-    {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,1},  ///arccot
-    {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,1},  ///arcsec
-    {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,1},  ///arccsc
-    {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},  ///Parentesis izquierdo
-};
 int prioridad (char op1, char op2)
 {
 	int i,j,prioridaad;
@@ -628,6 +761,7 @@ nodo_float *push_float(float valor, nodo_float *pila){
     nodo_nuevo = (nodo_float *) malloc(sizeof(nodo_float));
     if(nodo_nuevo != NULL){
         nodo_nuevo -> valor = valor;
+		printf("El valor guardado en la pila es: %f\n",nodo_nuevo->valor);
         nodo_nuevo -> siguiente = pila;
         pila = nodo_nuevo;
     }
@@ -648,7 +782,6 @@ nodo_float *pop_float(float *valor, nodo_float *pila){
     }
     return pila;
 }
-
 void pos(char entrada[n], char postfija[n]){
 	struct PILAA pila;
 	int i, j;
@@ -686,6 +819,22 @@ void pos(char entrada[n], char postfija[n]){
 		postfija[++j] = elemento;
 	}
 	postfija[++j] = '\0';
+}
+
+void ConversionInfijaAPostfija(char entrada[n], char postfija[n]){
+	int longitud;
+	longitud = strlen(entrada);
+	entrada[longitud] = '_';
+	entrada[longitud+1] = '\0';
+	pos(entrada, postfija);
+	for(int i=0; postfija[i] != '\0'; i++){
+		if(postfija[i] == 10){
+			for(int j=i; postfija[j] != '\0'; j++){
+				postfija[j] = postfija[j+1];
+			}
+		}
+	}
+	puts(postfija);
 }
 
 
@@ -729,6 +878,7 @@ float operacion(float operando1, float operando2, char operador, int *error,HWND
 }
 float operacion_trig(float operando1, char operador, int *error,HWND hwnd){
     char a_tilde = 160, i_tilde = 161, u_tilde = 163;
+    puts("Estamos en funciones trigonometricas");
         switch(operador){
         case 'a':
             if(operando1 < 0){
@@ -736,6 +886,7 @@ float operacion_trig(float operando1, char operador, int *error,HWND hwnd){
                 *error = 1;
                 break;
             }else{
+                printf("El operando 1 es: %f y su raiz es : %f\n",operando1,sqrt(9));
                 return sqrt(operando1);
                 break;
             }
@@ -839,6 +990,7 @@ float ObtenerResultado(char postfija[n], int *error, HWND hwnd){
                    || postfija[i] == 'k' || postfija[i] == 'l' || postfija[i] == 'm' || postfija[i] == '!' || postfija[i] == '%'){
                     pila = pop_float(&operando1, pila);
                     resultado = operacion_trig(operando1, postfija[i], &*error,hwnd);
+                    printf("Resultado guardado trigonometrico%f\n\n",resultado);
                     pila = push_float(resultado, pila);
                 }else{
                     continue;
@@ -857,13 +1009,10 @@ float ObtenerResultado(char postfija[n], int *error, HWND hwnd){
         MessageBox(hwnd,"Se excedió el límite permitido","Error de límite de carácteres",MB_ICONWARNING | MB_OK);
         *error = 1;
     }else{
+		printf("Se devoldio %f\n\n",pila->valor);
         return pila -> valor;
     }
 }
-
-
-///Función principal
-
 void Procedimiento(char entrada[n], char postfija[n], HWND hwnd){
     float resultado = 0, resultado_aux;
     int error = 0, func_multi = 0, resultado_int = 0;
@@ -873,13 +1022,16 @@ void Procedimiento(char entrada[n], char postfija[n], HWND hwnd){
         multi_parentesis(entrada);
         ConversionInfijaAPostfija(entrada, postfija);
         resultado = ObtenerResultado(postfija, &error,hwnd);
+        printf("El resultado es: %.4f (estamos en proc)\n", resultado);
         if(error == 0){
             resultado_int = resultado;
             resultado_aux = resultado_int;
             if(resultado == resultado_aux){
                     sprintf(resultado_txt,"%i",resultado_int);
+                    printf("El resultado es: %i\n", resultado_int);
                     SetWindowText(caja_texto,resultado_txt);
             }else{
+                printf("El resultado es: %.4f", resultado);
                 sprintf(resultado_txt,"%.4f",resultado);
                 SetWindowText(caja_texto,resultado_txt);
             }
@@ -891,11 +1043,10 @@ void Procedimiento(char entrada[n], char postfija[n], HWND hwnd){
     }
     else SetWindowText(caja_texto,entrada);
 }
-
-
-LRESULT CALLBACK winProc(HWND hwnd,UINT msj,WPARAM wParam,LPARAM lParam){
+LRESULT CALLBACK winProc(HWND hwnd,UINT msj,WPARAM wParam,LPARAM lParam)
+{
     ///Declaración de cadenas
-    char texto[33];
+    char texto[n];
     switch(msj){
 
     case WM_COMMAND: ///Referente a cuando se hace click en algún botón
@@ -1140,109 +1291,4 @@ LRESULT CALLBACK winProc(HWND hwnd,UINT msj,WPARAM wParam,LPARAM lParam){
         break;
     }
     DefWindowProc(hwnd,msj,wParam,lParam);
-}
-
-char app[] = "Mi clase";
-int WINAPI WinMain(HINSTANCE ins,HINSTANCE ins2,LPSTR cmd, int estado){
-    Ocultar_pantalla();
-    WNDCLASSEX vtn;
-    vtn.cbClsExtra=0;
-    vtn.cbSize=sizeof(WNDCLASSEX);
-    vtn.cbWndExtra = 0;
-    vtn.hbrBackground = (HBRUSH) (COLOR_HIGHLIGHT+1);
-    vtn.hCursor = LoadCursor(NULL,IDC_ARROW);
-    vtn.hIcon = NULL;
-    vtn.hIconSm = NULL;
-    vtn.hInstance = ins;
-    vtn.lpfnWndProc = winProc;
-    vtn.lpszClassName = app;
-    vtn.lpszMenuName = NULL;
-    vtn.style = CS_HREDRAW | CS_VREDRAW;
-
-    if(!RegisterClassEx(&vtn)){
-        MessageBox(HWND_DESKTOP,"Error al crear la clase","Error",MB_ICONERROR|MB_OK);
-    }
-
-///Ventana principal
-
-    ventana = CreateWindow(app,"Calculadora Científica basada en Win32 API",WS_OVERLAPPED | WS_CAPTION | WS_SYSMENU | WS_MINIMIZEBOX,CW_USEDEFAULT,CW_USEDEFAULT,640,380,HWND_DESKTOP,NULL,ins,NULL);
-
-///Caja de texto
-    caja_texto = CreateWindow("EDIT","",WS_CHILD | WS_VISIBLE  | ES_LOWERCASE | WS_BORDER | ES_RIGHT,6,12,610,34,ventana,NULL,ins,NULL);
-
-///Creación de etiquetas
-
-    tipos_conversion = CreateWindow("STATIC","Tipos de conversion",WS_CHILD | WS_VISIBLE | SS_LEFT ,6,62,140,30,ventana,NULL,ins,NULL);
-    lbin = CreateWindow("STATIC","Bin:",WS_CHILD | WS_VISIBLE | SS_NOTIFY | SS_LEFT,6,116,30.1,29.75,ventana,NULL,ins,NULL);
-    binl = CreateWindow("STATIC","",WS_CHILD | WS_VISIBLE | SS_NOTIFY | SS_RIGHT,36.1,116,113.5,29.75,ventana,NULL,ins,NULL);
-    loct = CreateWindow("STATIC","Oct:",WS_CHILD | WS_VISIBLE | SS_NOTIFY | SS_LEFT,6,166,34.25,29.75,ventana,NULL,ins,NULL);
-    octl = CreateWindow("STATIC","",WS_CHILD | WS_VISIBLE | SS_NOTIFY | SS_RIGHT,40.25,166,105,29.75,ventana,NULL,ins,NULL);
-    lhex = CreateWindow("STATIC","Hex:",WS_CHILD | WS_VISIBLE | SS_NOTIFY | SS_LEFT,6,216,34.25,29.75,ventana,NULL,ins,NULL);
-    hexl = CreateWindow("STATIC","",WS_CHILD | WS_VISIBLE | SS_NOTIFY | SS_RIGHT,40.25,216,105,29.75,ventana,NULL,ins,NULL);
-    lgrados = CreateWindow("STATIC","Grad:",WS_CHILD | WS_VISIBLE | SS_NOTIFY | SS_LEFT,6,266,34.25,29.75,ventana,NULL,ins,NULL);
-    gradosl = CreateWindow("STATIC","",WS_CHILD | WS_VISIBLE | SS_NOTIFY | SS_RIGHT,40.25,266,105,29.75,ventana,NULL,ins,NULL);
-    fun_trigl = CreateWindow("STATIC","Funciones trigonométricas",WS_CHILD | WS_VISIBLE | SS_LEFT | SS_CENTER ,166,62,228,30,ventana,NULL,ins,NULL);
-
-///Creación de botones
-
-    //Funciones trigonométricas
-
-    barcsec = CreateWindow("BUTTON","arcsec",WS_CHILD | WS_VISIBLE | SS_CENTER ,170,116,55,50,ventana,NULL,ins,NULL);
-    barccsc = CreateWindow("BUTTON","arccsc",WS_CHILD | WS_VISIBLE | SS_CENTER ,170,166,55,50,ventana,NULL,ins,NULL);
-    barccot = CreateWindow("BUTTON","arccot",WS_CHILD | WS_VISIBLE | SS_CENTER ,170,216,55,50,ventana,NULL,ins,NULL);
-    barcsin = CreateWindow("BUTTON","arcsin",WS_CHILD | WS_VISIBLE | SS_CENTER ,225,116,55,50,ventana,NULL,ins,NULL);
-    barccos = CreateWindow("BUTTON","arccos",WS_CHILD | WS_VISIBLE | SS_CENTER ,225,166,55,50,ventana,NULL,ins,NULL);
-    barctan = CreateWindow("BUTTON","arctan",WS_CHILD | WS_VISIBLE | SS_CENTER ,225,216,55,50,ventana,NULL,ins,NULL);
-    bsec = CreateWindow("BUTTON","sec",WS_CHILD | WS_VISIBLE | SS_CENTER ,280,116,55,50,ventana,NULL,ins,NULL);
-    bcsc = CreateWindow("BUTTON","csc",WS_CHILD | WS_VISIBLE | SS_CENTER ,280,166,55,50,ventana,NULL,ins,NULL);
-    bcot = CreateWindow("BUTTON","cot",WS_CHILD | WS_VISIBLE | SS_CENTER ,280,216,55,50,ventana,NULL,ins,NULL);
-    bsin = CreateWindow("BUTTON","sin",WS_CHILD | WS_VISIBLE | SS_CENTER ,335,116,55,50,ventana,NULL,ins,NULL);
-    bcos = CreateWindow("BUTTON","cos",WS_CHILD | WS_VISIBLE | SS_CENTER ,335,166,55,50,ventana,NULL,ins,NULL);
-    btan = CreateWindow("BUTTON","tan",WS_CHILD | WS_VISIBLE | SS_CENTER ,335,216,55,50,ventana,NULL,ins,NULL);
-
-
-    //Operaciones principales y básicas
-
-    bpot = CreateWindow("BUTTON","^",WS_CHILD | WS_VISIBLE | SS_CENTER ,405,65,45,45,ventana,NULL,ins,NULL);
-    braiz = CreateWindow("BUTTON","sqrt(x)",WS_CHILD | WS_VISIBLE | SS_CENTER ,405,110,45,45,ventana,NULL,ins,NULL);
-    bfact = CreateWindow("BUTTON","x!",WS_CHILD | WS_VISIBLE | SS_CENTER ,405,155,45,45,ventana,NULL,ins,NULL);
-    bporc = CreateWindow("BUTTON","%",WS_CHILD | WS_VISIBLE | SS_CENTER ,405,200,45,45,ventana,NULL,ins,NULL);
-    bpariz = CreateWindow("BUTTON","(",WS_CHILD | WS_VISIBLE | SS_CENTER ,405,245,45,45,ventana,NULL,ins,NULL);
-    bmul = CreateWindow("BUTTON","*",WS_CHILD | WS_VISIBLE | SS_CENTER ,450,65,45,45,ventana,NULL,ins,NULL);
-    b7 = CreateWindow("BUTTON","7",WS_CHILD | WS_VISIBLE | SS_CENTER ,450,110,45,45,ventana,NULL,ins,NULL);
-    b4 = CreateWindow("BUTTON","4",WS_CHILD | WS_VISIBLE | SS_CENTER ,450,155,45,45,ventana,NULL,ins,NULL);
-    b1 = CreateWindow("BUTTON","1",WS_CHILD | WS_VISIBLE | SS_CENTER ,450,200,45,45,ventana,NULL,ins,NULL);
-    bparder = CreateWindow("BUTTON",")",WS_CHILD | WS_VISIBLE | SS_CENTER ,450,245,45,45,ventana,NULL,ins,NULL);
-    bdiv = CreateWindow("BUTTON","/",WS_CHILD | WS_VISIBLE | SS_CENTER ,495,65,45,45,ventana,NULL,ins,NULL);
-    b8 = CreateWindow("BUTTON","8",WS_CHILD | WS_VISIBLE | SS_CENTER ,495,110,45,45,ventana,NULL,ins,NULL);
-    b5 = CreateWindow("BUTTON","5",WS_CHILD | WS_VISIBLE | SS_CENTER ,495,155,45,45,ventana,NULL,ins,NULL);
-    b2 = CreateWindow("BUTTON","2",WS_CHILD | WS_VISIBLE | SS_CENTER ,495,200,45,45,ventana,NULL,ins,NULL);
-    b0 = CreateWindow("BUTTON","0",WS_CHILD | WS_VISIBLE | SS_CENTER ,495,245,45,45,ventana,NULL,ins,NULL);
-    boff = CreateWindow("BUTTON","OFF",WS_CHILD | WS_VISIBLE | SS_CENTER ,540,65,45,45,ventana,NULL,ins,NULL);
-    b9 = CreateWindow("BUTTON","9",WS_CHILD | WS_VISIBLE | SS_CENTER ,540,110,45,45,ventana,NULL,ins,NULL);
-    b6 = CreateWindow("BUTTON","6",WS_CHILD | WS_VISIBLE | SS_CENTER ,540,155,45,45,ventana,NULL,ins,NULL);
-    b3 = CreateWindow("BUTTON","3",WS_CHILD | WS_VISIBLE | SS_CENTER ,540,200,45,45,ventana,NULL,ins,NULL);
-    bpunto = CreateWindow("BUTTON",".",WS_CHILD | WS_VISIBLE | SS_CENTER ,540,245,45,45,ventana,NULL,ins,NULL);
-    bac = CreateWindow("BUTTON","AC",WS_CHILD | WS_VISIBLE | SS_CENTER ,585,65,45,45,ventana,NULL,ins,NULL);
-    bsum = CreateWindow("BUTTON","+",WS_CHILD | WS_VISIBLE | SS_CENTER ,585,110,45,45,ventana,NULL,ins,NULL);
-    bresta = CreateWindow("BUTTON","-",WS_CHILD | WS_VISIBLE | SS_CENTER ,585,155,45,45,ventana,NULL,ins,NULL);
-    bresultado = CreateWindow("BUTTON","=",WS_CHILD | WS_VISIBLE | SS_CENTER ,585,200,45,90,ventana,NULL,ins,NULL);
-
-
-    if(!ventana){
-        MessageBox(HWND_DESKTOP,"Error al crear la ventana","Error",MB_ICONERROR|MB_OK);
-
-    }
-
-    ShowWindow(ventana,SW_SHOWNORMAL);
-    MSG msj;
-
-    while(GetMessage(&msj,NULL,0,0)){
-        DispatchMessage(&msj);
-        TranslateMessage(&msj);
-
-    }
-
-    return (int) msj.wParam;
-
 }
