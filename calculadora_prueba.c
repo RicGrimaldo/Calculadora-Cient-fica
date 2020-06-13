@@ -79,27 +79,24 @@ void multi_parentesis(char entrada [n]){
             }
         }
     }
-    printf("\nLa cadena resultado es:\n");
-    for(int j=0; entrada[j] != '\0'; j++){
-        printf("%c", entrada[j]);
-    }
 }
 void Procedimiento(char entrada[n], char postfija[n]){
-    float resultado = 0;
-    int error = 0, func_multi = 0;
+    float resultado = 0, resultado_aux;
+    int error = 0, func_multi = 0, resultado_int = 0;
     char o_tilde = 162;
     if(DetectarErrores(entrada) == 0){
         funciones_tri(entrada);
         multi_parentesis(entrada);
         ConversionInfijaAPostfija(entrada, postfija);
-        printf("Conversion infija: ");
-        for(int i=0; postfija[i] != '\0'; i++){
-            printf("%c", postfija[i]);
-        }
-        printf("\n");
         resultado = ObtenerResultado(postfija, &error);
         if(error == 0){
-            printf("El resultado es: %.4f", resultado);
+            resultado_int = resultado;
+            resultado_aux = resultado_int;
+            if(resultado == resultado_aux){
+                printf("El resultado es: %i", resultado_int);
+            }else{
+                printf("El resultado es: %.4f", resultado);
+            }
         }
     }
 }
@@ -342,7 +339,6 @@ void funciones_tri(char entrada [n]){
             else if (Encontrar_cadena("arcsec",trig ) == 1) operador = 'l';
             else if (Encontrar_cadena("arccsc",trig) == 1) operador = 'm';
             entrada[i] = operador;
-            printf("Se supone que %c y %c son iguales",entrada[i],operador);
             for(int j = (I+i); entrada[j] != '\0'; j++){
                 entrada[j-(I-1)] = entrada[j];
             }
@@ -367,11 +363,6 @@ void ConversionInfijaAPostfija(char entrada[n], char postfija[n]){
             }
         }
 	}
-	printf("\n");
-	for(int i=0; postfija[i] != '\0'; i++){
-        printf("%c", postfija[i]);
-	}
-	printf("\n");
 }
 void pos(char entrada[n], char postfija[n]){
 	struct PILAA pila;
@@ -524,7 +515,6 @@ int pila_vacia (struct PILAA *p){
 }
 void ins_pila(struct PILAA *p, char s){
 	if(p->t == n){
-        printf ("Pila llena");
 	}
 	else{
         p->t++;
@@ -533,7 +523,6 @@ void ins_pila(struct PILAA *p, char s){
 }
 void retira_pila(struct PILAA *p, char *s){
     if(pila_vacia(p)){
-        printf ("Pila vacia");
 		*s = '_';
 	}else{
 	    *s = p->a [p->t - 1];
@@ -555,11 +544,6 @@ float ObtenerResultado(char postfija[n], int *error){
                     i++;
                 }
             }
-            printf("\n\nLa cadena char valor es: ");
-            for(int j=0; valor[j] != '\0'; j++){
-                printf("%c", valor[j]);
-            }
-            printf("\n\n\n\n\n");
             valor_float = atof(valor);
             pila = push_float(valor_float, pila);
             for(int j=0; j<40; j++){
@@ -592,7 +576,12 @@ float ObtenerResultado(char postfija[n], int *error){
             postfija[i+6] = '\0';
         }
     }
-    return pila -> valor;
+    if(pila -> valor > 999999999999999999){
+        printf("Error de longitud");
+        *error = 1;
+    }else{
+        return pila -> valor;
+    }
 }
 nodo_float *crear_pila_float(nodo_float *pila){
     return pila = NULL;
@@ -623,37 +612,118 @@ nodo_float *pop_float(float *valor, nodo_float *pila){
     return pila;
 }
 float operacion(float operando1, float operando2, char operador, int *error){
+    char a_tilde = 160, o_tilde = 162;
     switch(operador){
-        case '+': return operando1 + operando2; break;
+        case '+':
+            /*if(operando1 > 999999999999999999 || operando2 > 999999999999999999){
+                printf("Error de longitud");
+                *error = 1;
+                break;
+            }else{*/
+                return operando1 + operando2; break;
+            //}
         case '-': return operando1 - operando2; break;
-        case '*': return operando1 * operando2; break;
+        case '*':
+            if((operando1 > 99999999999999 && operando2 > 99999999999999) || (operando1 > 999999999999999999 && operando2 != 0 && operando2 != 1) || (operando2 > 999999999999999999 && operando1 != 0 && operando1 != 1)){
+                printf("Error de longitud");
+                *error = 1;
+                break;
+            }else{
+                return operando1 * operando2; break;
+            }
         case '/':
             if(operando2 == 0){
-                *error = 1; break;
+                printf("Error matem%ctico: Divisi%ccn entre cero", a_tilde, o_tilde);
+                *error = 1;
+                break;
             }else{
                 return operando1 / operando2; break;
             }
-        case '^': return potencia(operando1, operando2); break;
+        case '^':
+            if((operando2 > 97 && operando1 != 1 && operando1 != 0 && operando1 != (-1))){
+                printf("Error de longitud");
+                *error = 1;
+                 break;
+            }else{
+                return potencia(operando1, operando2); break;
+            }
     }
 }
 float operacion_trig(float operando1, char operador, int *error){
-    puts("Estamos en los trigonometricos");
-    printf("%f\n\n",1/(asin(operando1)));
-        if (operador == 'a') return sqrt(operando1);
-        else if (operador == 'b') return sin(operando1);
-        else if (operador == 'c') return cos(operando1);
-        else if (operador == 'd') return tan(operando1);
-        else if (operador == 'e') return 1/tan(operando1);
-        else if (operador == 'f') return 1/cos(operando1);
-        else if (operador == 'g') return 1/sin(operando1);
-        else if (operador == 'h') return asin(operando1);
-        else if (operador == 'i') return acos(operando1);
-        else if (operador == 'j') return atan(operando1);
-        else if (operador == 'k') return 1/atan(operando1);
-        else if (operador == 'l') return 1/acos(operando1);
-        else if (operador == 'm') return 1/(asin(operando1));
-        else if (operador == '!') return factorial(operando1);
-        else if (operador == '%') return operando1/100;
+    char a_tilde = 160, i_tilde = 161, u_tilde = 163;
+        switch(operador){
+        case 'a':
+            if(operando1 < 0){
+                printf("Error matem%ctico: Ra%cz de n%cmero negativo", a_tilde, i_tilde, u_tilde);
+                *error = 1;
+                break;
+            }else{
+                return sqrt(operando1);
+                break;
+            }
+        case 'b': return sin(operando1); break;
+        case 'c': return cos(operando1); break;
+        case 'd':
+            if(cos(operando1) == 0){
+                printf("Error de dominio");
+                *error = 1;
+                break;
+            }else{
+                return tan(operando1);
+                break;
+            }
+        case 'e': return 1/tan(operando1); break;
+        case 'f': return 1/cos(operando1); break;
+        case 'g': return 1/sin(operando1); break;
+        case 'h':
+            if(operando1 > 1){
+                printf("Error de dominio");
+                *error = 1;
+                break;
+            }else{
+                return asin(operando1);
+                break;
+            }
+        case 'i':
+            if(operando1 > 1){
+                printf("Error de dominio");
+                *error = 1;
+                break;
+            }else{
+                return acos(operando1);
+                break;
+            }
+        case 'j': return atan(operando1); break;
+        case 'k': return 1/atan(operando1); break;
+        case 'l': return 1/acos(operando1); break;
+        case 'm': return 1/(asin(operando1)); break;
+        case '!':
+            if(operando1 < 0){
+                printf("Error matem%ctico: Factorial de n%cmero negativo", a_tilde, u_tilde);
+                *error = 1;
+                break;
+            }else{
+                if(operando1 > 28){
+                    printf("Error de longitud");
+                    *error = 1;
+                    break;
+                }else{
+                    int operando_int;
+                    float operando_float;
+                    operando_int = operando1;
+                    operando_float = operando_int;
+                    if(operando1 != operando_float){
+                        printf("Error matem%ctico: Factorial de n%cmero no entero", a_tilde, u_tilde);
+                        *error = 1;
+                        break;
+                    }else{
+                        return factorial(operando1);
+                        break;
+                    }
+                }
+            }
+        case '%': return operando1/100;
+    }
 }
 int factorial(float operando){
     int fact = 1;
