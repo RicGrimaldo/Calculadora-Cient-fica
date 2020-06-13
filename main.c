@@ -14,6 +14,15 @@ HWND b0,b1,b2,b3,b4,b5,b6,b7,b8,b9;
 ///Etiquetas estáticas
 HWND tipos_conversion,lbin,binl,loct,octl,lhex,hexl,lgrados,gradosl,font,fun_trigl;
 
+///Función para ocultar la pantalla negra al ejecutarse el programa
+void Ocultar_pantalla(void)
+{
+    HWND console;
+    AllocConsole();
+    console = FindWindowA("ConsoleWindowClass",NULL);
+    ShowWindow(console,0);
+}
+
 ///Funciones necesarias
 
 char enteroACaracter(int numero){
@@ -643,7 +652,7 @@ LRESULT CALLBACK winProc(HWND hwnd,UINT msj,WPARAM wParam,LPARAM lParam){
 
 char app[] = "Mi clase";
 int WINAPI WinMain(HINSTANCE ins,HINSTANCE ins2,LPSTR cmd, int estado){
-
+    Ocultar_pantalla();
     WNDCLASSEX vtn;
     vtn.cbClsExtra=0;
     vtn.cbSize=sizeof(WNDCLASSEX);
