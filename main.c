@@ -3,6 +3,7 @@
 #include <windows.h>
 #include <string.h>
 #include <math.h>
+#define n 40
 
 ///Esta es una prueba de pull request (Git)
 ///Botones
@@ -23,6 +24,18 @@ void Ocultar_pantalla(void)
     ShowWindow(console,0);
 }
 
+struct PILAA {
+	int t;
+	char a[n];
+};
+
+struct struct_nodo_float{
+    float valor;
+    struct struct_nodo_float *siguiente;
+};
+typedef struct struct_nodo_float nodo_float;
+
+
 ///Funciones necesarias
 
 char enteroACaracter(int numero){
@@ -40,13 +53,32 @@ int limite_cadena(char cad[],HWND hwnd)
     else
         return error = 0;
  }
+
+ int Encontrar_cadena2 (char cad1[],char cad2[]){
+	int resultado = 1;
+	for(int i=0; cad1[i] != '\0'; i++){
+        if(cad1[i] != cad2[i]){
+            resultado = 0;
+            break;
+        }
+    }
+	return resultado;
+}
+
+int factorial(float operando){
+    int fact = 1;
+    for(int i=1; i<=operando; i++){
+        fact *= i;
+    }
+    return fact;
+}
+
+
 ///Funciones de conversiones
 
-void conversion_hex(char texto[]){
+void conversion_hex(float resultado){
     char hextxt[33];
     int res;
-    float resultado;
-    resultado = atof(texto);
     if(resultado<=999999999){
     res=trunc(resultado);
     ltoa(res, hextxt,16);
@@ -55,12 +87,10 @@ void conversion_hex(char texto[]){
     else SetWindowText(octl,"Límite rebasado");
 }
 
-void conversion_oct (char texto[])
+void conversion_oct (float resultado)
 {
     char octtxt[33];
     int res;
-    float resultado;
-    resultado = atof(texto);
     if(resultado<=99999990){
     res=trunc(resultado);
     ltoa(res, octtxt, 8);
@@ -69,12 +99,10 @@ void conversion_oct (char texto[])
     else SetWindowText(octl,"Límite rebasado");
 }
 
-void conversion_bin (char texto[])
+void conversion_bin (float resultado)
 {
     char bintxt[50];
     int res;
-    float resultado;
-    resultado = atof(texto);
     res = trunc(resultado);
     if(resultado<=16300){
     ltoa(res,bintxt,2);
@@ -83,11 +111,10 @@ void conversion_bin (char texto[])
     else SetWindowText(binl,"Límite rebasado");
 }
 
- void conversion_grados(char res[]){
-    float dec,ope1,ope2,resultado;
+ void conversion_grados(float resultado){
+    float dec,ope1,ope2;
     int grados,minutos,segundos;
-	char m[30],s[30];
-	resultado = atof(res);
+	char m[30],s[30],res[33];
 	if(resultado<=9999999){
     grados=trunc(resultado);
     dec=resultado-grados;
@@ -387,6 +414,477 @@ int Detectar_Errores(char a[],HWND hwnd){
 	return error;
 }
 
+///Funciones pertenecientes para calcular el resultado
+
+int potencia(int x, int y){
+    float pot = 1;
+    for(int i = 0; i<y; i++){
+        pot *= x;
+    }
+    return pot;
+}
+void multi_parentesis(char entrada [n]){
+    int longitud = strlen(entrada);
+    for(int i = 0; entrada[i] != '\0'; i++){
+        if(entrada[i] == ')' && (entrada[i+1] == '(' || entrada[i+1] > 47 && entrada[i+1] < 58)){
+            for(int j = longitud-1; j > i; j--){
+                entrada[j+1] = entrada[j];
+            }
+            entrada[i+1] = '*';
+        }else{
+            if(i != 0 && entrada[i] == '(' && entrada[i-1] > 47 && entrada[i-1] < 58){
+            for(int j = longitud-1; j >= i; j--){
+                entrada[j+1] = entrada[j];
+            }
+            entrada[i] = '*';
+            }
+        }
+    }
+}
+
+void funciones_tri(char entrada [n]){
+    int I = 0;
+    char operador, trig[10];
+    for(int i = 0; entrada[i] != '\0'; i++){
+        if(entrada[i] > 96 && entrada [i] < 123){
+            for(int j = i; entrada[j] != '('; j++){
+                trig[I] = entrada[j];
+                I++;
+            }
+            if (Encontrar_cadena2("sqrt",trig) == 1) operador = 'a';
+            else if (Encontrar_cadena2("sin",trig ) == 1) operador = 'b';
+            else if (Encontrar_cadena2("cos",trig) == 1) operador = 'c';
+            else if (Encontrar_cadena2("tan",trig) == 1) operador = 'd';
+            else if (Encontrar_cadena2("cot",trig) == 1) operador = 'e';
+            else if (Encontrar_cadena2("sec",trig) == 1) operador = 'f';
+            else if (Encontrar_cadena2("csc",trig) == 1) operador = 'g';
+            else if (Encontrar_cadena2("arcsin",trig) == 1) operador = 'h';
+            else if (Encontrar_cadena2("arccos",trig ) == 1) operador = 'i';
+            else if (Encontrar_cadena2("arctan",trig ) == 1) operador = 'j';
+            else if (Encontrar_cadena2("arccot",trig) == 1) operador = 'k';
+            else if (Encontrar_cadena2("arcsec",trig ) == 1) operador = 'l';
+            else if (Encontrar_cadena2("arccsc",trig) == 1) operador = 'm';
+            entrada[i] = operador;
+            for(int j = (I+i); entrada[j] != '\0'; j++){
+                entrada[j-(I-1)] = entrada[j];
+            }
+            I = 0;
+        }
+        if(entrada[i+1] == 10){
+            entrada[i+2] = '\0';
+            entrada[i+3] = '\0';
+        }
+    }
+}
+void ConversionInfijaAPostfija(char entrada[n], char postfija[n]){
+    int longitud;
+    longitud = strlen(entrada);
+	entrada[longitud] = '_';
+	entrada[longitud+1] = '\0';
+	pos(entrada, postfija);
+	for(int i=0; postfija[i] != '\0'; i++){
+        if(postfija[i] == 10){
+            for(int j=i; postfija[j] != '\0'; j++){
+                postfija[j] = postfija[j+1];
+            }
+        }
+	}
+}
+void pos(char entrada[n], char postfija[n]){
+	struct PILAA pila;
+	int i, j;
+	char elemento;
+	int operando (char c);
+	int prioridad (char op1, char op2);
+	char tope (struct PILAA p);
+	void init_pila (struct PILAA *p);
+	int pila_vacia (struct PILAA *p);
+	void ins_pila (struct PILAA *p,char s);
+	void retira_pila (struct PILAA *p, char *s);
+	i = 0;
+	j = -1;
+	init_pila (&pila);
+	while(entrada[i] != '_') {
+	   if(operando(entrada[i]) == 1){
+            postfija [++j] = entrada[i++];
+	   }
+	   else{
+		     while (!pila_vacia (&pila) && prioridad(tope (pila), entrada[i])){
+			     retira_pila (&pila, &elemento);
+			     postfija[++j] = elemento;
+		      }
+		      if(operando(postfija[j]) == 1){
+                postfija[++j] = ',';
+                }
+		      if (entrada[i] == ')')
+			   retira_pila(&pila, &elemento);
+		      else ins_pila(&pila, entrada[i]);
+		      i++;
+		}
+	}
+	while (!pila_vacia (&pila)){
+		retira_pila (&pila, &elemento);
+		postfija[++j] = elemento;
+	}
+	postfija[++j] = '\0';
+}
+int operando (char c){
+	if  (c != '+' &&
+         c != '-' &&
+         c != '*' &&
+		 c != '/' &&
+		 c != '^' &&
+		 c != ')' &&
+		 c != '(' &&
+         c != 'a' &&
+         c != 'b' &&
+         c != 'c' &&
+         c != 'd' &&
+         c != 'e' &&
+         c != 'f' &&
+         c != 'g' &&
+         c != 'h' &&
+         c != 'i' &&
+         c != 'j' &&
+         c != 'k' &&
+         c != 'l' &&
+         c != 'm' &&
+         c != ','
+    ){
+        return 1;
+    }
+    return 0;
+}
+int priori[21][22]={
+    {1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},  ///Suma
+    {1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},  ///Resta
+    {1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},  ///Multiplicacion
+    {1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},  ///Division
+    {1,1,1,1,1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0},  ///Exponente
+    {1,1,1,1,1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0},  ///SQRT
+    {1,1,1,1,1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0},  ///Factorial
+    {1,1,1,1,1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0},  ///Porcentaje
+    {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,1},  ///Sin
+    {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,1},  ///Cos
+    {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,1},  ///Tan
+    {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,1},  ///Cot
+    {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,1},  ///Sec
+    {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,1},  ///Csc
+    {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,1},  ///arcsin
+    {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,1},  ///arccos
+    {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,1},  ///arctan
+    {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,1},  ///arccot
+    {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,1},  ///arcsec
+    {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,1},  ///arccsc
+    {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},  ///Parentesis izquierdo
+};
+int prioridad (char op1, char op2)
+{
+	int i,j,prioridaad;
+
+	if (op1=='+') i=0;
+	else if (op1=='-') i=1;
+	else if (op1=='*') i=2;
+	else if (op1=='/') i=3;
+	else if (op1=='^') i=4;
+	else if (op1=='!') i=5;
+	else if (op1=='%') i=6;
+	else if (op1=='a') i=7;
+	else if (op1=='b') i=8;
+	else if (op1=='c') i=9;
+	else if (op1=='d') i=10;
+	else if (op1=='e') i=11;
+	else if (op1=='f') i=12;
+	else if (op1=='g') i=13;
+	else if (op1=='h') i=14;
+	else if (op1=='i') i=15;
+	else if (op1=='j') i=16;
+	else if (op1=='k') i=17;
+	else if (op1=='l') i=18;
+	else if (op1=='m') i=19;
+	else if (op1=='(') i=20;
+
+    if (op2=='+') j=0;
+	else if (op2=='-') j=1;
+	else if (op2=='*') j=2;
+	else if (op2=='/') j=3;
+	else if (op2=='^') j=4;
+	else if (op2=='a') j=5;
+	else if (op2=='!') j=6;
+    else if (op2=='%') j=7;
+	else if (op2=='b') j=8;
+	else if (op2=='c') j=9;
+	else if (op2=='d') j=10;
+	else if (op2=='e') j=11;
+	else if (op2=='f') j=12;
+	else if (op2=='g') j=13;
+	else if (op2=='h') j=14;
+	else if (op2=='i') j=15;
+	else if (op2=='j') j=16;
+	else if (op2=='k') j=17;
+	else if (op2=='l') j=18;
+	else if (op2=='m') j=19;
+	else if (op2=='(') j=20;
+	else if (op1==')') j=21;
+
+	prioridaad=priori[i][j];
+	return (prioridaad);
+}
+char tope(struct PILAA p){
+	return (p.a[p.t-1]);
+}
+void init_pila(struct PILAA *p){
+	p->t = 0;
+}
+int pila_vacia (struct PILAA *p){
+    return(!p->t);
+}
+void ins_pila(struct PILAA *p, char s){
+	if(p->t == n){
+	}
+	else{
+        p->t++;
+        p->a [p->t - 1] = s;
+	}
+}
+void retira_pila(struct PILAA *p, char *s){
+    if(pila_vacia(p)){
+		*s = '_';
+	}else{
+	    *s = p->a [p->t - 1];
+        p->t--;
+	}
+}
+nodo_float *crear_pila_float(nodo_float *pila){
+    return pila = NULL;
+}
+nodo_float *push_float(float valor, nodo_float *pila){
+    nodo_float *nodo_nuevo;
+    nodo_nuevo = (nodo_float *) malloc(sizeof(nodo_float));
+    if(nodo_nuevo != NULL){
+        nodo_nuevo -> valor = valor;
+        nodo_nuevo -> siguiente = pila;
+        pila = nodo_nuevo;
+    }
+    return pila;
+}
+nodo_float *pop_float(float *valor, nodo_float *pila){
+    nodo_float *nodo_auxiliar;
+    float dato;
+    if(pila == NULL){
+
+    }
+    else{
+        nodo_auxiliar = pila;
+        dato = nodo_auxiliar ->valor;
+        pila = nodo_auxiliar ->siguiente;
+        *valor = dato;
+        free(nodo_auxiliar);
+    }
+    return pila;
+}
+float operacion(float operando1, float operando2, char operador, int *error){
+    char a_tilde = 160, o_tilde = 162;
+    switch(operador){
+        case '+':
+            /*if(operando1 > 999999999999999999 || operando2 > 999999999999999999){
+                printf("Error de longitud");
+                *error = 1;
+                break;
+            }else{*/
+                return operando1 + operando2; break;
+            //}
+        case '-': return operando1 - operando2; break;
+        case '*':
+            if((operando1 > 99999999999999 && operando2 > 99999999999999) || (operando1 > 999999999999999999 && operando2 != 0 && operando2 != 1) || (operando2 > 999999999999999999 && operando1 != 0 && operando1 != 1)){
+                printf("Error de longitud");
+                *error = 1;
+                break;
+            }else{
+                return operando1 * operando2; break;
+            }
+        case '/':
+            if(operando2 == 0){
+                printf("Error matem%ctico: Divisi%ccn entre cero", a_tilde, o_tilde);
+                *error = 1;
+                break;
+            }else{
+                return operando1 / operando2; break;
+            }
+        case '^':
+            if((operando2 > 97 && operando1 != 1 && operando1 != 0 && operando1 != (-1))){
+                printf("Error de longitud");
+                *error = 1;
+                 break;
+            }else{
+                return potencia(operando1, operando2); break;
+            }
+    }
+}
+float operacion_trig(float operando1, char operador, int *error){
+    char a_tilde = 160, i_tilde = 161, u_tilde = 163;
+        switch(operador){
+        case 'a':
+            if(operando1 < 0){
+                printf("Error matem%ctico: Ra%cz de n%cmero negativo", a_tilde, i_tilde, u_tilde);
+                *error = 1;
+                break;
+            }else{
+                return sqrt(operando1);
+                break;
+            }
+        case 'b': return sin(operando1); break;
+        case 'c': return cos(operando1); break;
+        case 'd':
+            if(cos(operando1) == 0){
+                printf("Error de dominio");
+                *error = 1;
+                break;
+            }else{
+                return tan(operando1);
+                break;
+            }
+        case 'e': return 1/tan(operando1); break;
+        case 'f': return 1/cos(operando1); break;
+        case 'g': return 1/sin(operando1); break;
+        case 'h':
+            if(operando1 > 1){
+                printf("Error de dominio");
+                *error = 1;
+                break;
+            }else{
+                return asin(operando1);
+                break;
+            }
+        case 'i':
+            if(operando1 > 1){
+                printf("Error de dominio");
+                *error = 1;
+                break;
+            }else{
+                return acos(operando1);
+                break;
+            }
+        case 'j': return atan(operando1); break;
+        case 'k': return 1/atan(operando1); break;
+        case 'l': return 1/acos(operando1); break;
+        case 'm': return 1/(asin(operando1)); break;
+        case '!':
+            if(operando1 < 0){
+                printf("Error matem%ctico: Factorial de n%cmero negativo", a_tilde, u_tilde);
+                *error = 1;
+                break;
+            }else{
+                if(operando1 > 28){
+                    printf("Error de longitud");
+                    *error = 1;
+                    break;
+                }else{
+                    int operando_int;
+                    float operando_float;
+                    operando_int = operando1;
+                    operando_float = operando_int;
+                    if(operando1 != operando_float){
+                        printf("Error matem%ctico: Factorial de n%cmero no entero", a_tilde, u_tilde);
+                        *error = 1;
+                        break;
+                    }else{
+                        return factorial(operando1);
+                        break;
+                    }
+                }
+            }
+        case '%': return operando1/100;
+    }
+}
+
+float ObtenerResultado(char postfija[n], int *error){
+    nodo_float *pila;
+    int I = 0;
+    char valor[n];
+    float operando1, operando2, resultado, valor_float;
+    pila = crear_pila_float(pila);
+    for(int i=0; postfija[i] != '\0'; i++){
+        if(postfija[i] >= 48 && postfija[i] <=57 || postfija[i] == '.'){
+            for(int j = i; postfija[j] >= 48 && postfija[j] <=57 || postfija[j] == '.'; j++){
+                valor[I] = postfija[j];
+                I++;
+                if(postfija[j+1] >= 48 && postfija[j+1] <= 57 || postfija[j+1] == '.'){
+                    i++;
+                }
+            }
+            valor_float = atof(valor);
+            pila = push_float(valor_float, pila);
+            for(int j=0; j<40; j++){
+                valor[j] = '\0';
+            }
+            I = 0;
+        }else{
+            if(postfija[i] == '+' || postfija[i] == '-' || postfija[i] == '*' || postfija[i] == '/' || postfija[i] == '^'){
+                pila = pop_float(&operando2, pila);
+                pila = pop_float(&operando1, pila);
+                resultado = operacion(operando1, operando2, postfija[i], &*error);
+                pila = push_float(resultado, pila);
+            }else{
+                if(postfija[i] == 'a' || postfija[i] == 'b' || postfija[i] == 'c' || postfija[i] == 'd' || postfija[i] == 'e'
+                   || postfija[i] == 'f' || postfija[i] == 'g' || postfija[i] == 'h' || postfija[i] == 'i' || postfija[i] == 'j'
+                   || postfija[i] == 'k' || postfija[i] == 'l' || postfija[i] == 'm' || postfija[i] == '!' || postfija[i] == '%'){
+                    pila = pop_float(&operando1, pila);
+                    resultado = operacion_trig(operando1, postfija[i], &*error);
+                    pila = push_float(resultado, pila);
+                }else{
+                    continue;
+                }
+            }
+        }
+        if(postfija[i+1] == 10){
+            postfija[i+2] = '\0';
+            postfija[i+3] = '\0';
+            postfija[i+4] = '\0';
+            postfija[i+5] = '\0';
+            postfija[i+6] = '\0';
+        }
+    }
+    if(pila -> valor > 999999999999999999){
+        printf("Error de longitud");
+        *error = 1;
+    }else{
+        return pila -> valor;
+    }
+}
+
+
+///Función principal
+
+void Procedimiento(char entrada[n], char postfija[n], HWND hwnd){
+    float resultado = 0, resultado_aux;
+    int error = 0, func_multi = 0, resultado_int = 0;
+    char resultado_txt[33];
+    if(Detectar_Errores(entrada,hwnd) == 0){
+        funciones_tri(entrada);
+        multi_parentesis(entrada);
+        ConversionInfijaAPostfija(entrada, postfija);
+        resultado = ObtenerResultado(postfija, &error);
+        if(error == 0){
+            resultado_int = resultado;
+            resultado_aux = resultado_int;
+            if(resultado == resultado_aux){
+                    sprintf(resultado_txt,"%i",resultado_int);
+                    SetWindowText(caja_texto,resultado_txt);
+            }else{
+                sprintf(resultado_txt,"%.4f",resultado);
+                SetWindowText(caja_texto,resultado_txt);
+            }
+            conversion_hex(resultado);
+            conversion_oct(resultado);
+            conversion_bin(resultado);
+            conversion_grados(resultado);
+        }
+    }
+    else SetWindowText(caja_texto,entrada);
+}
+
+
 LRESULT CALLBACK winProc(HWND hwnd,UINT msj,WPARAM wParam,LPARAM lParam){
     ///Declaración de cadenas
     char texto[33];
@@ -621,23 +1119,9 @@ LRESULT CALLBACK winProc(HWND hwnd,UINT msj,WPARAM wParam,LPARAM lParam){
         ///Funciones que se llevarán a cabo cuando se de click en el botón de "Resultado"
 
         if((HWND)lParam == bresultado){
-                int i;
+                char postfija [n];
                 GetWindowText(caja_texto,texto,33);
-                if(Detectar_Errores(texto,hwnd) == 1)
-                        SetWindowText(caja_texto,texto);
-                else{///Después de verificar el límite de carácteres permitido...
-                    conversion_hex(texto);
-                    conversion_oct(texto);
-                    conversion_bin(texto);
-                    conversion_grados(texto);
-                        /*Validación de errores
-                  Conversión de bin, oct, hex, grad
-                  Resultado final
-                  Copiar el resultado con SetWindowText*/
-                    strcpy(texto,"");
-                    SetWindowText(caja_texto,texto);
-                }
-                break;
+                Procedimiento(texto,postfija,hwnd);
         }
         break;
 
