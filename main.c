@@ -490,44 +490,7 @@ void ConversionInfijaAPostfija(char entrada[n], char postfija[n]){
         }
 	}
 }
-void pos(char entrada[n], char postfija[n]){
-	struct PILAA pila;
-	int i, j;
-	char elemento;
-	int operando (char c);
-	int prioridad (char op1, char op2);
-	char tope (struct PILAA p);
-	void init_pila (struct PILAA *p);
-	int pila_vacia (struct PILAA *p);
-	void ins_pila (struct PILAA *p,char s);
-	void retira_pila (struct PILAA *p, char *s);
-	i = 0;
-	j = -1;
-	init_pila (&pila);
-	while(entrada[i] != '_') {
-	   if(operando(entrada[i]) == 1){
-            postfija [++j] = entrada[i++];
-	   }
-	   else{
-		     while (!pila_vacia (&pila) && prioridad(tope (pila), entrada[i])){
-			     retira_pila (&pila, &elemento);
-			     postfija[++j] = elemento;
-		      }
-		      if(operando(postfija[j]) == 1){
-                postfija[++j] = ',';
-                }
-		      if (entrada[i] == ')')
-			   retira_pila(&pila, &elemento);
-		      else ins_pila(&pila, entrada[i]);
-		      i++;
-		}
-	}
-	while (!pila_vacia (&pila)){
-		retira_pila (&pila, &elemento);
-		postfija[++j] = elemento;
-	}
-	postfija[++j] = '\0';
-}
+
 int operando (char c){
 	if  (c != '+' &&
          c != '-' &&
@@ -555,6 +518,7 @@ int operando (char c){
     }
     return 0;
 }
+
 int priori[21][22]={
     {1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},  ///Suma
     {1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},  ///Resta
@@ -630,6 +594,7 @@ int prioridad (char op1, char op2)
 	prioridaad=priori[i][j];
 	return (prioridaad);
 }
+
 char tope(struct PILAA p){
 	return (p.a[p.t-1]);
 }
@@ -683,7 +648,48 @@ nodo_float *pop_float(float *valor, nodo_float *pila){
     }
     return pila;
 }
-float operacion(float operando1, float operando2, char operador, int *error){
+
+void pos(char entrada[n], char postfija[n]){
+	struct PILAA pila;
+	int i, j;
+	char elemento;
+	int operando (char c);
+	int prioridad (char op1, char op2);
+	char tope (struct PILAA p);
+	void init_pila (struct PILAA *p);
+	int pila_vacia (struct PILAA *p);
+	void ins_pila (struct PILAA *p,char s);
+	void retira_pila (struct PILAA *p, char *s);
+	i = 0;
+	j = -1;
+	init_pila (&pila);
+	while(entrada[i] != '_') {
+	   if(operando(entrada[i]) == 1){
+            postfija [++j] = entrada[i++];
+	   }
+	   else{
+		     while (!pila_vacia (&pila) && prioridad(tope (pila), entrada[i])){
+			     retira_pila (&pila, &elemento);
+			     postfija[++j] = elemento;
+		      }
+		      if(operando(postfija[j]) == 1){
+                postfija[++j] = ',';
+                }
+		      if (entrada[i] == ')')
+			   retira_pila(&pila, &elemento);
+		      else ins_pila(&pila, entrada[i]);
+		      i++;
+		}
+	}
+	while (!pila_vacia (&pila)){
+		retira_pila (&pila, &elemento);
+		postfija[++j] = elemento;
+	}
+	postfija[++j] = '\0';
+}
+
+
+float operacion(float operando1, float operando2, char operador, int *error,HWND hwnd){
     char a_tilde = 160, o_tilde = 162;
     switch(operador){
         case '+':
@@ -697,7 +703,7 @@ float operacion(float operando1, float operando2, char operador, int *error){
         case '-': return operando1 - operando2; break;
         case '*':
             if((operando1 > 99999999999999 && operando2 > 99999999999999) || (operando1 > 999999999999999999 && operando2 != 0 && operando2 != 1) || (operando2 > 999999999999999999 && operando1 != 0 && operando1 != 1)){
-                printf("Error de longitud");
+                MessageBox(hwnd,"Se excedió el límite permitido","Error de límite de carácteres",MB_ICONWARNING | MB_OK);
                 *error = 1;
                 break;
             }else{
@@ -705,7 +711,7 @@ float operacion(float operando1, float operando2, char operador, int *error){
             }
         case '/':
             if(operando2 == 0){
-                printf("Error matem%ctico: Divisi%ccn entre cero", a_tilde, o_tilde);
+                MessageBox(hwnd,"No es posible dividir entre cero","Error matemático",MB_ICONWARNING | MB_OK);
                 *error = 1;
                 break;
             }else{
@@ -713,7 +719,7 @@ float operacion(float operando1, float operando2, char operador, int *error){
             }
         case '^':
             if((operando2 > 97 && operando1 != 1 && operando1 != 0 && operando1 != (-1))){
-                printf("Error de longitud");
+               MessageBox(hwnd,"Se excedió el límite permitido","Error de límite de carácteres",MB_ICONWARNING | MB_OK);
                 *error = 1;
                  break;
             }else{
@@ -721,12 +727,12 @@ float operacion(float operando1, float operando2, char operador, int *error){
             }
     }
 }
-float operacion_trig(float operando1, char operador, int *error){
+float operacion_trig(float operando1, char operador, int *error,HWND hwnd){
     char a_tilde = 160, i_tilde = 161, u_tilde = 163;
         switch(operador){
         case 'a':
             if(operando1 < 0){
-                printf("Error matem%ctico: Ra%cz de n%cmero negativo", a_tilde, i_tilde, u_tilde);
+                MessageBox(hwnd,"No es posible calcular la raíz de un número negativo","Error matemático",MB_ICONWARNING | MB_OK);
                 *error = 1;
                 break;
             }else{
@@ -737,7 +743,7 @@ float operacion_trig(float operando1, char operador, int *error){
         case 'c': return cos(operando1); break;
         case 'd':
             if(cos(operando1) == 0){
-                printf("Error de dominio");
+                MessageBox(hwnd,"Hubo un error con el dominio de la función","Error matemático",MB_ICONWARNING | MB_OK);
                 *error = 1;
                 break;
             }else{
@@ -749,7 +755,7 @@ float operacion_trig(float operando1, char operador, int *error){
         case 'g': return 1/sin(operando1); break;
         case 'h':
             if(operando1 > 1){
-                printf("Error de dominio");
+                MessageBox(hwnd,"Hubo un error con el dominio de la función","Error matemático",MB_ICONWARNING | MB_OK);
                 *error = 1;
                 break;
             }else{
@@ -758,7 +764,7 @@ float operacion_trig(float operando1, char operador, int *error){
             }
         case 'i':
             if(operando1 > 1){
-                printf("Error de dominio");
+                MessageBox(hwnd,"Hubo un error con el dominio de la función","Error matemático",MB_ICONWARNING | MB_OK);
                 *error = 1;
                 break;
             }else{
@@ -771,12 +777,13 @@ float operacion_trig(float operando1, char operador, int *error){
         case 'm': return 1/(asin(operando1)); break;
         case '!':
             if(operando1 < 0){
-                printf("Error matem%ctico: Factorial de n%cmero negativo", a_tilde, u_tilde);
+                MessageBox(hwnd,"No es posible calcular el factorial de un número negativo","Error matemático",
+                           MB_ICONWARNING | MB_OK);
                 *error = 1;
                 break;
             }else{
                 if(operando1 > 28){
-                    printf("Error de longitud");
+                    MessageBox(hwnd,"Se excedió el límite permitido","Error de límite de carácteres",MB_ICONWARNING | MB_OK);
                     *error = 1;
                     break;
                 }else{
@@ -785,7 +792,8 @@ float operacion_trig(float operando1, char operador, int *error){
                     operando_int = operando1;
                     operando_float = operando_int;
                     if(operando1 != operando_float){
-                        printf("Error matem%ctico: Factorial de n%cmero no entero", a_tilde, u_tilde);
+                        MessageBox(hwnd,"No es posible calcular el factorial de un no-entero","Error matemático",
+                                   MB_ICONWARNING | MB_OK);
                         *error = 1;
                         break;
                     }else{
@@ -798,7 +806,7 @@ float operacion_trig(float operando1, char operador, int *error){
     }
 }
 
-float ObtenerResultado(char postfija[n], int *error){
+float ObtenerResultado(char postfija[n], int *error, HWND hwnd){
     nodo_float *pila;
     int I = 0;
     char valor[n];
@@ -823,14 +831,14 @@ float ObtenerResultado(char postfija[n], int *error){
             if(postfija[i] == '+' || postfija[i] == '-' || postfija[i] == '*' || postfija[i] == '/' || postfija[i] == '^'){
                 pila = pop_float(&operando2, pila);
                 pila = pop_float(&operando1, pila);
-                resultado = operacion(operando1, operando2, postfija[i], &*error);
+                resultado = operacion(operando1, operando2, postfija[i], &*error,hwnd);
                 pila = push_float(resultado, pila);
             }else{
                 if(postfija[i] == 'a' || postfija[i] == 'b' || postfija[i] == 'c' || postfija[i] == 'd' || postfija[i] == 'e'
                    || postfija[i] == 'f' || postfija[i] == 'g' || postfija[i] == 'h' || postfija[i] == 'i' || postfija[i] == 'j'
                    || postfija[i] == 'k' || postfija[i] == 'l' || postfija[i] == 'm' || postfija[i] == '!' || postfija[i] == '%'){
                     pila = pop_float(&operando1, pila);
-                    resultado = operacion_trig(operando1, postfija[i], &*error);
+                    resultado = operacion_trig(operando1, postfija[i], &*error,hwnd);
                     pila = push_float(resultado, pila);
                 }else{
                     continue;
@@ -846,7 +854,7 @@ float ObtenerResultado(char postfija[n], int *error){
         }
     }
     if(pila -> valor > 999999999999999999){
-        printf("Error de longitud");
+        MessageBox(hwnd,"Se excedió el límite permitido","Error de límite de carácteres",MB_ICONWARNING | MB_OK);
         *error = 1;
     }else{
         return pila -> valor;
@@ -859,12 +867,12 @@ float ObtenerResultado(char postfija[n], int *error){
 void Procedimiento(char entrada[n], char postfija[n], HWND hwnd){
     float resultado = 0, resultado_aux;
     int error = 0, func_multi = 0, resultado_int = 0;
-    char resultado_txt[33];
+    char resultado_txt[n];
     if(Detectar_Errores(entrada,hwnd) == 0){
         funciones_tri(entrada);
         multi_parentesis(entrada);
         ConversionInfijaAPostfija(entrada, postfija);
-        resultado = ObtenerResultado(postfija, &error);
+        resultado = ObtenerResultado(postfija, &error,hwnd);
         if(error == 0){
             resultado_int = resultado;
             resultado_aux = resultado_int;
