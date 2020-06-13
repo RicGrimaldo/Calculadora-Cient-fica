@@ -595,7 +595,9 @@ int potencia(int x, int y){
 }
 void multi_parentesis(char entrada [n]){
     int longitud = strlen(entrada);
-    for(int i = 0; entrada[i] != '\0'; i++){
+    printf("Esta es la entrada: ");
+    puts(entrada);
+    for(int i = 0; i<strlen(entrada); i++){
         if(entrada[i] == ')' && (entrada[i+1] == '(' || entrada[i+1] > 47 && entrada[i+1] < 58)){
             for(int j = longitud-1; j > i; j--){
                 entrada[j+1] = entrada[j];
@@ -610,6 +612,8 @@ void multi_parentesis(char entrada [n]){
             }
         }
     }
+    printf("Esta es la entrada: ");
+    puts(entrada);
 }
 
 void funciones_tri(char entrada [n]){
@@ -635,17 +639,21 @@ void funciones_tri(char entrada [n]){
             else if (Encontrar_cadena2("arcsec",trig ) == 1) operador = 'l';
             else if (Encontrar_cadena2("arccsc",trig) == 1) operador = 'm';
             entrada[i] = operador;
-			printf("Se supone que %c y %c son iguales\n",entrada[i],operador);
+            puts(entrada);
             for(int j = (I+i); entrada[j] != '\0'; j++){
                 entrada[j-(I-1)] = entrada[j];
+				printf("%c\n",entrada[j]);
             }
-            I = 0;
+			I=0;
+			printf("Salida despues del for: ");
+			puts(entrada);
         }
         if(entrada[i+1] == 10){
             entrada[i+2] = '\0';
             entrada[i+3] = '\0';
         }
     }
+	puts(entrada);
 }
 
 int operando (char c){
@@ -1280,6 +1288,7 @@ LRESULT CALLBACK winProc(HWND hwnd,UINT msj,WPARAM wParam,LPARAM lParam)
         if((HWND)lParam == bresultado){
                 char postfija [n];
                 GetWindowText(caja_texto,texto,33);
+                puts(texto);
                 Procedimiento(texto,postfija,hwnd);
         }
         break;
