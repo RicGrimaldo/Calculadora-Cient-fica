@@ -617,7 +617,7 @@ void multi_parentesis(char entrada [n]){
 }
 
 void funciones_tri(char entrada [n]){
-    int I = 0;
+    int I = 0, J = 0;
     char operador, trig[10];
     for(int i = 0; entrada[i] != '\0'; i++){
         if(entrada[i] > 96 && entrada [i] < 123){
@@ -625,35 +625,33 @@ void funciones_tri(char entrada [n]){
                 trig[I] = entrada[j];
                 I++;
             }
-            if (Encontrar_cadena2("sqrt",trig) == 1) operador = 'a';
-            else if (Encontrar_cadena2("sin",trig ) == 1) operador = 'b';
-            else if (Encontrar_cadena2("cos",trig) == 1) operador = 'c';
-            else if (Encontrar_cadena2("tan",trig) == 1) operador = 'd';
-            else if (Encontrar_cadena2("cot",trig) == 1) operador = 'e';
-            else if (Encontrar_cadena2("sec",trig) == 1) operador = 'f';
-            else if (Encontrar_cadena2("csc",trig) == 1) operador = 'g';
-            else if (Encontrar_cadena2("arcsin",trig) == 1) operador = 'h';
-            else if (Encontrar_cadena2("arccos",trig ) == 1) operador = 'i';
-            else if (Encontrar_cadena2("arctan",trig ) == 1) operador = 'j';
-            else if (Encontrar_cadena2("arccot",trig) == 1) operador = 'k';
-            else if (Encontrar_cadena2("arcsec",trig ) == 1) operador = 'l';
-            else if (Encontrar_cadena2("arccsc",trig) == 1) operador = 'm';
+            if (Encontrar_cadena2("sqrt",trig) == 1)            {operador = 'a'; J += 3;}
+            else if (Encontrar_cadena2("sin",trig ) == 1)       {operador = 'b'; J += 2;}
+            else if (Encontrar_cadena2("cos",trig) == 1)        {operador = 'c'; J += 2;}
+            else if (Encontrar_cadena2("tan",trig) == 1)        {operador = 'd'; J += 2;}
+            else if (Encontrar_cadena2("cot",trig) == 1)        {operador = 'e'; J += 2;}
+            else if (Encontrar_cadena2("sec",trig) == 1)        {operador = 'f'; J += 2;}
+            else if (Encontrar_cadena2("csc",trig) == 1)        {operador = 'g'; J += 2;}
+            else if (Encontrar_cadena2("arcsin",trig) == 1)     {operador = 'h'; J += 5;}
+            else if (Encontrar_cadena2("arccos",trig ) == 1)    {operador = 'i'; J += 5;}
+            else if (Encontrar_cadena2("arctan",trig ) == 1)    {operador = 'j'; J += 5;}
+            else if (Encontrar_cadena2("arccot",trig) == 1)     {operador = 'k'; J += 5;}
+            else if (Encontrar_cadena2("arcsec",trig ) == 1)    {operador = 'l'; J += 5;}
+            else if (Encontrar_cadena2("arccsc",trig) == 1)     {operador = 'm'; J += 5;}
             entrada[i] = operador;
-            puts(entrada);
             for(int j = (I+i); entrada[j] != '\0'; j++){
                 entrada[j-(I-1)] = entrada[j];
-				printf("%c\n",entrada[j]);
             }
-			I=0;
-			printf("Salida despues del for: ");
-			puts(entrada);
+            I = 0;
         }
-        if(entrada[i+1] == 10){
-            entrada[i+2] = '\0';
-            entrada[i+3] = '\0';
+        if(entrada[i+1] == '\0'){
+            for(int j = 0; j <= J; j++){
+                entrada[(i+1)-j] = '\0';
+            }
         }
     }
-	puts(entrada);
+    printf("Esta es la cadena resultado:\n");
+    puts(entrada);
 }
 
 int operando (char c){
@@ -890,7 +888,8 @@ float operacion_trig(float operando1, char operador, int *error,HWND hwnd){
         switch(operador){
         case 'a':
             if(operando1 < 0){
-                MessageBox(hwnd,"No es posible calcular la raíz de un número negativo","Error matemático",MB_ICONWARNING | MB_OK);
+                MessageBox(hwnd,"No es posible calcular la raíz de un número negativo","Error matemático",
+                           MB_ICONWARNING | MB_OK);
                 *error = 1;
                 break;
             }else{
