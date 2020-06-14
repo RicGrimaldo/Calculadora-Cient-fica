@@ -1,6 +1,6 @@
 #include<stdio.h>
 #include <string.h>
-#define n 33
+#define n 34
 int encontrar_error(char a[]);
 int error_sintatico(char a[]);
 int error_lexico(char a[]);
