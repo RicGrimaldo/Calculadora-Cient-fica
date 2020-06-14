@@ -642,7 +642,7 @@ void funciones_tri(char entrada [n]){
 }
 
 int operando (char c){
-	return (c != '+' &&
+	if (c != '+' &&
          c != '-' &&
          c != '*' &&
 		 c != '/' &&
@@ -662,48 +662,55 @@ int operando (char c){
          c != '(' &&
          c != ')' &&
          c != ',' &&
-         c != '_');
+         c != '_'){
+             return 1;
+         }
+         return 0;
 }
 int prioridad (char op1, char op2){
 	int i, j, prioridaad;
-	if (op1=='+') i=0;
-	else if (op1=='-') i=1;
-	else if (op1=='*') i=2;
-	else if (op1=='/') i=3;
-	else if (op1=='^') i=4;
-	else if (op1=='a') i=5;
-	else if (op1=='!') i=6;
-	else if (op1=='%') i=7;
-	else if (op1=='b') i=8;
-	else if (op1=='c') i=9;
-	else if (op1=='d') i=10;
-	else if (op1=='e') i=11;
-	else if (op1=='f') i=12;
-	else if (op1=='g') i=13;
-	else if (op1=='h') i=14;
-	else if (op1=='i') i=15;
-	else if (op1=='j') i=16;
-	else if (op1=='(') i=17;
+	switch(op1){
+	    case '+': i=0; break;
+	    case '-': i=1; break;
+	    case '*': i=2; break;
+	    case '/': i=3; break;
+	    case '^': i=4; break;
+	    case 'a': i=5; break;
+	    case '!': i=6; break;
+	    case '%': i=7; break;
+	    case 'b': i=8; break;
+	    case 'c': i=9; break;
+	    case 'd': i=10; break;
+	    case 'e': i=11; break;
+	    case 'f': i=12; break;
+	    case 'g': i=13; break;
+	    case 'h': i=14; break;
+	    case 'i': i=15; break;
+	    case 'j': i=16; break;
+	    case '(': i=17; break;
+	}
+	switch(op2){
+	    case '+': j=0; break;
+	    case '-': j=1; break;
+	    case '*': j=2; break;
+	    case '/': j=3; break;
+	    case '^': j=4; break;
+	    case 'a': j=5; break;
+	    case '!': j=6; break;
+	    case '%': j=7; break;
+	    case 'b': j=8; break;
+	    case 'c': j=9; break;
+	    case 'd': j=10; break;
+	    case 'e': j=11; break;
+	    case 'f': j=12; break;
+	    case 'g': j=13; break;
+	    case 'h': j=14; break;
+	    case 'i': j=15; break;
+	    case 'j': j=16; break;
+	    case '(': j=17; break;
+	    case ')': j=18; break;
+	}
 
-    if (op2=='+') j=0;
-	else if (op2=='-') j=1;
-	else if (op2=='*') j=2;
-	else if (op2=='/') j=3;
-	else if (op2=='^') j=4;
-	else if (op2=='a') j=5;
-	else if (op2=='!') j=6;
-    else if (op2=='%') j=7;
-	else if (op2=='b') j=8;
-	else if (op2=='c') j=9;
-	else if (op2=='d') j=10;
-	else if (op2=='e') j=11;
-	else if (op2=='f') j=12;
-	else if (op2=='g') j=13;
-	else if (op2=='h') j=14;
-	else if (op2=='i') j=15;
-	else if (op2=='j') j=16;
-	else if (op2=='(') j=17;
-	else if (op1==')') j=18;
 	prioridaad = priori[i][j];
 	return (prioridaad);
 }
@@ -777,7 +784,7 @@ void pos(char entrada[n], char postfija[n]){
 	j = -1;
 	init_pila(&pila);
 	while(entrada[i] != '_') {
-	   if(operando(entrada[i])){
+	   if(operando(entrada[i]) == 1){
             postfija [++j] = entrada[i++];
 	   }
 	   else{
@@ -785,15 +792,14 @@ void pos(char entrada[n], char postfija[n]){
 			     retira_pila (&pila, &elemento);
 			     postfija[++j] = elemento;
 		      }
-		      if(operando(postfija[j])){
+		      if(operando(entrada[j]) == 1){
                 postfija[++j] = ',';
-                }else{
-                    if (entrada[i] == ')'){
+                }
+                if (entrada[i] == ')'){
                     retira_pila(&pila, &elemento);
-                  }
-                  else{
+                }
+                else{
                     ins_pila(&pila, entrada[i]);
-                  }
                 }
 		      i++;
 		}
@@ -821,8 +827,6 @@ void ConversionInfijaAPostfija(char entrada[n], char postfija[n]){
 	}
 	puts(postfija);
 }
-
-
 float operacion(float operando1, float operando2, char operador, int *error,HWND hwnd){
     char a_tilde = 160, o_tilde = 162;
     switch(operador){
