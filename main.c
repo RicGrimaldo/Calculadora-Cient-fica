@@ -4,7 +4,7 @@
 #include<stdlib.h>
 #include<math.h>
 #include<ctype.h>
-#define n 40
+#define n 35
 
 ///Esta es una prueba de pull request (Git)
 ///Botones
