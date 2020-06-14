@@ -72,6 +72,7 @@ int Detectar_Errores(char a[n],HWND hwnd);
 ///Funciones pertenecientes para calcular el resultado
 
 int potencia(int x, int y);
+void negatividad(char entrada[n]);
 void multi_parentesis(char entrada [n]);
 void funciones_tri(char entrada [n]);
 int operando (char c);
@@ -427,6 +428,17 @@ int parentesis_vacio(char a[n], HWND hwnd){
 
 int validacion_caracter(char a[n],HWND hwnd){
 	int error=0,f;
+	for(int i = 1; i<strlen(a);i++)
+    {
+        if(Primer_letra_funcion(a[i])==1){
+            if (esDigito(a[i-1])==1 || a[i-1]=='!' || a[i-1]=='%'){
+            MessageBox(hwnd,"Error con la declaración de la función","Error sintáctico",
+                                   MB_ICONWARNING | MB_OK);
+            return error = 1;
+            /*Validará que, antes de una función, no haya un número, ! o %*/
+        }
+    }
+    }
 	if(es_operador(a[0])==1 && a[0]!='(' && a[0]!='-' && esDigito(a[0])==0){
 		error=1; /*Validará que el primer carácter no sea ningún operador a excepción del '(', y cualquier primer letra de las funciones*/
         MessageBox(hwnd,"Error con el primer carácter","Error sintáctico",MB_ICONWARNING | MB_OK);
@@ -471,7 +483,6 @@ int validacion_caracter(char a[n],HWND hwnd){
 			}
 			}
 	}
-
 		return error;
 	}
 
@@ -538,7 +549,7 @@ int error_sintatico(char a[n],HWND hwnd){
         if(a[i]=='('||a[i]==')'){
                 continue; /*Ignorará los operadores válidos, en este caso los paréntesis*/
         }
-        if(es_operador(a[i])==1 && es_operador(a[i+1])==1 && a[i+1]!='('&& a[i+1]!='!' && a[i+1]!='%'){
+        if(es_operador(a[i])==1 && es_operador(a[i+1])==1 && a[i+1]!='('&& a[i+1]!='!' && a[i+1]!='%' && a[i]!='!' && a[i]!='%'){
             /*Sirve para validar que un operador no sea puesto 2 veces seguidas, pero ignorando los parentesis,
 			factorial, porcentaje o que primero esté un signo negativo*/
 			MessageBox(hwnd,"No es posible calcular con 2 operadores seguidos","Error sintáctico",MB_ICONWARNING | MB_OK);
@@ -583,6 +594,19 @@ int potencia(int x, int y){
     }
     return pot;
 }
+void negatividad(char entrada[n]){
+    int longitud = strlen(entrada);
+    for(int i=0; entrada[i] != '\0'; i++){
+        if(entrada[i] == '-' && (i == 0 || entrada[i-1] == '(')){
+            for(int j = longitud; j > i; j--){
+                entrada[j] = entrada[j-1];
+           }
+           entrada[i] = '0';
+        }
+    }
+    printf("Negatividad:\n");
+    puts(entrada);
+}
 void multi_parentesis(char entrada [n]){
     int longitud = strlen(entrada);
     printf("Esta es la entrada: ");
@@ -605,7 +629,6 @@ void multi_parentesis(char entrada [n]){
     printf("Esta es la entrada: ");
     puts(entrada);
 }
-
 void funciones_tri(char entrada [n]){
     int I = 0, J = 0;
     char operador, trig[10];
@@ -938,7 +961,6 @@ float operacion_trig(float operando1, char operador, int *error,HWND hwnd){
         case '%': return operando1/100;
     }
 }
-
 float ObtenerResultado(char postfija[n], int *error, HWND hwnd){
     nodo_float *pila;
     int I = 0;
@@ -1002,6 +1024,7 @@ void Procedimiento(char entrada[n], char postfija[n], HWND hwnd){
     if(Detectar_Errores(entrada,hwnd) == 0){
         funciones_tri(entrada);
         multi_parentesis(entrada);
+        negatividad(entrada);
         ConversionInfijaAPostfija(entrada, postfija);
         resultado = ObtenerResultado(postfija, &error,hwnd);
         printf("El resultado es: %.4f (estamos en proc)\n", resultado);
