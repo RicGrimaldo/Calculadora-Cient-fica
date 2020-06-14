@@ -4,7 +4,7 @@
 #include<stdlib.h>
 #include<math.h>
 #include<ctype.h>
-#define n 40
+#define n 35
 
 ///Esta es una prueba de pull request (Git)
 ///Botones
@@ -24,6 +24,8 @@ void Ocultar_pantalla(void)
     console = FindWindowA("ConsoleWindowClass",NULL);
     ShowWindow(console,0);
 }
+
+///Estructuras necesarias para la pila
 struct PILAA {
 	int t;
 	char a[n];
@@ -45,7 +47,7 @@ int factorial(float operando);
 void conversion_hex(float resultado);
 void conversion_oct (float resultado);
 void conversion_bin (float resultado);
- void conversion_grados(float resultado);
+void conversion_grados(float resultado);
 
 ///Funciones de validación
 int esDigito (char car);
@@ -108,7 +110,7 @@ nodo_float *crear_pila_float(nodo_float *pila);
 nodo_float *push_float(float valor, nodo_float *pila);
 nodo_float *pop_float(float *valor, nodo_float *pila);
 
-///Funciones para el resultado
+///Funciones para calcular el resultado
 void pos(char entrada[n], char postfija[n]);
 void ConversionInfijaAPostfija(char entrada[n], char postfija[n]);
 float operacion(float operando1, float operando2, char operador, int *error,HWND hwnd);
@@ -118,9 +120,10 @@ float ObtenerResultado(char postfija[n], int *error, HWND hwnd);
 ///Función principal
 void Procedimiento(char entrada[n], char postfija[n], HWND hwnd);
 
-///Interfaz gráfica
+///Eventos de la Interfaz gráfica
 LRESULT CALLBACK winProc(HWND hwnd,UINT msj,WPARAM wParam,LPARAM lParam);
 
+///Creación de la interfaz gráfica
 char app[] = "Calculadora";
 int WINAPI WinMain(HINSTANCE ins,HINSTANCE ins2,LPSTR cmd, int estado){
     //Ocultar_pantalla();
@@ -255,23 +258,29 @@ int factorial(float operando){
 void conversion_hex(float resultado){
     char hextxt[33];
     int res;
-    if(resultado<=999999999){
+    if(resultado<=999999999 && resultado>=0){
     res=trunc(resultado);
     ltoa(res, hextxt,16);
     SetWindowText(hexl,hextxt);
     }
-    else SetWindowText(octl,"Límite rebasado");
+    else{
+        if(resultado<0) SetWindowText(hexl," ");
+        else SetWindowText(hexl,"Límite rebasado");
+    }
 }
 void conversion_oct (float resultado)
 {
     char octtxt[33];
     int res;
-    if(resultado<=99999990){
+    if(resultado<=99999990 && resultado>=0){
     res=trunc(resultado);
     ltoa(res, octtxt, 8);
     SetWindowText(octl,octtxt);
     }
-    else SetWindowText(octl,"Límite rebasado");
+    else{
+        if(resultado<0) SetWindowText(octl," ");
+        else SetWindowText(gradosl,"Límite rebasado");
+    }
 }
 
 void conversion_bin (float resultado)
@@ -279,18 +288,21 @@ void conversion_bin (float resultado)
     char bintxt[50];
     int res;
     res = trunc(resultado);
-    if(resultado<=16300){
+    if(resultado<=16300 && resultado>=0){
     ltoa(res,bintxt,2);
     SetWindowText(binl,bintxt);
     }
-    else SetWindowText(binl,"Límite rebasado");
+    else{
+        if(resultado<0) SetWindowText(binl," ");
+        else SetWindowText(gradosl,"Límite rebasado");
+    }
 }
 
  void conversion_grados(float resultado){
     float dec,ope1,ope2;
     int grados,minutos,segundos;
 	char m[30],s[30],res[33];
-	if(resultado<=9999999){
+	if(resultado<=9999999 && resultado>=0){
     grados=trunc(resultado);
     dec=resultado-grados;
     ope1=dec*60;
@@ -303,7 +315,10 @@ void conversion_bin (float resultado)
 	strcat(res,"° "); strcat(res,m); strcat(res," ' "); strcat(res,s); strcat(res,"''");
 	SetWindowText(gradosl,res);
 	}
-	else SetWindowText(gradosl,"Límite rebasado");
+	else{
+        if(resultado<0) SetWindowText(gradosl," ");
+        else SetWindowText(gradosl,"Límite rebasado");
+	}
 }
 int esDigito (char car){
     int resultado=0;
@@ -439,7 +454,7 @@ int validacion_caracter(char a[n],HWND hwnd){
         }
     }
     }
-	if(es_operador(a[0])==1 && a[0]!='(' && a[0]!='-' && esDigito(a[0])==0){
+	if(es_operador(a[0])==1 && a[0]!='(' && a[0]!='-' && esDigito(a[0])==0 && a[0]!='+' && a[0]!='.'){
 		error=1; /*Validará que el primer carácter no sea ningún operador a excepción del '(', y cualquier primer letra de las funciones*/
         MessageBox(hwnd,"Error con el primer carácter","Error sintáctico",MB_ICONWARNING | MB_OK);
 		}
@@ -460,7 +475,7 @@ int validacion_caracter(char a[n],HWND hwnd){
 
 	if(error==0){
 		for(int i=1;i<strlen(a),a[i+1]!='\0';i++){
-			if(a[i-1]=='(' && es_operador(a[i])==1 && a[i]!='(' && a[i]!='-' && esDigito(a[i])==0){
+			if(a[i-1]=='(' && es_operador(a[i])==1 && a[i]!='(' && a[i]!='-' && esDigito(a[i])==0 && a[i]!='.' && a[i]!='+'){
 				/*Validará que el primer carácter no sea ningún operador a excepción del '(', y cualquier primer letra de las funciones*/
                 MessageBox(hwnd,"Error con el primer carácter después del paréntesis","Error sintáctico",
                            MB_ICONWARNING | MB_OK);
@@ -520,15 +535,15 @@ procediendo a leer el siguiente carácter de la candena*/
         }
         else{
         /*En caso de que el carácter leído no sea dígito u operador, se detectará el error léxico*/
-                error=1;
                 if(a[i]=='.'){ /*Si el carácter inválido es un punto decimal, hará una impresión diferente*/
                     if(esDigito(a[i-1])==1 && esDigito(a[i+1])==1){
                         error = decimal(a,hwnd);
                         break;
                     }
                 else{
+                    if(a[i+1]=='.'){
                     MessageBox(hwnd,"Error en ubicación del punto decimal.","Error léxico",MB_ICONWARNING | MB_OK);
-                    return error = 1;
+                    return error = 1;}
                 }
                 }
                 else{
@@ -549,21 +564,15 @@ int error_sintatico(char a[n],HWND hwnd){
         if(a[i]=='('||a[i]==')'){
                 continue; /*Ignorará los operadores válidos, en este caso los paréntesis*/
         }
-        if(es_operador(a[i])==1 && es_operador(a[i+1])==1 && a[i+1]!='('&& a[i+1]!='!' && a[i+1]!='%' && a[i]!='!' && a[i]!='%'){
+        if(es_operador(a[i])==1 && es_operador(a[i+1])==1 && a[i+1]!='('&& a[i+1]!='!' && a[i+1]!='%'
+                        && a[i]!='!' && a[i]!='%' && a[i+1]!='.' && a[i]!='.'){
             /*Sirve para validar que un operador no sea puesto 2 veces seguidas, pero ignorando los parentesis,
 			factorial, porcentaje o que primero esté un signo negativo*/
 			MessageBox(hwnd,"No es posible calcular con 2 operadores seguidos","Error sintáctico",MB_ICONWARNING | MB_OK);
 			return error = 1;
         }
-        else{
-                 if(i>=2 && a[i]=='-' && a[i-1]=='('  && esDigito(a[i-1])==0){
-                    MessageBox(hwnd,"Error con la ubicación del '-'","Error sintáctico",MB_ICONWARNING | MB_OK);
-                    return error = 1;
-                }
-                else
-            error = 0;
+        else error = 0;
             /*El error será 0 en caso de que el carácter leído no haya presentado error*/
-        }
     }
     }
     else{
@@ -603,6 +612,11 @@ void negatividad(char entrada[n]){
            }
            entrada[i] = '0';
         }
+        if(entrada [i] == '+' && (i == 0 || entrada[i-1] == '(')){
+            for(int j = i+1; entrada[j-1] != '\0'; j++){
+                entrada[j-1] = entrada[j];
+           }
+        }
     }
     printf("Negatividad:\n");
     puts(entrada);
@@ -613,13 +627,13 @@ void multi_parentesis(char entrada [n]){
     puts(entrada);
     for(int i = 0; i<strlen(entrada); i++){
         if(entrada[i] == ')' && (entrada[i+1] == '(' || entrada[i+1] > 47 && entrada[i+1] < 58)){
-            for(int j = longitud-1; j > i; j--){
+            for(int j = longitud; j > i; j--){
                 entrada[j+1] = entrada[j];
             }
             entrada[i+1] = '*';
         }else{
             if(i != 0 && entrada[i] == '(' && entrada[i-1] > 47 && entrada[i-1] < 58){
-            for(int j = longitud-1; j >= i; j--){
+            for(int j = longitud; j >= i; j--){
                 entrada[j+1] = entrada[j];
             }
             entrada[i] = '*';
@@ -629,6 +643,7 @@ void multi_parentesis(char entrada [n]){
     printf("Esta es la entrada: ");
     puts(entrada);
 }
+
 void funciones_tri(char entrada [n]){
     int I = 0, J = 0;
     char operador, trig[10];
@@ -961,6 +976,7 @@ float operacion_trig(float operando1, char operador, int *error,HWND hwnd){
         case '%': return operando1/100;
     }
 }
+
 float ObtenerResultado(char postfija[n], int *error, HWND hwnd){
     nodo_float *pila;
     int I = 0;
