@@ -429,11 +429,14 @@ int validacion_caracter(char a[n],HWND hwnd){
 	int error=0,f;
 	for(int i = 1; i<strlen(a);i++)
     {
-        if(esDigito(a[i-1])==1 && Primer_letra_funcion(a[i])==1){
+        if(Primer_letra_funcion(a[i])==1){
+            if (esDigito(a[i-1])==1 || a[i-1]=='!' || a[i-1]=='%'){
             MessageBox(hwnd,"Error con la declaración de la función","Error sintáctico",
                                    MB_ICONWARNING | MB_OK);
             return error = 1;
+            /*Validará que, antes de una función, no haya un número, ! o %*/
         }
+    }
     }
 	if(es_operador(a[0])==1 && a[0]!='(' && a[0]!='-' && esDigito(a[0])==0){
 		error=1; /*Validará que el primer carácter no sea ningún operador a excepción del '(', y cualquier primer letra de las funciones*/
