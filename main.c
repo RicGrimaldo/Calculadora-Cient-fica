@@ -485,7 +485,7 @@ int validacion_caracter(char a[],HWND hwnd){
 int verificacion_funciones(HWND hwnd,char cad[])
  {
      int error = 0;
-    /* for(int i=0;i<strlen(cad);i++)
+     for(int i=0;i<strlen(cad);i++)
      {
          if(esDigito(cad[i])==0 && es_operador(cad[i])==0){
                 if (Encontrar_cadena("sqrt(",cad) == 1)  error=0;
@@ -505,7 +505,7 @@ int verificacion_funciones(HWND hwnd,char cad[])
      }
      }
      if(error == 1) MessageBox(hwnd,"Es necesario escribir las funciones con la sintaxis correcta","Error sintáctico",
-                               MB_ICONWARNING | MB_OK);*/
+                               MB_ICONWARNING | MB_OK);
      return error;
  }
 int error_lexico(char a[], HWND hwnd){
@@ -555,8 +555,8 @@ int error_sintatico(char a[],HWND hwnd){
 			return error = 1;
         }
         else{
-                if(i>=2 && a[i]=='-' && a[i-1]=='('  && esDigito(a[i-1])==0 && a[i-2]==')'){
-                    MessageBox(hwnd,"Error con la ubicación del '-' ss","Error sintáctico",MB_ICONWARNING | MB_OK);
+                if(i>=2 && a[i]=='-' && a[i-1]=='('  && esDigito(a[i-1])==0){
+                    MessageBox(hwnd,"Error con la ubicación del '-'","Error sintáctico",MB_ICONWARNING | MB_OK);
                     return error = 1;
                 }
                 else
