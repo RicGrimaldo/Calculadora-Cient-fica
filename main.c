@@ -45,7 +45,7 @@ int factorial(float operando);
 void conversion_hex(float resultado);
 void conversion_oct (float resultado);
 void conversion_bin (float resultado);
- void conversion_grados(float resultado);
+void conversion_grados(float resultado);
 
 ///Funciones de validación
 int esDigito (char car);
@@ -72,6 +72,7 @@ int Detectar_Errores(char a[n],HWND hwnd);
 ///Funciones pertenecientes para calcular el resultado
 
 int potencia(int x, int y);
+void negatividad(char entrada[n]);
 void multi_parentesis(char entrada [n]);
 void funciones_tri(char entrada [n]);
 int operando (char c);
@@ -593,6 +594,19 @@ int potencia(int x, int y){
     }
     return pot;
 }
+void negatividad(char entrada[n]){
+    int longitud = strlen(entrada);
+    for(int i=0; entrada[i] != '\0'; i++){
+        if(entrada[i] == '-' && (i == 0 || entrada[i-1] == '(')){
+            for(int j = longitud; j > i; j--){
+                entrada[j] = entrada[j-1];
+           }
+           entrada[i] = '0';
+        }
+    }
+    printf("Negatividad:\n");
+    puts(entrada);
+}
 void multi_parentesis(char entrada [n]){
     int longitud = strlen(entrada);
     printf("Esta es la entrada: ");
@@ -1012,6 +1026,7 @@ void Procedimiento(char entrada[n], char postfija[n], HWND hwnd){
     if(Detectar_Errores(entrada,hwnd) == 0){
         funciones_tri(entrada);
         multi_parentesis(entrada);
+        negatividad(entrada);
         ConversionInfijaAPostfija(entrada, postfija);
         resultado = ObtenerResultado(postfija, &error,hwnd);
         printf("El resultado es: %.4f (estamos en proc)\n", resultado);
