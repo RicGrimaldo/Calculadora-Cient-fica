@@ -641,7 +641,7 @@ void funciones_tri(char entrada [n]){
     puts(entrada);
 }
 
-int operando (char c){
+int operando(char c){
 	if (c != '+' &&
          c != '-' &&
          c != '*' &&
@@ -792,7 +792,7 @@ void pos(char entrada[n], char postfija[n]){
 			     retira_pila (&pila, &elemento);
 			     postfija[++j] = elemento;
 		      }
-		      if(operando(entrada[j]) == 1){
+		      if(operando(postfija[j]) == 1){
                 postfija[++j] = ',';
                 }
                 if (entrada[i] == ')'){
