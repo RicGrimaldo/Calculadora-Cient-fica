@@ -122,7 +122,7 @@ LRESULT CALLBACK winProc(HWND hwnd,UINT msj,WPARAM wParam,LPARAM lParam);
 
 char app[] = "Calculadora";
 int WINAPI WinMain(HINSTANCE ins,HINSTANCE ins2,LPSTR cmd, int estado){
-    //Ocultar_pantalla();
+    Ocultar_pantalla();
     WNDCLASSEX vtn;
     vtn.cbClsExtra=0;
     vtn.cbSize=sizeof(WNDCLASSEX);
