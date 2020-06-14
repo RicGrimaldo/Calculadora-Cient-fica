@@ -454,22 +454,24 @@ int validacion_caracter(char a[n],HWND hwnd){
         }
     }
     }
-	if(es_operador(a[0])==1 && a[0]!='(' && a[0]!='-' && esDigito(a[0])==0 && a[0]!='+'){
-		error=1; /*Validará que el primer carácter no sea ningún operador a excepción del '(', y cualquier primer letra de las funciones*/
+	if(es_operador(a[0])==1 && a[0]!='(' && a[0]!='-' && esDigito(a[0])==0 && a[0]!='+' && a[0]!='.'){
+        /*Validará que el primer carácter no sea ningún operador a excepción del '(', y cualquier primer letra de las funciones*/
         MessageBox(hwnd,"Error con el primer carácter","Error sintáctico",MB_ICONWARNING | MB_OK);
+        return error=1;
 		}
 	else{///Caso especial si es una letra
 		if(letras_permitidas(a[0])==1 && Primer_letra_funcion(a[0])==0){
-			error = 1;
 			MessageBox(hwnd,"Error en el primer carácter","Error sintáctico",MB_ICONWARNING | MB_OK);
+			return error=1;
 		}
 	}
 
 	if(error == 0){
 	f=strlen(a)-1;
 	if(a[f]!=')' && a[f]!='!' && a[f]!='%' && es_operador(a[f])==1 || letras_permitidas(a[f])==1 ){
-		error=1; /*Validará que el último carácter no sea un operador a excepción de ')', ! y %*/
+        /*Validará que el último carácter no sea un operador a excepción de ')', ! y %*/
 		MessageBox(hwnd,"Error con el último carácter","Error sintáctico",MB_ICONWARNING | MB_OK);
+		return error = 1;
 	}
 	}
 
