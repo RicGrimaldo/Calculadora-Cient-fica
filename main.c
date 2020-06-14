@@ -837,16 +837,16 @@ float operacion(float operando1, float operando2, char operador, int *error,HWND
     char a_tilde = 160, o_tilde = 162;
     switch(operador){
         case '+':
-            /*if(operando1 > 999999999999999999 || operando2 > 999999999999999999){
-                printf("Error de longitud");
+           if(operando1 > 999999999999999999 || operando2 > 999999999999999999){
+                MessageBox(hwnd,"Se excedió el límite permitido","Error de límite de carácteres",MB_ICONWARNING | MB_OK);
                 *error = 1;
                 break;
-            }else{*/
+            }else{
                 return operando1 + operando2; break;
-            //}
+            }
         case '-': return operando1 - operando2; break;
         case '*':
-            if((operando1 > 99999999999999 && operando2 > 99999999999999) || (operando1 > 999999999999999999 && operando2 != 0 && operando2 != 1) || (operando2 > 999999999999999999 && operando1 != 0 && operando1 != 1)){
+           if((operando1 > 999999999 && operando2 > 999999999) || (operando1 > 999999999999999999 && operando2 != 0 && operando2 != 1) || (operando2 > 999999999999999999 && operando1 != 0 && operando1 != 1)){
                 MessageBox(hwnd,"Se excedió el límite permitido","Error de límite de carácteres",MB_ICONWARNING | MB_OK);
                 *error = 1;
                 break;
@@ -862,7 +862,7 @@ float operacion(float operando1, float operando2, char operador, int *error,HWND
                 return operando1 / operando2; break;
             }
         case '^':
-            if((operando2 > 97 && operando1 != 1 && operando1 != 0 && operando1 != (-1))){
+            if((operando2 > 59 && operando1 != 1 && operando1 != 0 && operando1 != (-1))){
                MessageBox(hwnd,"Se excedió el límite permitido","Error de límite de carácteres",MB_ICONWARNING | MB_OK);
                 *error = 1;
                  break;
@@ -919,14 +919,12 @@ float operacion_trig(float operando1, char operador, int *error,HWND hwnd){
                 break;
             }
         case 'j': return atan(operando1); break;
-        case '!':
-            if(operando1 < 0){
-                MessageBox(hwnd,"No es posible calcular el factorial de un número negativo","Error matemático",
-                           MB_ICONWARNING | MB_OK);
+        case '!': if(operando1 < 0){
+                MessageBox(hwnd,"No es posible calcular el factorial de un número negativo","Error matemático",MB_ICONWARNING | MB_OK);
                 *error = 1;
                 break;
             }else{
-                if(operando1 > 28){
+                if(operando1 > 19){
                     MessageBox(hwnd,"Se excedió el límite permitido","Error de límite de carácteres",MB_ICONWARNING | MB_OK);
                     *error = 1;
                     break;
@@ -936,8 +934,7 @@ float operacion_trig(float operando1, char operador, int *error,HWND hwnd){
                     operando_int = operando1;
                     operando_float = operando_int;
                     if(operando1 != operando_float){
-                        MessageBox(hwnd,"No es posible calcular el factorial de un no-entero","Error matemático",
-                                   MB_ICONWARNING | MB_OK);
+                        MessageBox(hwnd,"No es posible calcular el factorial de un no-entero","Error matemático",MB_ICONWARNING | MB_OK);
                         *error = 1;
                         break;
                     }else{
@@ -998,7 +995,7 @@ float ObtenerResultado(char postfija[n], int *error, HWND hwnd){
             postfija[i+6] = '\0';
         }
     }
-    if(pila -> valor > 999999999999999999){
+   if(pila -> valor > 999999999999999999){
         MessageBox(hwnd,"Se excedió el límite permitido","Error de límite de carácteres",MB_ICONWARNING | MB_OK);
         *error = 1;
     }else{
