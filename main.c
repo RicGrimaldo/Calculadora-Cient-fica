@@ -36,8 +36,8 @@ typedef struct struct_nodo_float nodo_float;
 
 ///Funciones necesarias
 char enteroACaracter(int numero);
-int limite_cadena(char cad[],HWND hwnd);
-int Encontrar_cadena2 (char cad1[],char cad2[]);
+int limite_cadena(char cad[n],HWND hwnd);
+int Encontrar_cadena2 (char cad1[n],char cad2[n]);
 int factorial(float operando);
 
 ///Funciones de conversiones
@@ -52,22 +52,22 @@ int esDigito (char car);
 int es_operador(char car);
 int letras_permitidas (char car);
 int Primer_letra_funcion(char a);
-int encontrarCaracter(char cad[], char car);
-int decimal(char a[],HWND hwnd);
+int encontrarCaracter(char cad[n], char car);
+int decimal(char a[n],HWND hwnd);
 
 ///Funciones de 'errores' secundarias
 
-int Encontrar_cadena (char cad1[],char cad2[]);
-int parentesis_paridad(char a[],HWND hwnd);
-int parentesis_vacio(char a[], HWND hwnd);
-int validacion_caracter(char a[],HWND hwnd);
-int verificacion_funciones(HWND hwnd,char cad[]);
+int Encontrar_cadena (char cad1[n],char cad2[n]);
+int parentesis_paridad(char a[n],HWND hwnd);
+int parentesis_vacio(char a[n], HWND hwnd);
+int validacion_caracter(char a[n],HWND hwnd);
+int verificacion_funciones(HWND hwnd,char cad[n]);
 
 ///Funciones de 'errores' principales
 
-int error_lexico(char a[], HWND hwnd);
-int error_sintatico(char a[],HWND hwnd);
-int Detectar_Errores(char a[],HWND hwnd);
+int error_lexico(char a[n], HWND hwnd);
+int error_sintatico(char a[n],HWND hwnd);
+int Detectar_Errores(char a[n],HWND hwnd);
 
 ///Funciones pertenecientes para calcular el resultado
 
@@ -123,7 +123,7 @@ void Procedimiento(char entrada[n], char postfija[n], HWND hwnd);
 ///Interfaz gráfica
 LRESULT CALLBACK winProc(HWND hwnd,UINT msj,WPARAM wParam,LPARAM lParam);
 
-char app[] = "Mi clase";
+char app[] = "Calculadora";
 int WINAPI WinMain(HINSTANCE ins,HINSTANCE ins2,LPSTR cmd, int estado){
     //Ocultar_pantalla();
     WNDCLASSEX vtn;
@@ -168,14 +168,14 @@ int WINAPI WinMain(HINSTANCE ins,HINSTANCE ins2,LPSTR cmd, int estado){
 
     //Funciones trigonométricas
 
-    barcsec = CreateWindow("BUTTON","arcsec",WS_CHILD | WS_VISIBLE | SS_CENTER ,170,116,55,50,ventana,NULL,ins,NULL);
-    barccsc = CreateWindow("BUTTON","arccsc",WS_CHILD | WS_VISIBLE | SS_CENTER ,170,166,55,50,ventana,NULL,ins,NULL);
+    barccsc = CreateWindow("BUTTON","arccsc",WS_CHILD | WS_VISIBLE | SS_CENTER ,170,116,55,50,ventana,NULL,ins,NULL);
+    barcsec = CreateWindow("BUTTON","arcsec",WS_CHILD | WS_VISIBLE | SS_CENTER ,170,166,55,50,ventana,NULL,ins,NULL);
     barccot = CreateWindow("BUTTON","arccot",WS_CHILD | WS_VISIBLE | SS_CENTER ,170,216,55,50,ventana,NULL,ins,NULL);
     barcsin = CreateWindow("BUTTON","arcsin",WS_CHILD | WS_VISIBLE | SS_CENTER ,225,116,55,50,ventana,NULL,ins,NULL);
     barccos = CreateWindow("BUTTON","arccos",WS_CHILD | WS_VISIBLE | SS_CENTER ,225,166,55,50,ventana,NULL,ins,NULL);
     barctan = CreateWindow("BUTTON","arctan",WS_CHILD | WS_VISIBLE | SS_CENTER ,225,216,55,50,ventana,NULL,ins,NULL);
-    bsec = CreateWindow("BUTTON","sec",WS_CHILD | WS_VISIBLE | SS_CENTER ,280,116,55,50,ventana,NULL,ins,NULL);
-    bcsc = CreateWindow("BUTTON","csc",WS_CHILD | WS_VISIBLE | SS_CENTER ,280,166,55,50,ventana,NULL,ins,NULL);
+    bcsc = CreateWindow("BUTTON","csc",WS_CHILD | WS_VISIBLE | SS_CENTER ,280,116,55,50,ventana,NULL,ins,NULL);
+    bsec = CreateWindow("BUTTON","sec",WS_CHILD | WS_VISIBLE | SS_CENTER ,280,166,55,50,ventana,NULL,ins,NULL);
     bcot = CreateWindow("BUTTON","cot",WS_CHILD | WS_VISIBLE | SS_CENTER ,280,216,55,50,ventana,NULL,ins,NULL);
     bsin = CreateWindow("BUTTON","sin",WS_CHILD | WS_VISIBLE | SS_CENTER ,335,116,55,50,ventana,NULL,ins,NULL);
     bcos = CreateWindow("BUTTON","cos",WS_CHILD | WS_VISIBLE | SS_CENTER ,335,166,55,50,ventana,NULL,ins,NULL);
@@ -230,7 +230,7 @@ int WINAPI WinMain(HINSTANCE ins,HINSTANCE ins2,LPSTR cmd, int estado){
 char enteroACaracter(int numero){
 	return numero + '0';
 }
-int limite_cadena(char cad[],HWND hwnd)
+int limite_cadena(char cad[n],HWND hwnd)
  {
      int error = 0;
      if(strlen(cad) >= 31)
@@ -241,7 +241,7 @@ int limite_cadena(char cad[],HWND hwnd)
     else
         return error = 0;
  }
- int Encontrar_cadena2 (char cad1[],char cad2[]){
+ int Encontrar_cadena2 (char cad1[n],char cad2[n]){
 	int resultado = 1;
 	for(int i=0; cad1[i] != '\0'; i++){
         if(cad1[i] != cad2[i]){
@@ -348,7 +348,7 @@ int Primer_letra_funcion(char a)
     return resultado;
 }
 
-int encontrarCaracter(char cad[], char car){
+int encontrarCaracter(char cad[n], char car){
      int r=0;
      for(int i=0;i<strlen(cad);i++){
         if(cad[i]==car){
@@ -359,7 +359,7 @@ int encontrarCaracter(char cad[], char car){
      return r-1;
  }
 
-int decimal(char a[],HWND hwnd){
+int decimal(char a[n],HWND hwnd){
 
     int error = 0,x;
     x = encontrarCaracter(a,'.');
@@ -377,7 +377,7 @@ int decimal(char a[],HWND hwnd){
 
     return error;
 }
-int Encontrar_cadena (char cad1[],char cad2[]){
+int Encontrar_cadena (char cad1[n],char cad2[n]){
 	int resultado=0,i=0;
 	///Si no se encuentra cadena, devuelve 0.
 	while(i<strlen(cad1)){
@@ -401,7 +401,7 @@ int Encontrar_cadena (char cad1[],char cad2[]){
 	return resultado;
 }
 
-int parentesis_paridad(char a[],HWND hwnd){
+int parentesis_paridad(char a[n],HWND hwnd){
     int b=0,c=0,error=0,m; /*Contadores para contar cantidad de paréntesis en la cadena*/
     m=strlen(a);
     for(int i=0;i<m;i++){
@@ -420,7 +420,7 @@ int parentesis_paridad(char a[],HWND hwnd){
     return error;
 }
 
-int parentesis_vacio(char a[], HWND hwnd){
+int parentesis_vacio(char a[n], HWND hwnd){
     int error=0;
     for(int i=0;i<strlen(a);i++){
         if(a[i]=='('&& a[i+1]==')' && a[i+1]!='\0'){/*Al encontrar un par de paréntesis vacíos, se sale del bucle*/
@@ -432,7 +432,7 @@ int parentesis_vacio(char a[], HWND hwnd){
     return error;
 }
 
-int validacion_caracter(char a[],HWND hwnd){
+int validacion_caracter(char a[n],HWND hwnd){
 	int error=0,f;
 	if(es_operador(a[0])==1 && a[0]!='(' && a[0]!='-' && esDigito(a[0])==0){
 		error=1; /*Validará que el primer carácter no sea ningún operador a excepción del '(', y cualquier primer letra de las funciones*/
@@ -482,7 +482,7 @@ int validacion_caracter(char a[],HWND hwnd){
 		return error;
 	}
 
-int verificacion_funciones(HWND hwnd,char cad[])
+int verificacion_funciones(HWND hwnd,char cad[n])
  {
      int error = 0;
      for(int i=0;i<strlen(cad);i++)
@@ -508,7 +508,7 @@ int verificacion_funciones(HWND hwnd,char cad[])
                                MB_ICONWARNING | MB_OK);
      return error;
  }
-int error_lexico(char a[], HWND hwnd){
+int error_lexico(char a[n], HWND hwnd){
     int error=1;
     for(int i=0;i<strlen(a);i++){
         if(esDigito(a[i])==1 || es_operador(a[i])==1  && a[i]!='.' || letras_permitidas(a[i])==1){
@@ -540,7 +540,7 @@ procediendo a leer el siguiente carácter de la candena*/
     return error;
 }
 
-int error_sintatico(char a[],HWND hwnd){
+int error_sintatico(char a[n],HWND hwnd){
     int error=0;
     if(parentesis_paridad(a,hwnd)!=1){ /*Primero, se validará si hay la misma cantidad de pares de paréntesis*/
     for(int i=0;i<strlen(a);i++){
@@ -579,7 +579,7 @@ int error_sintatico(char a[],HWND hwnd){
     return error;
 }
 
-int Detectar_Errores(char a[],HWND hwnd){
+int Detectar_Errores(char a[n],HWND hwnd){
 	int error=0;
 	if(limite_cadena(a,hwnd)==1) return error = 1;
 	if(error_lexico(a,hwnd)==1) return error = 1;
