@@ -825,6 +825,8 @@ void pos(char entrada[n], char postfija[n]){
 		postfija[++j] = elemento;
 	}
 	postfija[++j] = '\0';
+	printf("Postfija: \n");
+	puts(postfija);
 }
 
 void ConversionInfijaAPostfija(char entrada[n], char postfija[n]){
