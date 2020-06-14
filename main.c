@@ -9,7 +9,7 @@
 ///Esta es una prueba de pull request (Git)
 ///Botones
 HWND ventana,caja_texto;
-HWND bsin,bcos,btan,bsec,bcsc,bcot,barcsin,barccos,barctan,barcsec,barccsc,barccot;
+HWND bsin,bcos,btan,bsec,bcsc,bcot,barcsin,barccos,barctan;
 HWND bpot,bmul,bdiv,boff,bac,braiz,bsum,bfact,bporc,bpariz,bparder,bpunto,bresta,bresultado;
 HWND b0,b1,b2,b3,b4,b5,b6,b7,b8,b9;
 
@@ -485,9 +485,6 @@ int verificacion_funciones(HWND hwnd,char cad[n])
      {
          if(esDigito(cad[i])==0 && es_operador(cad[i])==0){
                 if (Encontrar_cadena("sqrt(",cad) == 1)  error=0;
-                else if (Encontrar_cadena("arccsc(",cad) == 1) error=0;
-                else if (Encontrar_cadena("arcsec(",cad ) == 1) error=0;
-                else if (Encontrar_cadena("arccot(",cad) == 1) error=0;
                 else if (Encontrar_cadena("arctan(",cad ) == 1) error=0;
                 else if (Encontrar_cadena("arccos(",cad ) == 1) error=0;
                 else if (Encontrar_cadena("arcsin(",cad) == 1) error=0;
@@ -631,9 +628,6 @@ void funciones_tri(char entrada [n]){
             else if (Encontrar_cadena2("arcsin",trig) == 1)     {operador = 'h'; J += 5;}
             else if (Encontrar_cadena2("arccos",trig ) == 1)    {operador = 'i'; J += 5;}
             else if (Encontrar_cadena2("arctan",trig ) == 1)    {operador = 'j'; J += 5;}
-            else if (Encontrar_cadena2("arccot",trig) == 1)     {operador = 'k'; J += 5;}
-            else if (Encontrar_cadena2("arcsec",trig ) == 1)    {operador = 'l'; J += 5;}
-            else if (Encontrar_cadena2("arccsc",trig) == 1)     {operador = 'm'; J += 5;}
             entrada[i] = operador;
             for(int j = (I+i); entrada[j] != '\0'; j++){
                 entrada[j-(I-1)] = entrada[j];
@@ -668,9 +662,6 @@ int operando (char c){
          c != 'h' &&
          c != 'i' &&
          c != 'j' &&
-         c != 'k' &&
-         c != 'l' &&
-         c != 'm' &&
          c != ','
     ){
         return 1;
@@ -928,9 +919,6 @@ float operacion_trig(float operando1, char operador, int *error,HWND hwnd){
                 break;
             }
         case 'j': return atan(operando1); break;
-        case 'k': return 1/atan(operando1); break;
-        case 'l': return 1/acos(operando1); break;
-        case 'm': return 1/(asin(operando1)); break;
         case '!':
             if(operando1 < 0){
                 MessageBox(hwnd,"No es posible calcular el factorial de un número negativo","Error matemático",
@@ -992,7 +980,7 @@ float ObtenerResultado(char postfija[n], int *error, HWND hwnd){
             }else{
                 if(postfija[i] == 'a' || postfija[i] == 'b' || postfija[i] == 'c' || postfija[i] == 'd' || postfija[i] == 'e'
                    || postfija[i] == 'f' || postfija[i] == 'g' || postfija[i] == 'h' || postfija[i] == 'i' || postfija[i] == 'j'
-                   || postfija[i] == 'k' || postfija[i] == 'l' || postfija[i] == 'm' || postfija[i] == '!' || postfija[i] == '%'){
+                   || postfija[i] == '!' || postfija[i] == '%'){
                     pila = pop_float(&operando1, pila);
                     resultado = operacion_trig(operando1, postfija[i], &*error,hwnd);
                     printf("Resultado guardado trigonometrico%f\n\n",resultado);
@@ -1060,25 +1048,7 @@ LRESULT CALLBACK winProc(HWND hwnd,UINT msj,WPARAM wParam,LPARAM lParam)
 
     //Funciones trigonométricas
 
-    if((HWND)lParam == barcsec){
-            GetWindowText(caja_texto,texto,33);
-            strcat(texto,"arcsec(");
-            SetWindowText(caja_texto,texto);
-        }
-
-    if((HWND)lParam == barccsc){
-            GetWindowText(caja_texto,texto,33);
-            strcat(texto,"arccsc(");
-            SetWindowText(caja_texto,texto);
-        }
-
-     if((HWND)lParam == barccot ){
-            GetWindowText(caja_texto,texto,33);
-            strcat(texto,"arccot(");
-            SetWindowText(caja_texto,texto);
-        }
-
-     if((HWND)lParam == barcsin ){
+    if((HWND)lParam == barcsin ){
             GetWindowText(caja_texto,texto,33);
             strcat(texto,"arcsin(");
             SetWindowText(caja_texto,texto);
