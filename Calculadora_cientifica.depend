@@ -1,5 +1,5 @@
 # depslib dependency file v1.0
-1592098394 source:c:\users\ricardo grimaldo\downloads\calculadora_científica\main.c
+1592099841 source:c:\users\ricardo grimaldo\downloads\calculadora_científica\main.c
 	<windows.h>
 	<stdio.h>
 	<string.h>
