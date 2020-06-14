@@ -123,7 +123,7 @@ LRESULT CALLBACK winProc(HWND hwnd,UINT msj,WPARAM wParam,LPARAM lParam);
 
 char app[] = "Calculadora";
 int WINAPI WinMain(HINSTANCE ins,HINSTANCE ins2,LPSTR cmd, int estado){
-    Ocultar_pantalla();
+    //Ocultar_pantalla();
     WNDCLASSEX vtn;
     vtn.cbClsExtra=0;
     vtn.cbSize=sizeof(WNDCLASSEX);
@@ -255,23 +255,29 @@ int factorial(float operando){
 void conversion_hex(float resultado){
     char hextxt[33];
     int res;
-    if(resultado<=999999999){
+    if(resultado<=999999999 && resultado>=0){
     res=trunc(resultado);
     ltoa(res, hextxt,16);
     SetWindowText(hexl,hextxt);
     }
-    else SetWindowText(octl,"Límite rebasado");
+    else{
+        if(resultado<0) SetWindowText(hexl," ");
+        else SetWindowText(hexl,"Límite rebasado");
+    }
 }
 void conversion_oct (float resultado)
 {
     char octtxt[33];
     int res;
-    if(resultado<=99999990){
+    if(resultado<=99999990 && resultado>=0){
     res=trunc(resultado);
     ltoa(res, octtxt, 8);
     SetWindowText(octl,octtxt);
     }
-    else SetWindowText(octl,"Límite rebasado");
+    else{
+        if(resultado<0) SetWindowText(octl," ");
+        else SetWindowText(gradosl,"Límite rebasado");
+    }
 }
 
 void conversion_bin (float resultado)
@@ -279,18 +285,21 @@ void conversion_bin (float resultado)
     char bintxt[50];
     int res;
     res = trunc(resultado);
-    if(resultado<=16300){
+    if(resultado<=16300 && resultado>=0){
     ltoa(res,bintxt,2);
     SetWindowText(binl,bintxt);
     }
-    else SetWindowText(binl,"Límite rebasado");
+    else{
+        if(resultado<0) SetWindowText(binl," ");
+        else SetWindowText(gradosl,"Límite rebasado");
+    }
 }
 
  void conversion_grados(float resultado){
     float dec,ope1,ope2;
     int grados,minutos,segundos;
 	char m[30],s[30],res[33];
-	if(resultado<=9999999){
+	if(resultado<=9999999 && resultado>=0){
     grados=trunc(resultado);
     dec=resultado-grados;
     ope1=dec*60;
@@ -303,7 +312,10 @@ void conversion_bin (float resultado)
 	strcat(res,"° "); strcat(res,m); strcat(res," ' "); strcat(res,s); strcat(res,"''");
 	SetWindowText(gradosl,res);
 	}
-	else SetWindowText(gradosl,"Límite rebasado");
+	else{
+        if(resultado<0) SetWindowText(gradosl," ");
+        else SetWindowText(gradosl,"Límite rebasado");
+	}
 }
 int esDigito (char car){
     int resultado=0;
