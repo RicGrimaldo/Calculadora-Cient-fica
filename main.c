@@ -123,7 +123,7 @@ LRESULT CALLBACK winProc(HWND hwnd,UINT msj,WPARAM wParam,LPARAM lParam);
 
 char app[] = "Calculadora";
 int WINAPI WinMain(HINSTANCE ins,HINSTANCE ins2,LPSTR cmd, int estado){
-    Ocultar_pantalla();
+    //Ocultar_pantalla();
     WNDCLASSEX vtn;
     vtn.cbClsExtra=0;
     vtn.cbSize=sizeof(WNDCLASSEX);
@@ -555,15 +555,8 @@ int error_sintatico(char a[n],HWND hwnd){
 			MessageBox(hwnd,"No es posible calcular con 2 operadores seguidos","Error sintáctico",MB_ICONWARNING | MB_OK);
 			return error = 1;
         }
-        else{
-                 if(i>=2 && a[i]=='-' && a[i-1]=='('  && esDigito(a[i-1])==0){
-                    MessageBox(hwnd,"Error con la ubicación del '-'","Error sintáctico",MB_ICONWARNING | MB_OK);
-                    return error = 1;
-                }
-                else
-            error = 0;
+        else error = 0;
             /*El error será 0 en caso de que el carácter leído no haya presentado error*/
-        }
     }
     }
     else{
