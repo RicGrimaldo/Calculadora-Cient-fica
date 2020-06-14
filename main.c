@@ -555,7 +555,7 @@ int error_sintatico(char a[],HWND hwnd){
 			return error = 1;
         }
         else{
-                if(i>=2 && a[i]=='-' && a[i-1]=='('  && esDigito(a[i-1])==0){
+                 if(i>=2 && a[i]=='-' && a[i-1]=='('  && esDigito(a[i-1])==0){
                     MessageBox(hwnd,"Error con la ubicación del '-'","Error sintáctico",MB_ICONWARNING | MB_OK);
                     return error = 1;
                 }
