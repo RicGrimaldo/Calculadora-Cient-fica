@@ -347,6 +347,8 @@ void funciones_tri(char entrada [n]){
         if(entrada[i+1] == 10){
             entrada[i+2] = '\0';
             entrada[i+3] = '\0';
+            entrada[i+4] = '\0';
+            entrada[i+5] = '\0';
         }
     }
 }
