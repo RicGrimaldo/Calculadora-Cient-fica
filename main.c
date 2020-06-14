@@ -24,6 +24,8 @@ void Ocultar_pantalla(void)
     console = FindWindowA("ConsoleWindowClass",NULL);
     ShowWindow(console,0);
 }
+
+///Estructuras necesarias para la pila
 struct PILAA {
 	int t;
 	char a[n];
@@ -108,7 +110,7 @@ nodo_float *crear_pila_float(nodo_float *pila);
 nodo_float *push_float(float valor, nodo_float *pila);
 nodo_float *pop_float(float *valor, nodo_float *pila);
 
-///Funciones para el resultado
+///Funciones para calcular el resultado
 void pos(char entrada[n], char postfija[n]);
 void ConversionInfijaAPostfija(char entrada[n], char postfija[n]);
 float operacion(float operando1, float operando2, char operador, int *error,HWND hwnd);
@@ -118,9 +120,10 @@ float ObtenerResultado(char postfija[n], int *error, HWND hwnd);
 ///Función principal
 void Procedimiento(char entrada[n], char postfija[n], HWND hwnd);
 
-///Interfaz gráfica
+///Eventos de la Interfaz gráfica
 LRESULT CALLBACK winProc(HWND hwnd,UINT msj,WPARAM wParam,LPARAM lParam);
 
+///Creación de la interfaz gráfica
 char app[] = "Calculadora";
 int WINAPI WinMain(HINSTANCE ins,HINSTANCE ins2,LPSTR cmd, int estado){
     //Ocultar_pantalla();
@@ -532,16 +535,16 @@ procediendo a leer el siguiente carácter de la candena*/
         }
         else{
         /*En caso de que el carácter leído no sea dígito u operador, se detectará el error léxico*/
-                error=1;
                 if(a[i]=='.'){ /*Si el carácter inválido es un punto decimal, hará una impresión diferente*/
                     if(esDigito(a[i-1])==1 && esDigito(a[i+1])==1){
                         error = decimal(a,hwnd);
                         break;
                     }
-                /*else{
+                else{
+                    if(a[i+1]=='.'){
                     MessageBox(hwnd,"Error en ubicación del punto decimal.","Error léxico",MB_ICONWARNING | MB_OK);
-                    return error = 1;
-                }*/
+                    return error = 1;}
+                }
                 }
                 else{
                 MessageBox(hwnd,"No se permiten caracteres inválidos","Error léxico",MB_ICONWARNING | MB_OK);
