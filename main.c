@@ -9,7 +9,7 @@
 ///Esta es una prueba de pull request (Git)
 ///Botones
 HWND ventana,caja_texto;
-HWND bsin,bcos,btan,bsec,bcsc,bcot,barcsin,barccos,barctan,barcsec,barccsc,barccot;
+HWND bsin,bcos,btan,bsec,bcsc,bcot,barcsin,barccos,barctan;
 HWND bpot,bmul,bdiv,boff,bac,braiz,bsum,bfact,bporc,bpariz,bparder,bpunto,bresta,bresultado;
 HWND b0,b1,b2,b3,b4,b5,b6,b7,b8,b9;
 
@@ -75,28 +75,25 @@ int potencia(int x, int y);
 void multi_parentesis(char entrada [n]);
 void funciones_tri(char entrada [n]);
 int operando (char c);
-int priori[21][22]={
-    {1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},  ///Suma
-    {1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},  ///Resta
-    {1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},  ///Multiplicacion
-    {1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},  ///Division
-    {1,1,1,1,1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0},  ///Exponente
-    {1,1,1,1,1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0},  ///SQRT
-    {1,1,1,1,1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0},  ///Factorial
-    {1,1,1,1,1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0},  ///Porcentaje
-    {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,1},  ///Sin
-    {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,1},  ///Cos
-    {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,1},  ///Tan
-    {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,1},  ///Cot
-    {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,1},  ///Sec
-    {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,1},  ///Csc
-    {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,1},  ///arcsin
-    {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,1},  ///arccos
-    {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,1},  ///arctan
-    {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,1},  ///arccot
-    {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,1},  ///arcsec
-    {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,1},  ///arccsc
-    {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},  ///Parentesis izquierdo
+int priori[18][19]={
+    {1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},  ///Suma
+    {1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},  ///Resta
+    {1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},  ///Multiplicacion
+    {1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},  ///Division
+    {1,1,1,1,1,1,1,1,0,0,0,0,0,0,0,0,0,0,1},  ///Exponente
+    {1,1,1,1,1,1,1,1,0,0,0,0,0,0,0,0,0,0,1},  ///SQRT
+    {1,1,1,1,1,1,1,1,0,0,0,0,0,0,0,0,0,0,1},  ///Factorial
+    {1,1,1,1,1,1,1,1,0,0,0,0,0,0,0,0,0,0,1},  ///Porcentaje
+    {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,1},  ///Sin
+    {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,1},  ///Cos
+    {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,1},  ///Tan
+    {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,1},  ///Cot
+    {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,1},  ///Sec
+    {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,1},  ///Csc
+    {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,1},  ///arcsin
+    {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,1},  ///arccos
+    {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,1},  ///arctan
+    {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0}  ///Parentesis izquierdo
 };
 int prioridad (char op1, char op2);
 
@@ -123,7 +120,7 @@ void Procedimiento(char entrada[n], char postfija[n], HWND hwnd);
 ///Interfaz gráfica
 LRESULT CALLBACK winProc(HWND hwnd,UINT msj,WPARAM wParam,LPARAM lParam);
 
-char app[] = "Mi clase";
+char app[] = "Calculadora";
 int WINAPI WinMain(HINSTANCE ins,HINSTANCE ins2,LPSTR cmd, int estado){
     //Ocultar_pantalla();
     WNDCLASSEX vtn;
@@ -168,19 +165,15 @@ int WINAPI WinMain(HINSTANCE ins,HINSTANCE ins2,LPSTR cmd, int estado){
 
     //Funciones trigonométricas
 
-    barccsc = CreateWindow("BUTTON","arccsc",WS_CHILD | WS_VISIBLE | SS_CENTER ,170,116,55,50,ventana,NULL,ins,NULL);
-    barcsec = CreateWindow("BUTTON","arcsec",WS_CHILD | WS_VISIBLE | SS_CENTER ,170,166,55,50,ventana,NULL,ins,NULL);
-    barccot = CreateWindow("BUTTON","arccot",WS_CHILD | WS_VISIBLE | SS_CENTER ,170,216,55,50,ventana,NULL,ins,NULL);
-    barcsin = CreateWindow("BUTTON","arcsin",WS_CHILD | WS_VISIBLE | SS_CENTER ,225,116,55,50,ventana,NULL,ins,NULL);
-    barccos = CreateWindow("BUTTON","arccos",WS_CHILD | WS_VISIBLE | SS_CENTER ,225,166,55,50,ventana,NULL,ins,NULL);
-    barctan = CreateWindow("BUTTON","arctan",WS_CHILD | WS_VISIBLE | SS_CENTER ,225,216,55,50,ventana,NULL,ins,NULL);
-    bcsc = CreateWindow("BUTTON","csc",WS_CHILD | WS_VISIBLE | SS_CENTER ,280,116,55,50,ventana,NULL,ins,NULL);
-    bsec = CreateWindow("BUTTON","sec",WS_CHILD | WS_VISIBLE | SS_CENTER ,280,166,55,50,ventana,NULL,ins,NULL);
-    bcot = CreateWindow("BUTTON","cot",WS_CHILD | WS_VISIBLE | SS_CENTER ,280,216,55,50,ventana,NULL,ins,NULL);
-    bsin = CreateWindow("BUTTON","sin",WS_CHILD | WS_VISIBLE | SS_CENTER ,335,116,55,50,ventana,NULL,ins,NULL);
-    bcos = CreateWindow("BUTTON","cos",WS_CHILD | WS_VISIBLE | SS_CENTER ,335,166,55,50,ventana,NULL,ins,NULL);
-    btan = CreateWindow("BUTTON","tan",WS_CHILD | WS_VISIBLE | SS_CENTER ,335,216,55,50,ventana,NULL,ins,NULL);
-
+    bsin = CreateWindow("BUTTON","sin",WS_CHILD | WS_VISIBLE | SS_CENTER ,168,120,75,50,ventana,NULL,ins,NULL);
+    bcos = CreateWindow("BUTTON","cos",WS_CHILD | WS_VISIBLE | SS_CENTER ,168,170,75,50,ventana,NULL,ins,NULL);
+    btan = CreateWindow("BUTTON","tan",WS_CHILD | WS_VISIBLE | SS_CENTER ,168,220,75,50,ventana,NULL,ins,NULL);
+    bcsc = CreateWindow("BUTTON","csc",WS_CHILD | WS_VISIBLE | SS_CENTER ,243,120,75,50,ventana,NULL,ins,NULL);
+    bsec = CreateWindow("BUTTON","sec",WS_CHILD | WS_VISIBLE | SS_CENTER ,243,170,75,50,ventana,NULL,ins,NULL);
+    bcot = CreateWindow("BUTTON","cot",WS_CHILD | WS_VISIBLE | SS_CENTER ,243,220,75,50,ventana,NULL,ins,NULL);
+    barcsin = CreateWindow("BUTTON","arcsin",WS_CHILD | WS_VISIBLE | SS_CENTER ,318,120,75,50,ventana,NULL,ins,NULL);
+    barccos = CreateWindow("BUTTON","arccos",WS_CHILD | WS_VISIBLE | SS_CENTER ,318,170,75,50,ventana,NULL,ins,NULL);
+    barctan = CreateWindow("BUTTON","arctan",WS_CHILD | WS_VISIBLE | SS_CENTER ,318,220,75,50,ventana,NULL,ins,NULL);
 
     //Operaciones principales y básicas
 
@@ -489,9 +482,6 @@ int verificacion_funciones(HWND hwnd,char cad[n])
      {
          if(esDigito(cad[i])==0 && es_operador(cad[i])==0){
                 if (Encontrar_cadena("sqrt(",cad) == 1)  error=0;
-                else if (Encontrar_cadena("arccsc(",cad) == 1) error=0;
-                else if (Encontrar_cadena("arcsec(",cad ) == 1) error=0;
-                else if (Encontrar_cadena("arccot(",cad) == 1) error=0;
                 else if (Encontrar_cadena("arctan(",cad ) == 1) error=0;
                 else if (Encontrar_cadena("arccos(",cad ) == 1) error=0;
                 else if (Encontrar_cadena("arcsin(",cad) == 1) error=0;
@@ -635,9 +625,6 @@ void funciones_tri(char entrada [n]){
             else if (Encontrar_cadena2("arcsin",trig) == 1)     {operador = 'h'; J += 5;}
             else if (Encontrar_cadena2("arccos",trig ) == 1)    {operador = 'i'; J += 5;}
             else if (Encontrar_cadena2("arctan",trig ) == 1)    {operador = 'j'; J += 5;}
-            else if (Encontrar_cadena2("arccot",trig) == 1)     {operador = 'k'; J += 5;}
-            else if (Encontrar_cadena2("arcsec",trig ) == 1)    {operador = 'l'; J += 5;}
-            else if (Encontrar_cadena2("arccsc",trig) == 1)     {operador = 'm'; J += 5;}
             entrada[i] = operador;
             for(int j = (I+i); entrada[j] != '\0'; j++){
                 entrada[j-(I-1)] = entrada[j];
@@ -655,14 +642,14 @@ void funciones_tri(char entrada [n]){
 }
 
 int operando (char c){
-	if  (c != '+' &&
+	return (c != '+' &&
          c != '-' &&
          c != '*' &&
 		 c != '/' &&
 		 c != '^' &&
-		 c != ')' &&
-		 c != '(' &&
          c != 'a' &&
+         c != '!' &&
+         c != '%' &&
          c != 'b' &&
          c != 'c' &&
          c != 'd' &&
@@ -672,27 +659,21 @@ int operando (char c){
          c != 'h' &&
          c != 'i' &&
          c != 'j' &&
-         c != 'k' &&
-         c != 'l' &&
-         c != 'm' &&
-         c != ','
-    ){
-        return 1;
-    }
-    return 0;
+         c != '(' &&
+         c != ')' &&
+         c != ',' &&
+         c != '_');
 }
-int prioridad (char op1, char op2)
-{
-	int i,j,prioridaad;
-
+int prioridad (char op1, char op2){
+	int i, j, prioridaad;
 	if (op1=='+') i=0;
 	else if (op1=='-') i=1;
 	else if (op1=='*') i=2;
 	else if (op1=='/') i=3;
 	else if (op1=='^') i=4;
-	else if (op1=='!') i=5;
-	else if (op1=='%') i=6;
-	else if (op1=='a') i=7;
+	else if (op1=='a') i=5;
+	else if (op1=='!') i=6;
+	else if (op1=='%') i=7;
 	else if (op1=='b') i=8;
 	else if (op1=='c') i=9;
 	else if (op1=='d') i=10;
@@ -702,10 +683,7 @@ int prioridad (char op1, char op2)
 	else if (op1=='h') i=14;
 	else if (op1=='i') i=15;
 	else if (op1=='j') i=16;
-	else if (op1=='k') i=17;
-	else if (op1=='l') i=18;
-	else if (op1=='m') i=19;
-	else if (op1=='(') i=20;
+	else if (op1=='(') i=17;
 
     if (op2=='+') j=0;
 	else if (op2=='-') j=1;
@@ -724,13 +702,9 @@ int prioridad (char op1, char op2)
 	else if (op2=='h') j=14;
 	else if (op2=='i') j=15;
 	else if (op2=='j') j=16;
-	else if (op2=='k') j=17;
-	else if (op2=='l') j=18;
-	else if (op2=='m') j=19;
-	else if (op2=='(') j=20;
-	else if (op1==')') j=21;
-
-	prioridaad=priori[i][j];
+	else if (op2=='(') j=17;
+	else if (op1==')') j=18;
+	prioridaad = priori[i][j];
 	return (prioridaad);
 }
 
@@ -801,22 +775,26 @@ void pos(char entrada[n], char postfija[n]){
 	void retira_pila (struct PILAA *p, char *s);
 	i = 0;
 	j = -1;
-	init_pila (&pila);
+	init_pila(&pila);
 	while(entrada[i] != '_') {
-	   if(operando(entrada[i]) == 1){
+	   if(operando(entrada[i])){
             postfija [++j] = entrada[i++];
 	   }
 	   else{
-		     while (!pila_vacia (&pila) && prioridad(tope (pila), entrada[i])){
+		     while (!pila_vacia (&pila) && prioridad(tope(pila), entrada[i])){
 			     retira_pila (&pila, &elemento);
 			     postfija[++j] = elemento;
 		      }
-		      if(operando(postfija[j]) == 1){
+		      if(operando(postfija[j])){
                 postfija[++j] = ',';
+                }else{
+                    if (entrada[i] == ')'){
+                    retira_pila(&pila, &elemento);
+                  }
+                  else{
+                    ins_pila(&pila, entrada[i]);
+                  }
                 }
-		      if (entrada[i] == ')')
-			   retira_pila(&pila, &elemento);
-		      else ins_pila(&pila, entrada[i]);
 		      i++;
 		}
 	}
@@ -828,7 +806,6 @@ void pos(char entrada[n], char postfija[n]){
 	printf("Postfija: \n");
 	puts(postfija);
 }
-
 void ConversionInfijaAPostfija(char entrada[n], char postfija[n]){
 	int longitud;
 	longitud = strlen(entrada);
@@ -847,9 +824,10 @@ void ConversionInfijaAPostfija(char entrada[n], char postfija[n]){
 
 
 float operacion(float operando1, float operando2, char operador, int *error,HWND hwnd){
+    char a_tilde = 160, o_tilde = 162;
     switch(operador){
         case '+':
-            if(operando1 > 999999999999999999 || operando2 > 999999999999999999){
+           if(operando1 > 999999999999999999 || operando2 > 999999999999999999){
                 MessageBox(hwnd,"Se excedió el límite permitido","Error de límite de carácteres",MB_ICONWARNING | MB_OK);
                 *error = 1;
                 break;
@@ -858,7 +836,7 @@ float operacion(float operando1, float operando2, char operador, int *error,HWND
             }
         case '-': return operando1 - operando2; break;
         case '*':
-            if((operando1 > 999999999 && operando2 > 999999999) || (operando1 > 999999999999999999 && operando2 != 0 && operando2 != 1) || (operando2 > 999999999999999999 && operando1 != 0 && operando1 != 1)){
+           if((operando1 > 999999999 && operando2 > 999999999) || (operando1 > 999999999999999999 && operando2 != 0 && operando2 != 1) || (operando2 > 999999999999999999 && operando1 != 0 && operando1 != 1)){
                 MessageBox(hwnd,"Se excedió el límite permitido","Error de límite de carácteres",MB_ICONWARNING | MB_OK);
                 *error = 1;
                 break;
@@ -884,7 +862,6 @@ float operacion(float operando1, float operando2, char operador, int *error,HWND
     }
 }
 float operacion_trig(float operando1, char operador, int *error,HWND hwnd){
-    puts("Estamos en funciones trigonometricas");
         switch(operador){
         case 'a':
             if(operando1 < 0){
@@ -913,7 +890,7 @@ float operacion_trig(float operando1, char operador, int *error,HWND hwnd){
         case 'g': return 1/sin(operando1); break;
         case 'h':
             if(operando1 > 1 || operando1 < -1){
-                MessageBox(hwnd,"Hubo un error con el dominio de la función cual","Error matemático",MB_ICONWARNING | MB_OK);
+                MessageBox(hwnd,"Hubo un error con el dominio de la función","Error matemático",MB_ICONWARNING | MB_OK);
                 *error = 1;
                 break;
             }else{
@@ -930,27 +907,7 @@ float operacion_trig(float operando1, char operador, int *error,HWND hwnd){
                 break;
             }
         case 'j': return atan(operando1); break;
-        case 'k': return 1/atan(operando1); break;
-        case 'l':
-            if(operando1 > -1 && operando1 < 1){
-                MessageBox(hwnd,"Hubo un error con el dominio de la función","Error matemático",MB_ICONWARNING | MB_OK);
-                *error = 1;
-                break;
-            }else{
-                return 1/acos(operando1);
-                break;
-            }
-        case 'm':
-            if(operando1 > -1 && operando1 < 1){
-                MessageBox(hwnd,"Hubo un error con el dominio de la función","Error matemático",MB_ICONWARNING | MB_OK);
-                *error = 1;
-                break;
-            }else{
-                return 1/asin(operando1);
-                break;
-            }
-        case '!':
-            if(operando1 < 0){
+        case '!': if(operando1 < 0){
                 MessageBox(hwnd,"No es posible calcular el factorial de un número negativo","Error matemático",MB_ICONWARNING | MB_OK);
                 *error = 1;
                 break;
@@ -1008,7 +965,7 @@ float ObtenerResultado(char postfija[n], int *error, HWND hwnd){
             }else{
                 if(postfija[i] == 'a' || postfija[i] == 'b' || postfija[i] == 'c' || postfija[i] == 'd' || postfija[i] == 'e'
                    || postfija[i] == 'f' || postfija[i] == 'g' || postfija[i] == 'h' || postfija[i] == 'i' || postfija[i] == 'j'
-                   || postfija[i] == 'k' || postfija[i] == 'l' || postfija[i] == 'm' || postfija[i] == '!' || postfija[i] == '%'){
+                   || postfija[i] == '!' || postfija[i] == '%'){
                     pila = pop_float(&operando1, pila);
                     resultado = operacion_trig(operando1, postfija[i], &*error,hwnd);
                     printf("Resultado guardado trigonometrico%f\n\n",resultado);
@@ -1026,7 +983,7 @@ float ObtenerResultado(char postfija[n], int *error, HWND hwnd){
             postfija[i+6] = '\0';
         }
     }
-    if(pila -> valor > 999999999999999999){
+   if(pila -> valor > 999999999999999999){
         MessageBox(hwnd,"Se excedió el límite permitido","Error de límite de carácteres",MB_ICONWARNING | MB_OK);
         *error = 1;
     }else{
@@ -1076,25 +1033,7 @@ LRESULT CALLBACK winProc(HWND hwnd,UINT msj,WPARAM wParam,LPARAM lParam)
 
     //Funciones trigonométricas
 
-    if((HWND)lParam == barcsec){
-            GetWindowText(caja_texto,texto,33);
-            strcat(texto,"arcsec(");
-            SetWindowText(caja_texto,texto);
-        }
-
-    if((HWND)lParam == barccsc){
-            GetWindowText(caja_texto,texto,33);
-            strcat(texto,"arccsc(");
-            SetWindowText(caja_texto,texto);
-        }
-
-     if((HWND)lParam == barccot ){
-            GetWindowText(caja_texto,texto,33);
-            strcat(texto,"arccot(");
-            SetWindowText(caja_texto,texto);
-        }
-
-     if((HWND)lParam == barcsin ){
+    if((HWND)lParam == barcsin ){
             GetWindowText(caja_texto,texto,33);
             strcat(texto,"arcsin(");
             SetWindowText(caja_texto,texto);
