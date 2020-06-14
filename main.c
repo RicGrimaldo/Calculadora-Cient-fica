@@ -914,8 +914,8 @@ float operacion_trig(float operando1, char operador, int *error,HWND hwnd){
         case 'f': return 1/cos(operando1); break;
         case 'g': return 1/sin(operando1); break;
         case 'h':
-            if(operando1 > 1){
-                MessageBox(hwnd,"Hubo un error con el dominio de la función","Error matemático",MB_ICONWARNING | MB_OK);
+            if(operando1 > 1 || operando1 < -1){
+                MessageBox(hwnd,"Hubo un error con el dominio de la función cual","Error matemático",MB_ICONWARNING | MB_OK);
                 *error = 1;
                 break;
             }else{
@@ -923,7 +923,7 @@ float operacion_trig(float operando1, char operador, int *error,HWND hwnd){
                 break;
             }
         case 'i':
-            if(operando1 > 1){
+            if(operando1 > 1 || operando1 < -1){
                 MessageBox(hwnd,"Hubo un error con el dominio de la función","Error matemático",MB_ICONWARNING | MB_OK);
                 *error = 1;
                 break;
