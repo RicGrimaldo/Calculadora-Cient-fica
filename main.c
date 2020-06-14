@@ -472,7 +472,7 @@ int validacion_caracter(char a[n],HWND hwnd){
 
 	if(error==0){
 		for(int i=1;i<strlen(a),a[i+1]!='\0';i++){
-			if(a[i-1]=='(' && es_operador(a[i])==1 && a[i]!='(' && a[i]!='-' && esDigito(a[i])==0){
+			if(a[i-1]=='(' && es_operador(a[i])==1 && a[i]!='(' && a[i]!='-' && esDigito(a[i])==0 && a[i]!='.'){
 				/*Validará que el primer carácter no sea ningún operador a excepción del '(', y cualquier primer letra de las funciones*/
                 MessageBox(hwnd,"Error con el primer carácter después del paréntesis","Error sintáctico",
                            MB_ICONWARNING | MB_OK);
@@ -538,10 +538,10 @@ procediendo a leer el siguiente carácter de la candena*/
                         error = decimal(a,hwnd);
                         break;
                     }
-                else{
+                /*else{
                     MessageBox(hwnd,"Error en ubicación del punto decimal.","Error léxico",MB_ICONWARNING | MB_OK);
                     return error = 1;
-                }
+                }*/
                 }
                 else{
                 MessageBox(hwnd,"No se permiten caracteres inválidos","Error léxico",MB_ICONWARNING | MB_OK);
@@ -561,7 +561,8 @@ int error_sintatico(char a[n],HWND hwnd){
         if(a[i]=='('||a[i]==')'){
                 continue; /*Ignorará los operadores válidos, en este caso los paréntesis*/
         }
-        if(es_operador(a[i])==1 && es_operador(a[i+1])==1 && a[i+1]!='('&& a[i+1]!='!' && a[i+1]!='%' && a[i]!='!' && a[i]!='%'){
+        if(es_operador(a[i])==1 && es_operador(a[i+1])==1 && a[i+1]!='('&& a[i+1]!='!' && a[i+1]!='%'
+                        && a[i]!='!' && a[i]!='%' && a[i+1]!='.' && a[i]!='.'){
             /*Sirve para validar que un operador no sea puesto 2 veces seguidas, pero ignorando los parentesis,
 			factorial, porcentaje o que primero esté un signo negativo*/
 			MessageBox(hwnd,"No es posible calcular con 2 operadores seguidos","Error sintáctico",MB_ICONWARNING | MB_OK);
