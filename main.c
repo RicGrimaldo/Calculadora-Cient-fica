@@ -541,7 +541,7 @@ int error_sintatico(char a[n],HWND hwnd){
         if(a[i]=='('||a[i]==')'){
                 continue; /*Ignorará los operadores válidos, en este caso los paréntesis*/
         }
-        if(es_operador(a[i])==1 && es_operador(a[i+1])==1 && a[i+1]!='('&& a[i+1]!='!' && a[i+1]!='%'){
+        if(es_operador(a[i])==1 && es_operador(a[i+1])==1 && a[i+1]!='('&& a[i+1]!='!' && a[i+1]!='%' && a[i]!='!' && a[i]!='%'){
             /*Sirve para validar que un operador no sea puesto 2 veces seguidas, pero ignorando los parentesis,
 			factorial, porcentaje o que primero esté un signo negativo*/
 			MessageBox(hwnd,"No es posible calcular con 2 operadores seguidos","Error sintáctico",MB_ICONWARNING | MB_OK);
