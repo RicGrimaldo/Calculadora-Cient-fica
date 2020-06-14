@@ -6,7 +6,6 @@
 #include<ctype.h>
 #define n 35
 
-///Esta es una prueba de pull request (Git)
 ///Botones
 HWND ventana,caja_texto;
 HWND bsin,bcos,btan,bsec,bcsc,bcot,barcsin,barccos,barctan;
@@ -126,7 +125,7 @@ LRESULT CALLBACK winProc(HWND hwnd,UINT msj,WPARAM wParam,LPARAM lParam);
 ///Creación de la interfaz gráfica
 char app[] = "Calculadora";
 int WINAPI WinMain(HINSTANCE ins,HINSTANCE ins2,LPSTR cmd, int estado){
-    //Ocultar_pantalla();
+    Ocultar_pantalla();
     WNDCLASSEX vtn;
     vtn.cbClsExtra=0;
     vtn.cbSize=sizeof(WNDCLASSEX);
@@ -224,6 +223,8 @@ int WINAPI WinMain(HINSTANCE ins,HINSTANCE ins2,LPSTR cmd, int estado){
     return (int) msj.wParam;
 
 }
+
+///Funciones
 char enteroACaracter(int numero){
 	return numero + '0';
 }
@@ -259,11 +260,11 @@ void conversion_hex(float resultado){
     char hextxt[33];
     int res;
     if(resultado<=999999999 && resultado>=0){
-    res=trunc(resultado);
-    ltoa(res, hextxt,16);
+    res=trunc(resultado); ///Se truncará para convertir únicamente el número entero
+    ltoa(res, hextxt,16); ///Número que se desea convertir, cadena en que se guardará, base
     SetWindowText(hexl,hextxt);
     }
-    else{
+    else{ ///Casos si es negativo o rebasó el límite permitido
         if(resultado<0) SetWindowText(hexl," ");
         else SetWindowText(hexl,"Límite rebasado");
     }
@@ -312,6 +313,7 @@ void conversion_bin (float resultado)
 	itoa(grados,res,10);
 	itoa(minutos,m,10);
 	itoa(segundos,s,10);
+	///Con la función strcat, se unen cadenas y carácteres, todo guardado en la cadena 'res'
 	strcat(res,"° "); strcat(res,m); strcat(res," ' "); strcat(res,s); strcat(res,"''");
 	SetWindowText(gradosl,res);
 	}
@@ -329,7 +331,7 @@ int esDigito (char car){
 }
 
 int es_operador(char car){
-    int resultado=0;
+    int resultado=0; ///Función para verificar si un carácter es operador, 1 si lo es, 0 caso contrario.
     switch(car){
     case'+': case'-': case'*': case'/': case '^': case'(': case ')': case '%': case '.': case '!': resultado=1;
     break;
@@ -338,8 +340,7 @@ int es_operador(char car){
 }
 
 int letras_permitidas (char car){
-    int resultado = 0;
-
+    int resultado = 0; ///Función para verificar si un carácter es alguna de las letras permitidas, 1 si lo es, 0 caso contrario.
     switch(car){
         case 'a': case'c': case 'n': case'e': case'i': case 'o': case'r': case 's': case 't': case 'q':resultado=1;
         break;
@@ -349,7 +350,7 @@ int letras_permitidas (char car){
 
 int Primer_letra_funcion(char a)
 {
-    int resultado = 0;
+    int resultado = 0; ///Primeras posibles letras de todas las funciones
     switch(a){
     case 'a': case 's' : case 'c' : case 't': resultado = 1;
     break;
@@ -358,7 +359,8 @@ int Primer_letra_funcion(char a)
 }
 
 int encontrarCaracter(char cad[n], char car){
-     int r=0;
+     int r=0; ///Una función que verifica si el carácter se encuentra en la cadena.
+     ///Si lo encuentra devuelve la posición, 0 en caso contrario
      for(int i=0;i<strlen(cad);i++){
         if(cad[i]==car){
             r=i+1;
@@ -373,12 +375,12 @@ int decimal(char a[n],HWND hwnd){
     int error = 0,x;
     x = encontrarCaracter(a,'.');
     for(int i=x+1;i<strlen(a);i++){
-            if(esDigito(a[i])==1) continue;
+            if(esDigito(a[i])==1) continue; ///En el caso de que el carácter después de . es número, se verifica el siguiente carácter
         if(es_operador(a[i]) == 1 && a[i]!= '.'){
-            break;
+            break; ///En el caso de que sea un operador, no se encontró error alguno
         }
         else{
-            if(a[i] == '.')
+            if(a[i] == '.') ///Particulares casos como '2.2.2'
                 MessageBox(hwnd,"El número decimal únicamente debe llevar un solo punto.","Error léxico",MB_ICONWARNING | MB_OK);
                 return error = 1;
         }
@@ -405,7 +407,7 @@ int Encontrar_cadena (char cad1[n],char cad2[n]){
 		if(cad1[i]=='\0'){
 			break;}
 		break;
-	}
+	} ///En el caso que hayan coincidido algunas letras, pero la longitud de la cadena es más pequeña que el contador
 	if(i<strlen(cad1)) return resultado=0;
 	return resultado;
 }
@@ -417,14 +419,13 @@ int parentesis_paridad(char a[n],HWND hwnd){
         if(a[i]=='(') b++;
         if(a[i]==')') c++;
         }
-        if(c>b){
-            error = 1;
+        if(c>b){ ///Ej: 4)(6
             MessageBox(hwnd,"Error de paréntesis","Error sintáctico",MB_ICONWARNING | MB_OK);
-            return error;
+            return error = 1;
         }
-    if(c!=b){
-            error=1;
+    if(c!=b){///En el caso de falte un paréntesis
             MessageBox(hwnd,"Error debido a falta de un parentesis","Error sintáctico",MB_ICONWARNING | MB_OK);
+            return error = 1;
     }
     return error;
 }
@@ -446,20 +447,19 @@ int validacion_caracter(char a[n],HWND hwnd){
 	for(int i = 1; i<strlen(a);i++)
     {
         if(Primer_letra_funcion(a[i])==1){
-            if (esDigito(a[i-1])==1 || a[i-1]=='!' || a[i-1]=='%'){
+            if (esDigito(a[i-1])==1 || a[i-1]=='!' || a[i-1]=='%'){ ///Validará que, antes de una función, no haya un número, ! o %
             MessageBox(hwnd,"Error con la declaración de la función","Error sintáctico",
                                    MB_ICONWARNING | MB_OK);
             return error = 1;
-            /*Validará que, antes de una función, no haya un número, ! o %*/
         }
     }
     }
 	if(es_operador(a[0])==1 && a[0]!='(' && a[0]!='-' && esDigito(a[0])==0 && a[0]!='+' && a[0]!='.'){
-        /*Validará que el primer carácter no sea ningún operador a excepción del '(', y cualquier primer letra de las funciones*/
+    ///Validará que el primer carácter no sea ningún operador a excepción del '(',cualquier primer letra de las funciones, - o +.
         MessageBox(hwnd,"Error con el primer carácter","Error sintáctico",MB_ICONWARNING | MB_OK);
         return error=1;
 		}
-	else{///Caso especial si es una letra
+	else{///Caso especial si es una letra y NO es la primer letra de una función
 		if(letras_permitidas(a[0])==1 && Primer_letra_funcion(a[0])==0){
 			MessageBox(hwnd,"Error en el primer carácter","Error sintáctico",MB_ICONWARNING | MB_OK);
 			return error=1;
@@ -469,16 +469,15 @@ int validacion_caracter(char a[n],HWND hwnd){
 	if(error == 0){
 	f=strlen(a)-1;
 	if(a[f]!=')' && a[f]!='!' && a[f]!='%' && es_operador(a[f])==1 || letras_permitidas(a[f])==1 ){
-        /*Validará que el último carácter no sea un operador a excepción de ')', ! y %*/
+        ///Validará que el último carácter no sea un operador a excepción de ')', ! y %
 		MessageBox(hwnd,"Error con el último carácter","Error sintáctico",MB_ICONWARNING | MB_OK);
 		return error = 1;
 	}
 	}
-
 	if(error==0){
-		for(int i=1;i<strlen(a),a[i+1]!='\0';i++){
+		for(int i=1;i<strlen(a),a[i+1]!='\0';i++){ ///Después de un (...
 			if(a[i-1]=='(' && es_operador(a[i])==1 && a[i]!='(' && a[i]!='-' && esDigito(a[i])==0 && a[i]!='.' && a[i]!='+'){
-				/*Validará que el primer carácter no sea ningún operador a excepción del '(', y cualquier primer letra de las funciones*/
+            ///Validará que el primer carácter no sea ningún operador a excepción del '(',cualquier primer letra de las funciones, ., - o +
                 MessageBox(hwnd,"Error con el primer carácter después del paréntesis","Error sintáctico",
                            MB_ICONWARNING | MB_OK);
                            return error = 1;
@@ -489,9 +488,8 @@ int validacion_caracter(char a[n],HWND hwnd){
                                MB_ICONWARNING | MB_OK);
                     return error = 1;
 				}
-				else{
+				else{///Aquí se verifica que no haya un operador antes de un paréntesis cerrado a excepción de ),! o %
 					if(es_operador(a[i-1])==1 && a[i]==')' && a[i-1]!='!' && a[i-1]!='%' && a[i-1]!=')'){
-                    /*Aquí se verifica que no haya un operador antes de un paréntesis cerrado*/
 						MessageBox(hwnd,"Error con el carácter antes del paréntesis cerrado","Error sintáctico",
                                    MB_ICONWARNING | MB_OK);
 						return error = 1;
@@ -505,7 +503,7 @@ int validacion_caracter(char a[n],HWND hwnd){
 
 int verificacion_funciones(HWND hwnd,char cad[n])
  {
-     int error = 0;
+     int error = 0; ///Validación de la correcta escritura de las funciones permitidas
      for(int i=0;i<strlen(cad);i++)
      {
          if(esDigito(cad[i])==0 && es_operador(cad[i])==0){
@@ -536,22 +534,20 @@ procediendo a leer el siguiente carácter de la candena*/
             continue;
         }
         else{
-        /*En caso de que el carácter leído no sea dígito u operador, se detectará el error léxico*/
                 if(a[i]=='.'){ /*Si el carácter inválido es un punto decimal, hará una impresión diferente*/
                     if(esDigito(a[i-1])==1 && esDigito(a[i+1])==1){
                         error = decimal(a,hwnd);
                         break;
                     }
                 else{
-                    if(a[i+1]=='.'){
+                    if(a[i+1]=='.'){ ///Ej: 3..5
                     MessageBox(hwnd,"Error en ubicación del punto decimal.","Error léxico",MB_ICONWARNING | MB_OK);
                     return error = 1;}
                 }
                 }
-                else{
+                else{ ///Si no es letra, operador ni número, entonces es un carácter inválido
                 MessageBox(hwnd,"No se permiten caracteres inválidos","Error léxico",MB_ICONWARNING | MB_OK);
                 return error = 1;
-            /*Saliéndose del bucle*/
                 }
         }
     } /*Devolverá 1 en caso de que se haya encontrado un error léxico, 0 en caso contrario*/
@@ -568,8 +564,8 @@ int error_sintatico(char a[n],HWND hwnd){
         }
         if(es_operador(a[i])==1 && es_operador(a[i+1])==1 && a[i+1]!='('&& a[i+1]!='!' && a[i+1]!='%'
                         && a[i]!='!' && a[i]!='%' && a[i+1]!='.' && a[i]!='.'){
-            /*Sirve para validar que un operador no sea puesto 2 veces seguidas, pero ignorando los parentesis,
-			factorial, porcentaje o que primero esté un signo negativo*/
+        ///Sirve para validar que un operador no sea puesto 2 veces seguidas, pero ignorando los parentesis,
+        ///!, % o que primero esté un signo - o +*/
 			MessageBox(hwnd,"No es posible calcular con 2 operadores seguidos","Error sintáctico",MB_ICONWARNING | MB_OK);
 			return error = 1;
         }
@@ -615,13 +611,9 @@ void negatividad(char entrada[n]){
            entrada[i] = '0';
         }
     }
-    printf("Negatividad:\n");
-    puts(entrada);
 }
 void multi_parentesis(char entrada [n]){
     int longitud = strlen(entrada);
-    printf("Esta es la entrada: ");
-    puts(entrada);
     for(int i = 0; i<strlen(entrada); i++){
         if(entrada[i] == ')' && (entrada[i+1] == '(' || entrada[i+1] > 47 && entrada[i+1] < 58)){
             for(int j = longitud-1; j > i; j--){
@@ -637,8 +629,6 @@ void multi_parentesis(char entrada [n]){
             }
         }
     }
-    printf("Esta es la entrada: ");
-    puts(entrada);
 }
 
 void funciones_tri(char entrada [n]){
