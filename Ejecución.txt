@@ -1,0 +1,4 @@
+La ejecución del programa se puede realizar directamente del archivo ejecutable .exe
+ubicado en la carpeta bin, o bien, directamente desde el archivo main.c
+
+En el manual de usuario se explica más detalladamente los pasos a seguir.
