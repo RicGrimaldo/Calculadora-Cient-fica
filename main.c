@@ -6,7 +6,8 @@
 #include<ctype.h>
 #define n 35
 
-///Esta es una prueba de pull request (Git)
+///Antes de compilar el programa, es necesario comentar la ejecución de la función Ocultar_pantalla
+
 ///Botones
 HWND ventana,caja_texto;
 HWND bsin,bcos,btan,bsec,bcsc,bcot,barcsin,barccos,barctan;
@@ -17,8 +18,7 @@ HWND b0,b1,b2,b3,b4,b5,b6,b7,b8,b9;
 HWND tipos_conversion,lbin,binl,loct,octl,lhex,hexl,lgrados,gradosl,font,fun_trigl;
 
 ///Función para ocultar la pantalla negra al ejecutarse el programa
-void Ocultar_pantalla(void)
-{
+void Ocultar_pantalla(void){
     HWND console;
     AllocConsole();
     console = FindWindowA("ConsoleWindowClass",NULL);
@@ -125,9 +125,10 @@ LRESULT CALLBACK winProc(HWND hwnd,UINT msj,WPARAM wParam,LPARAM lParam);
 
 ///Creación de la interfaz gráfica
 char app[] = "Calculadora";
+
 int WINAPI WinMain(HINSTANCE ins,HINSTANCE ins2,LPSTR cmd, int estado){
-    //Ocultar_pantalla();
-    WNDCLASSEX vtn;
+    Ocultar_pantalla();
+    WNDCLASSEX vtn; ///Estructura acerca de la clase de ventana
     vtn.cbClsExtra=0;
     vtn.cbSize=sizeof(WNDCLASSEX);
     vtn.cbWndExtra = 0;
@@ -141,18 +142,24 @@ int WINAPI WinMain(HINSTANCE ins,HINSTANCE ins2,LPSTR cmd, int estado){
     vtn.lpszMenuName = NULL;
     vtn.style = CS_HREDRAW | CS_VREDRAW;
 
+///MessageBox(Manipulador de la ventana principal (hwnd), mensaje, título de la ventana, estilo)
+
     if(!RegisterClassEx(&vtn)){
         MessageBox(HWND_DESKTOP,"Error al crear la clase","Error",MB_ICONERROR|MB_OK);
     }
 
+///CreateWindow= (Clase, nombre, estilo, posición horizontal, posición vertical, ancho, alto, ventana,
+///               caso de que sea una ventana 'hija', manipulador a la instancia de la app, datos extras);
+
 ///Ventana principal
 
-    ventana = CreateWindow(app,"Calculadora Científica basada en Win32 API",WS_OVERLAPPED | WS_CAPTION | WS_SYSMENU | WS_MINIMIZEBOX,CW_USEDEFAULT,CW_USEDEFAULT,640,380,HWND_DESKTOP,NULL,ins,NULL);
+    ventana = CreateWindow(app,"Calculadora Científica basada en Win32 API",WS_OVERLAPPED | WS_CAPTION | WS_SYSMENU |
+                           WS_MINIMIZEBOX,CW_USEDEFAULT,CW_USEDEFAULT,640,380,HWND_DESKTOP,NULL,ins,NULL);
 
-///Caja de texto
+///Caja de texto = EDIT
     caja_texto = CreateWindow("EDIT","",WS_CHILD | WS_VISIBLE  | ES_LOWERCASE | WS_BORDER | ES_RIGHT,6,12,610,34,ventana,NULL,ins,NULL);
 
-///Creación de etiquetas
+///Creación de etiquetas = STATIC
 
     tipos_conversion = CreateWindow("STATIC","Tipos de conversion",WS_CHILD | WS_VISIBLE | SS_LEFT ,6,62,140,30,ventana,NULL,ins,NULL);
     lbin = CreateWindow("STATIC","Bin:",WS_CHILD | WS_VISIBLE | SS_NOTIFY | SS_LEFT,6,116,30.1,29.75,ventana,NULL,ins,NULL);
@@ -165,7 +172,7 @@ int WINAPI WinMain(HINSTANCE ins,HINSTANCE ins2,LPSTR cmd, int estado){
     gradosl = CreateWindow("STATIC","",WS_CHILD | WS_VISIBLE | SS_NOTIFY | SS_RIGHT,40.25,266,105,29.75,ventana,NULL,ins,NULL);
     fun_trigl = CreateWindow("STATIC","Funciones trigonométricas",WS_CHILD | WS_VISIBLE | SS_LEFT | SS_CENTER ,166,62,228,30,ventana,NULL,ins,NULL);
 
-///Creación de botones
+///Creación de botones = BUTTON
 
     //Funciones trigonométricas
 
@@ -207,7 +214,7 @@ int WINAPI WinMain(HINSTANCE ins,HINSTANCE ins2,LPSTR cmd, int estado){
     bresultado = CreateWindow("BUTTON","=",WS_CHILD | WS_VISIBLE | SS_CENTER ,585,200,45,90,ventana,NULL,ins,NULL);
 
 
-    if(!ventana){
+    if(!ventana){ ///Se presentará en el caso de que no se haya podido crear la ventana
         MessageBox(HWND_DESKTOP,"Error al crear la ventana","Error",MB_ICONERROR|MB_OK);
 
     }
@@ -224,13 +231,15 @@ int WINAPI WinMain(HINSTANCE ins,HINSTANCE ins2,LPSTR cmd, int estado){
     return (int) msj.wParam;
 
 }
+
+///Funciones
 char enteroACaracter(int numero){
 	return numero + '0';
 }
 int limite_cadena(char cad[n],HWND hwnd)
  {
      int error = 0;
-     if(strlen(cad) >= 31)
+     if(strlen(cad) >= 31) ///Se verifica si la entrada no se excede del límite establecido
      {
         MessageBox(hwnd,"Se excedió el límite de carácteres permitido","Error de límite de carácteres",MB_ICONWARNING | MB_OK);
         return error = 1;
@@ -259,11 +268,11 @@ void conversion_hex(float resultado){
     char hextxt[33];
     int res;
     if(resultado<=999999999 && resultado>=0){
-    res=trunc(resultado);
-    ltoa(res, hextxt,16);
+    res=trunc(resultado); ///Se truncará para convertir únicamente el número entero
+    ltoa(res, hextxt,16); ///Número que se desea convertir, cadena en que se guardará, base
     SetWindowText(hexl,hextxt);
     }
-    else{
+    else{ ///Casos si es negativo o rebasó el límite permitido
         if(resultado<0) SetWindowText(hexl," ");
         else SetWindowText(hexl,"Límite rebasado");
     }
@@ -312,6 +321,7 @@ void conversion_bin (float resultado)
 	itoa(grados,res,10);
 	itoa(minutos,m,10);
 	itoa(segundos,s,10);
+	///Con la función strcat, se unen cadenas y carácteres, todo guardado en la cadena 'res'
 	strcat(res,"° "); strcat(res,m); strcat(res," ' "); strcat(res,s); strcat(res,"''");
 	SetWindowText(gradosl,res);
 	}
@@ -329,7 +339,7 @@ int esDigito (char car){
 }
 
 int es_operador(char car){
-    int resultado=0;
+    int resultado=0; ///Función para verificar si un carácter es operador, 1 si lo es, 0 caso contrario.
     switch(car){
     case'+': case'-': case'*': case'/': case '^': case'(': case ')': case '%': case '.': case '!': resultado=1;
     break;
@@ -338,8 +348,7 @@ int es_operador(char car){
 }
 
 int letras_permitidas (char car){
-    int resultado = 0;
-
+    int resultado = 0; ///Función para verificar si un carácter es alguna de las letras permitidas, 1 si lo es, 0 caso contrario.
     switch(car){
         case 'a': case'c': case 'n': case'e': case'i': case 'o': case'r': case 's': case 't': case 'q':resultado=1;
         break;
@@ -349,7 +358,7 @@ int letras_permitidas (char car){
 
 int Primer_letra_funcion(char a)
 {
-    int resultado = 0;
+    int resultado = 0; ///Primeras posibles letras de todas las funciones
     switch(a){
     case 'a': case 's' : case 'c' : case 't': resultado = 1;
     break;
@@ -358,7 +367,8 @@ int Primer_letra_funcion(char a)
 }
 
 int encontrarCaracter(char cad[n], char car){
-     int r=0;
+     int r=0; ///Una función que verifica si el carácter se encuentra en la cadena.
+     ///Si lo encuentra devuelve la posición, 0 en caso contrario
      for(int i=0;i<strlen(cad);i++){
         if(cad[i]==car){
             r=i+1;
@@ -373,12 +383,12 @@ int decimal(char a[n],HWND hwnd){
     int error = 0,x;
     x = encontrarCaracter(a,'.');
     for(int i=x+1;i<strlen(a);i++){
-            if(esDigito(a[i])==1) continue;
+            if(esDigito(a[i])==1) continue; ///En el caso de que el carácter después de . es número, se verifica el siguiente carácter
         if(es_operador(a[i]) == 1 && a[i]!= '.'){
-            break;
+            break; ///En el caso de que sea un operador, no se encontró error alguno
         }
         else{
-            if(a[i] == '.')
+            if(a[i] == '.') ///Particulares casos como '2.2.2'
                 MessageBox(hwnd,"El número decimal únicamente debe llevar un solo punto.","Error léxico",MB_ICONWARNING | MB_OK);
                 return error = 1;
         }
@@ -405,7 +415,7 @@ int Encontrar_cadena (char cad1[n],char cad2[n]){
 		if(cad1[i]=='\0'){
 			break;}
 		break;
-	}
+	} ///En el caso que hayan coincidido algunas letras, pero la longitud de la cadena es más pequeña que el contador
 	if(i<strlen(cad1)) return resultado=0;
 	return resultado;
 }
@@ -417,14 +427,13 @@ int parentesis_paridad(char a[n],HWND hwnd){
         if(a[i]=='(') b++;
         if(a[i]==')') c++;
         }
-        if(c>b){
-            error = 1;
+        if(c>b){ ///Ej: 4)(6
             MessageBox(hwnd,"Error de paréntesis","Error sintáctico",MB_ICONWARNING | MB_OK);
-            return error;
+            return error = 1;
         }
-    if(c!=b){
-            error=1;
+    if(c!=b){///En el caso de falte un paréntesis
             MessageBox(hwnd,"Error debido a falta de un parentesis","Error sintáctico",MB_ICONWARNING | MB_OK);
+            return error = 1;
     }
     return error;
 }
@@ -446,37 +455,37 @@ int validacion_caracter(char a[n],HWND hwnd){
 	for(int i = 1; i<strlen(a);i++)
     {
         if(Primer_letra_funcion(a[i])==1){
-            if (esDigito(a[i-1])==1 || a[i-1]=='!' || a[i-1]=='%'){
+            if (esDigito(a[i-1])==1 || a[i-1]=='!' || a[i-1]=='%'){ ///Validará que, antes de una función, no haya un número, ! o %
             MessageBox(hwnd,"Error con la declaración de la función","Error sintáctico",
                                    MB_ICONWARNING | MB_OK);
             return error = 1;
-            /*Validará que, antes de una función, no haya un número, ! o %*/
         }
     }
     }
 	if(es_operador(a[0])==1 && a[0]!='(' && a[0]!='-' && esDigito(a[0])==0 && a[0]!='+' && a[0]!='.'){
-		error=1; /*Validará que el primer carácter no sea ningún operador a excepción del '(', y cualquier primer letra de las funciones*/
+    ///Validará que el primer carácter no sea ningún operador a excepción del '(',cualquier primer letra de las funciones, - o +.
         MessageBox(hwnd,"Error con el primer carácter","Error sintáctico",MB_ICONWARNING | MB_OK);
+        return error=1;
 		}
-	else{///Caso especial si es una letra
+	else{///Caso especial si es una letra y NO es la primer letra de una función
 		if(letras_permitidas(a[0])==1 && Primer_letra_funcion(a[0])==0){
-			error = 1;
 			MessageBox(hwnd,"Error en el primer carácter","Error sintáctico",MB_ICONWARNING | MB_OK);
+			return error=1;
 		}
 	}
 
 	if(error == 0){
 	f=strlen(a)-1;
 	if(a[f]!=')' && a[f]!='!' && a[f]!='%' && es_operador(a[f])==1 || letras_permitidas(a[f])==1 ){
-		error=1; /*Validará que el último carácter no sea un operador a excepción de ')', ! y %*/
+        ///Validará que el último carácter no sea un operador a excepción de ')', ! y %
 		MessageBox(hwnd,"Error con el último carácter","Error sintáctico",MB_ICONWARNING | MB_OK);
+		return error = 1;
 	}
 	}
-
 	if(error==0){
-		for(int i=1;i<strlen(a),a[i+1]!='\0';i++){
+		for(int i=1;i<strlen(a),a[i+1]!='\0';i++){ ///Después de un (...
 			if(a[i-1]=='(' && es_operador(a[i])==1 && a[i]!='(' && a[i]!='-' && esDigito(a[i])==0 && a[i]!='.' && a[i]!='+'){
-				/*Validará que el primer carácter no sea ningún operador a excepción del '(', y cualquier primer letra de las funciones*/
+            ///Validará que el primer carácter no sea ningún operador a excepción del '(',cualquier primer letra de las funciones, ., - o +
                 MessageBox(hwnd,"Error con el primer carácter después del paréntesis","Error sintáctico",
                            MB_ICONWARNING | MB_OK);
                            return error = 1;
@@ -487,9 +496,8 @@ int validacion_caracter(char a[n],HWND hwnd){
                                MB_ICONWARNING | MB_OK);
                     return error = 1;
 				}
-				else{
+				else{///Aquí se verifica que no haya un operador antes de un paréntesis cerrado a excepción de ),! o %
 					if(es_operador(a[i-1])==1 && a[i]==')' && a[i-1]!='!' && a[i-1]!='%' && a[i-1]!=')'){
-                    /*Aquí se verifica que no haya un operador antes de un paréntesis cerrado*/
 						MessageBox(hwnd,"Error con el carácter antes del paréntesis cerrado","Error sintáctico",
                                    MB_ICONWARNING | MB_OK);
 						return error = 1;
@@ -503,7 +511,7 @@ int validacion_caracter(char a[n],HWND hwnd){
 
 int verificacion_funciones(HWND hwnd,char cad[n])
  {
-     int error = 0;
+     int error = 0; ///Validación de la correcta escritura de las funciones permitidas
      for(int i=0;i<strlen(cad);i++)
      {
          if(esDigito(cad[i])==0 && es_operador(cad[i])==0){
@@ -534,22 +542,20 @@ procediendo a leer el siguiente carácter de la candena*/
             continue;
         }
         else{
-        /*En caso de que el carácter leído no sea dígito u operador, se detectará el error léxico*/
                 if(a[i]=='.'){ /*Si el carácter inválido es un punto decimal, hará una impresión diferente*/
                     if(esDigito(a[i-1])==1 && esDigito(a[i+1])==1){
                         error = decimal(a,hwnd);
                         break;
                     }
                 else{
-                    if(a[i+1]=='.'){
+                    if(a[i+1]=='.'){ ///Ej: 3..5
                     MessageBox(hwnd,"Error en ubicación del punto decimal.","Error léxico",MB_ICONWARNING | MB_OK);
                     return error = 1;}
                 }
                 }
-                else{
+                else{ ///Si no es letra, operador ni número, entonces es un carácter inválido
                 MessageBox(hwnd,"No se permiten caracteres inválidos","Error léxico",MB_ICONWARNING | MB_OK);
                 return error = 1;
-            /*Saliéndose del bucle*/
                 }
         }
     } /*Devolverá 1 en caso de que se haya encontrado un error léxico, 0 en caso contrario*/
@@ -566,8 +572,8 @@ int error_sintatico(char a[n],HWND hwnd){
         }
         if(es_operador(a[i])==1 && es_operador(a[i+1])==1 && a[i+1]!='('&& a[i+1]!='!' && a[i+1]!='%'
                         && a[i]!='!' && a[i]!='%' && a[i+1]!='.' && a[i]!='.'){
-            /*Sirve para validar que un operador no sea puesto 2 veces seguidas, pero ignorando los parentesis,
-			factorial, porcentaje o que primero esté un signo negativo*/
+        ///Sirve para validar que un operador no sea puesto 2 veces seguidas, pero ignorando los parentesis,
+        ///!, % o que primero esté un signo - o +*/
 			MessageBox(hwnd,"No es posible calcular con 2 operadores seguidos","Error sintáctico",MB_ICONWARNING | MB_OK);
 			return error = 1;
         }
@@ -612,36 +618,25 @@ void negatividad(char entrada[n]){
            }
            entrada[i] = '0';
         }
-        if(entrada [i] == '+' && (i == 0 || entrada[i-1] == '(')){
-            for(int j = i+1; entrada[j-1] != '\0'; j++){
-                entrada[j-1] = entrada[j];
-           }
-        }
     }
-    printf("Negatividad:\n");
-    puts(entrada);
 }
 void multi_parentesis(char entrada [n]){
     int longitud = strlen(entrada);
-    printf("Esta es la entrada: ");
-    puts(entrada);
     for(int i = 0; i<strlen(entrada); i++){
         if(entrada[i] == ')' && (entrada[i+1] == '(' || entrada[i+1] > 47 && entrada[i+1] < 58)){
-            for(int j = longitud; j > i; j--){
+            for(int j = longitud-1; j > i; j--){
                 entrada[j+1] = entrada[j];
             }
             entrada[i+1] = '*';
         }else{
             if(i != 0 && entrada[i] == '(' && entrada[i-1] > 47 && entrada[i-1] < 58){
-            for(int j = longitud; j >= i; j--){
+            for(int j = longitud-1; j >= i; j--){
                 entrada[j+1] = entrada[j];
             }
             entrada[i] = '*';
             }
         }
     }
-    printf("Esta es la entrada: ");
-    puts(entrada);
 }
 
 void funciones_tri(char entrada [n]){
@@ -675,8 +670,6 @@ void funciones_tri(char entrada [n]){
             }
         }
     }
-    printf("Esta es la cadena resultado:\n");
-    puts(entrada);
 }
 
 int operando(char c){
@@ -786,7 +779,6 @@ nodo_float *push_float(float valor, nodo_float *pila){
     nodo_nuevo = (nodo_float *) malloc(sizeof(nodo_float));
     if(nodo_nuevo != NULL){
         nodo_nuevo -> valor = valor;
-		printf("El valor guardado en la pila es: %f\n",nodo_nuevo->valor);
         nodo_nuevo -> siguiente = pila;
         pila = nodo_nuevo;
     }
@@ -847,8 +839,6 @@ void pos(char entrada[n], char postfija[n]){
 		postfija[++j] = elemento;
 	}
 	postfija[++j] = '\0';
-	printf("Postfija: \n");
-	puts(postfija);
 }
 void ConversionInfijaAPostfija(char entrada[n], char postfija[n]){
 	int longitud;
@@ -863,10 +853,8 @@ void ConversionInfijaAPostfija(char entrada[n], char postfija[n]){
 			}
 		}
 	}
-	puts(postfija);
 }
 float operacion(float operando1, float operando2, char operador, int *error,HWND hwnd){
-    char a_tilde = 160, o_tilde = 162;
     switch(operador){
         case '+':
            if(operando1 > 999999999999999999 || operando2 > 999999999999999999){
@@ -1010,7 +998,6 @@ float ObtenerResultado(char postfija[n], int *error, HWND hwnd){
                    || postfija[i] == '!' || postfija[i] == '%'){
                     pila = pop_float(&operando1, pila);
                     resultado = operacion_trig(operando1, postfija[i], &*error,hwnd);
-                    printf("Resultado guardado trigonometrico%f\n\n",resultado);
                     pila = push_float(resultado, pila);
                 }else{
                     continue;
@@ -1028,31 +1015,26 @@ float ObtenerResultado(char postfija[n], int *error, HWND hwnd){
    if(pila -> valor > 999999999999999999){
         MessageBox(hwnd,"Se excedió el límite permitido","Error de límite de carácteres",MB_ICONWARNING | MB_OK);
         *error = 1;
-    }else{
-		printf("Se devoldio %f\n\n",pila->valor);
-        return pila -> valor;
-    }
+    }else return pila -> valor;
 }
 void Procedimiento(char entrada[n], char postfija[n], HWND hwnd){
     float resultado = 0, resultado_aux;
     int error = 0, func_multi = 0, resultado_int = 0;
     char resultado_txt[n];
-    if(Detectar_Errores(entrada,hwnd) == 0){
+    if(Detectar_Errores(entrada,hwnd) == 0){ ///En el caso que no haya ningún error sintáctico, léxico o de límite, se procederá a calcular la expresión
         funciones_tri(entrada);
         multi_parentesis(entrada);
         negatividad(entrada);
         ConversionInfijaAPostfija(entrada, postfija);
         resultado = ObtenerResultado(postfija, &error,hwnd);
-        printf("El resultado es: %.4f (estamos en proc)\n", resultado);
         if(error == 0){
             resultado_int = resultado;
             resultado_aux = resultado_int;
             if(resultado == resultado_aux){
+    ///Sprintf sirve para guardar en una cadena, un tipo de número
                     sprintf(resultado_txt,"%i",resultado_int);
-                    printf("El resultado es: %i\n", resultado_int);
                     SetWindowText(caja_texto,resultado_txt);
             }else{
-                printf("El resultado es: %.4f", resultado);
                 sprintf(resultado_txt,"%.4f",resultado);
                 SetWindowText(caja_texto,resultado_txt);
             }
@@ -1073,6 +1055,10 @@ LRESULT CALLBACK winProc(HWND hwnd,UINT msj,WPARAM wParam,LPARAM lParam)
     case WM_COMMAND: ///Referente a cuando se hace click en algún botón
 
 ///Funcionalidad de botones
+
+///GetWindowText = (De dónde se quiere agarrar el texto, dónde se quiere guardar, número máx de caracteres a copiar);
+///SetWindowText = (A dónde se quiere mandar el texto guardado, cadena donde se tiene guardado el texto);
+///strcat = Copia una cadena en el final de otra
 
     //Funciones trigonométricas
 
@@ -1200,20 +1186,19 @@ LRESULT CALLBACK winProc(HWND hwnd,UINT msj,WPARAM wParam,LPARAM lParam)
 
     if((HWND)lParam == bac){
         GetWindowText(caja_texto,texto,33);
-        strcpy(texto,"");
-        SetWindowText(caja_texto,texto);
+        strcpy(texto,"");///Se vaciará la cadena
+        SetWindowText(caja_texto,texto); ///Y las etiquetas también
         SetWindowText(octl,texto);
         SetWindowText(binl,texto);
         SetWindowText(hexl,texto);
         SetWindowText(gradosl,texto);
         }
 
-    //Función especial
-    ///OFF
+    ///Función especial OFF
 
-    if((HWND)lParam == boff){
+    if((HWND)lParam == boff){ ///En el caso que se halla dado click en 'OK'...
         if(MessageBox(hwnd,"¿Estás seguro que quieres salir del programa?","Aviso",MB_OKCANCEL | MB_ICONEXCLAMATION) == IDOK)
-            PostQuitMessage(0);
+            PostQuitMessage(0); ///Se cerrará la ventana
         }
 
     //Números y dígitos
@@ -1283,7 +1268,6 @@ LRESULT CALLBACK winProc(HWND hwnd,UINT msj,WPARAM wParam,LPARAM lParam)
         if((HWND)lParam == bresultado){
                 char postfija [n];
                 GetWindowText(caja_texto,texto,33);
-                puts(texto);
                 Procedimiento(texto,postfija,hwnd);
         }
         break;
@@ -1291,7 +1275,7 @@ LRESULT CALLBACK winProc(HWND hwnd,UINT msj,WPARAM wParam,LPARAM lParam)
         break;
 
     case WM_DESTROY :
-        PostQuitMessage(0);
+        PostQuitMessage(0); ///Cerrar la ventana
         break;
     }
     DefWindowProc(hwnd,msj,wParam,lParam);
