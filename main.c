@@ -287,7 +287,7 @@ void conversion_oct (float resultado)
     }
     else{
         if(resultado<0) SetWindowText(octl," ");
-        else SetWindowText(gradosl,"Límite rebasado");
+        else SetWindowText(octl,"Límite rebasado");
     }
 }
 
@@ -302,7 +302,7 @@ void conversion_bin (float resultado)
     }
     else{
         if(resultado<0) SetWindowText(binl," ");
-        else SetWindowText(gradosl,"Límite rebasado");
+        else SetWindowText(binl,"Límite rebasado");
     }
 }
 
