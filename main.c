@@ -26,7 +26,7 @@ void Ocultar_pantalla(void)
 
 ///Estructuras necesarias para la pila
 struct PILAA {
-	int t;
+	int t;    ///Posición en que se encuentra
 	char a[n];
 };
 struct struct_nodo_float{
@@ -77,7 +77,7 @@ void negatividad(char entrada[n]);
 void multi_parentesis(char entrada [n]);
 void funciones_tri(char entrada [n]);
 int operando (char c);
-int priori[18][19]={
+int priori[18][19]={ ///Fila / Columna
     {1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},  ///Suma
     {1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},  ///Resta
     {1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},  ///Multiplicacion
@@ -218,7 +218,7 @@ int WINAPI WinMain(HINSTANCE ins,HINSTANCE ins2,LPSTR cmd, int estado){
 
     }
 
-    ShowWindow(ventana,SW_SHOWNORMAL);
+    ShowWindow(ventana,SW_SHOWNORMAL);///Esta función especifica cómo se mostrará la ventana.
     MSG msj;
 
     while(GetMessage(&msj,NULL,0,0)){
@@ -248,8 +248,8 @@ int limite_cadena(char cad[n],HWND hwnd)
  }
  int Encontrar_cadena2 (char cad1[n],char cad2[n]){
 	int resultado = 1;
-	for(int i=0; cad1[i] != '\0'; i++){
-        if(cad1[i] != cad2[i]){
+	for(int i=0; cad1[i] != '\0'; i++){ ///Todos los carácteres deben ser completamente iguales
+        if(cad1[i] != cad2[i]){         ///Compara 2 cadenas, 1 si son iguales y 0 si no
             resultado = 0;
             break;
         }
@@ -610,24 +610,24 @@ int potencia(int x, int y){
 }
 void negatividad(char entrada[n]){
     int longitud = strlen(entrada);
-    for(int i=0; entrada[i] != '\0'; i++){
+    for(int i=0; entrada[i] != '\0'; i++){///Un - en la primera posición o después de un paréntesis
         if(entrada[i] == '-' && (i == 0 || entrada[i-1] == '(')){
             for(int j = longitud; j > i; j--){
-                entrada[j] = entrada[j-1];
+                entrada[j] = entrada[j-1]; ///Corre la cadena hacia la cadena una posición
            }
-           entrada[i] = '0';
+           entrada[i] = '0';///Y se coloca un 0 hasta el principio
         }
     }
 }
 void multi_parentesis(char entrada [n]){
     int longitud = strlen(entrada);
-    for(int i = 0; i<strlen(entrada); i++){
+    for(int i = 0; i<strlen(entrada); i++){///(2)(3) o (2)3
         if(entrada[i] == ')' && (entrada[i+1] == '(' || entrada[i+1] > 47 && entrada[i+1] < 58)){
             for(int j = longitud-1; j > i; j--){
                 entrada[j+1] = entrada[j];
             }
             entrada[i+1] = '*';
-        }else{
+        }else{///Si hay un número antes de un paréntesis izquierdo
             if(i != 0 && entrada[i] == '(' && entrada[i-1] > 47 && entrada[i-1] < 58){
             for(int j = longitud-1; j >= i; j--){
                 entrada[j+1] = entrada[j];
@@ -642,8 +642,8 @@ void funciones_tri(char entrada [n]){
     int I = 0, J = 0;
     char operador, trig[10];
     for(int i = 0; entrada[i] != '\0'; i++){
-        if(entrada[i] > 96 && entrada [i] < 123){
-            for(int j = i; entrada[j] != '('; j++){
+        if(entrada[i] > 96 && entrada [i] < 123){///Verifica si el carácter es una letra
+            for(int j = i; entrada[j] != '('; j++){///Hasta que encuentre un paréntesis, guarda las letras en otra cadena
                 trig[I] = entrada[j];
                 I++;
             }
@@ -740,8 +740,8 @@ int prioridad (char op1, char op2){
 	    case '(': j=17; break;
 	    case ')': j=18; break;
 	}
-
-	prioridaad = priori[i][j];
+ ///Determina qué operador va primero
+	prioridaad = priori[i][j]; ///Regresará el valor de la prioridad
 	return (prioridaad);
 }
 
@@ -749,32 +749,32 @@ char tope(struct PILAA p){
 	return (p.a[p.t-1]);
 }
 void init_pila(struct PILAA *p){
-	p->t = 0;
+	p->t = 0; ///Inicializar pila
 }
 int pila_vacia (struct PILAA *p){
     return(!p->t);
 }
 void ins_pila(struct PILAA *p, char s){
 	if(p->t == n){
-	}
+	} ///Valida que la entrada no tenga límite de caracteres, pero no es útil
 	else{
-        p->t++;
+        p->t++; ///Insertar valor nuevo
         p->a [p->t - 1] = s;
 	}
 }
 void retira_pila(struct PILAA *p, char *s){
-    if(pila_vacia(p)){
-		*s = '_';
+    if(pila_vacia(p)){ ///Si la pila está vacía, se le pasa el guión bajo por referencia
+		*s = '_'; ///último carácter de la cadena
 	}else{
-	    *s = p->a [p->t - 1];
-        p->t--;
+	    *s = p->a [p->t - 1];///Carácter por referencia = carácter del tope de la pila
+        p->t--; ///Como se elimina el último carácter de la pila, entonces la posición se borra
 	}
 }
 nodo_float *crear_pila_float(nodo_float *pila){
-    return pila = NULL;
+    return pila = NULL; ///Crea una pila NULL (Vacía)
 }
 nodo_float *push_float(float valor, nodo_float *pila){
-    nodo_float *nodo_nuevo;
+    nodo_float *nodo_nuevo; ///Como ins_pila, guarda valores float
     nodo_nuevo = (nodo_float *) malloc(sizeof(nodo_float));
     if(nodo_nuevo != NULL){
         nodo_nuevo -> valor = valor;
@@ -784,7 +784,7 @@ nodo_float *push_float(float valor, nodo_float *pila){
     return pila;
 }
 nodo_float *pop_float(float *valor, nodo_float *pila){
-    nodo_float *nodo_auxiliar;
+    nodo_float *nodo_auxiliar; ///Como retira pila, lo regresa y elimina el último valor guardado
     float dato;
     if(pila == NULL){
 
@@ -794,7 +794,7 @@ nodo_float *pop_float(float *valor, nodo_float *pila){
         dato = nodo_auxiliar ->valor;
         pila = nodo_auxiliar ->siguiente;
         *valor = dato;
-        free(nodo_auxiliar);
+        free(nodo_auxiliar); ///Libera espacio que se ha estado guardando
     }
     return pila;
 }
@@ -811,10 +811,10 @@ void pos(char entrada[n], char postfija[n]){
 	void retira_pila (struct PILAA *p, char *s);
 	i = 0;
 	j = -1;
-	init_pila(&pila);
+	init_pila(&pila);///Se inicializa la pila
 	while(entrada[i] != '_') {
-	   if(operando(entrada[i]) == 1){
-            postfija [++j] = entrada[i++];
+	   if(operando(entrada[i]) == 1){ ///Si el caracter es un operando
+            postfija [++j] = entrada[i++]; ///Lo pone en postfija
 	   }
 	   else{
 		     while (!pila_vacia (&pila) && prioridad(tope(pila), entrada[i])){
@@ -842,7 +842,7 @@ void pos(char entrada[n], char postfija[n]){
 void ConversionInfijaAPostfija(char entrada[n], char postfija[n]){
 	int longitud;
 	longitud = strlen(entrada);
-	entrada[longitud] = '_';
+	entrada[longitud] = '_'; ///En la última posición se agrega guión bajo
 	entrada[longitud+1] = '\0';
 	pos(entrada, postfija);
 	for(int i=0; postfija[i] != '\0'; i++){
