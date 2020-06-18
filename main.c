@@ -774,7 +774,7 @@ nodo_float *crear_pila_float(nodo_float *pila){
     return pila = NULL; ///Crea una pila NULL (Vacía)
 }
 nodo_float *push_float(float valor, nodo_float *pila){
-    nodo_float *nodo_nuevo; ///Como ins_pila, guarda valores float
+    nodo_float *nodo_nuevo; ///Como ins_pila, guarda valores float - insertar
     nodo_nuevo = (nodo_float *) malloc(sizeof(nodo_float));
     if(nodo_nuevo != NULL){
         nodo_nuevo -> valor = valor;
