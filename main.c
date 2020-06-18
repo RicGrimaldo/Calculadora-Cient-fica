@@ -1031,10 +1031,10 @@ void Procedimiento(char entrada[n], char postfija[n], HWND hwnd){
             resultado_aux = resultado_int;
             if(resultado == resultado_aux){
     ///Sprintf sirve para guardar en una cadena, un tipo de número
-                    sprintf(resultado_txt,"%i",resultado_int);
+                    sprintf(resultado_txt,"%i",resultado_int); ///Crea una cadena según cierto formato, con datos a guardar
                     SetWindowText(caja_texto,resultado_txt);
             }else{
-                sprintf(resultado_txt,"%.4f",resultado);
+                sprintf(resultado_txt,"%.4f",resultado); ///Sprintf(La cadena de destino, la cadena de formato y los datos a guardar)
                 SetWindowText(caja_texto,resultado_txt);
             }
             conversion_hex(resultado);
