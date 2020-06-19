@@ -845,22 +845,23 @@ void pos(char entrada[n], char postfija[n]){
 	}
 	postfija[++j] = '\0'; ///El último carácter de postfija será nulo
 }
+//Sólo en el cmd, en GUI es obsoleto
 void ConversionInfijaAPostfija(char entrada[n], char postfija[n]){
 	int longitud;
 	longitud = strlen(entrada);
 	entrada[longitud] = '_'; ///En la última posición se agrega guión bajo
 	entrada[longitud+1] = '\0';
 	pos(entrada, postfija);
-	for(int i=0; postfija[i] != '\0'; i++){
-		if(postfija[i] == 10){
+	for(int i=0; postfija[i] != '\0'; i++){///Solución cuando se agregaban "saltos de línea" en el cmd
+		if(postfija[i] == 10){ ///10 en ASCII es salto de línea
 			for(int j=i; postfija[j] != '\0'; j++){
-				postfija[j] = postfija[j+1];
+				postfija[j] = postfija[j+1];///Ignorando el salto de línea, agrega cada carácter a su posición anterior
 			}
 		}
 	}
 }
 float operacion(float operando1, float operando2, char operador, int *error,HWND hwnd){
-    switch(operador){
+    switch(operador){///Cada caso validará un posible error matemático
         case '+':
            if(operando1 > 999999999999999999 || operando2 > 999999999999999999){
                 MessageBox(hwnd,"Se excedió el límite permitido","Error de límite de carácteres",MB_ICONWARNING | MB_OK);
