@@ -6,6 +6,8 @@
 #include<ctype.h>
 #define n 35
 
+///HWND es un tipo de dato (identificador) en WINAPI para crear cosas
+
 ///Botones
 HWND ventana,caja_texto;
 HWND bsin,bcos,btan,bsec,bcsc,bcot,barcsin,barccos,barctan;
@@ -128,18 +130,19 @@ char app[] = "Calculadora";
 int WINAPI WinMain(HINSTANCE ins,HINSTANCE ins2,LPSTR cmd, int estado){
     Ocultar_pantalla();
     WNDCLASSEX vtn; ///Estructura acerca de la clase de ventana
-    vtn.cbClsExtra=0;
-    vtn.cbSize=sizeof(WNDCLASSEX);
-    vtn.cbWndExtra = 0;
-    vtn.hbrBackground = (HBRUSH) (COLOR_HIGHLIGHT+1);
-    vtn.hCursor = LoadCursor(NULL,IDC_ARROW);
-    vtn.hIcon = NULL;
-    vtn.hIconSm = NULL;
-    vtn.hInstance = ins;
-    vtn.lpfnWndProc = winProc;
-    vtn.lpszClassName = app;
-    vtn.lpszMenuName = NULL;
-    vtn.style = CS_HREDRAW | CS_VREDRAW;
+    vtn.cbClsExtra=0; ///Bytes extra que se van a reservar para nuestra clase de ventana
+    vtn.cbSize=sizeof(WNDCLASSEX); ///Tamaño de la estructura
+    vtn.cbWndExtra = 0; ///Bytes extra que se reservarán para las ventanas
+    vtn.hbrBackground = (HBRUSH) (COLOR_HIGHLIGHT+1); ///Color de fondo
+    vtn.hCursor = LoadCursor(NULL,IDC_ARROW); ///Cursor de la clase
+    vtn.hIcon = NULL; ///Ícono establecido por defecto
+    vtn.hIconSm = NULL; ///Ícono pequeño establecido por defecto
+    vtn.hInstance = ins; ///Número que representa la app en el Sistema operativo
+    vtn.lpfnWndProc = winProc; ///Proceso/función de mensajes a recibir (eventos)
+    vtn.lpszClassName = app;///Nombre de la clase de la ventana
+    vtn.lpszMenuName = NULL;///No tendrá menú, por lo que será NULL
+    vtn.style = CS_HREDRAW | CS_VREDRAW;///Estilo de ventana
+    ///En este caso, se redibuja la ventana cada que se cambie el tamaño de la ventana (si fuera el caso)
 
 ///MessageBox(Manipulador de la ventana principal (hwnd), mensaje, título de la ventana, estilo)
 
@@ -147,8 +150,8 @@ int WINAPI WinMain(HINSTANCE ins,HINSTANCE ins2,LPSTR cmd, int estado){
         MessageBox(HWND_DESKTOP,"Error al crear la clase","Error",MB_ICONERROR|MB_OK);
     }
 
-///CreateWindow= (Clase, nombre, estilo, posición horizontal, posición vertical, ancho, alto, ventana,
-///               caso de que sea una ventana 'hija', manipulador a la instancia de la app, datos extras);
+///CreateWindow= (Clase, nombre, estilo, posición horizontal, posición vertical, ancho, alto, ventana madre,
+///               , manipulador a la instancia de la app, valores que se les pueden pasar a otras ventanas);
 
 ///Ventana principal
 
@@ -219,15 +222,16 @@ int WINAPI WinMain(HINSTANCE ins,HINSTANCE ins2,LPSTR cmd, int estado){
     }
 
     ShowWindow(ventana,SW_SHOWNORMAL);///Esta función especifica cómo se mostrará la ventana.
-    MSG msj;
+    MSG msj;///Variable que guarda mensajes
+
 
     while(GetMessage(&msj,NULL,0,0)){
-        DispatchMessage(&msj);
-        TranslateMessage(&msj);
+        DispatchMessage(&msj);///Se envían los mensajes a WinProc
+        TranslateMessage(&msj);///Traduce el msj
 
     }
 
-    return (int) msj.wParam;
+    return (int) msj.wParam;///Guarda el estatus de salida de la app
 
 }
 
@@ -1045,6 +1049,7 @@ void Procedimiento(char entrada[n], char postfija[n], HWND hwnd){
     }
     else SetWindowText(caja_texto,entrada);
 }
+
 LRESULT CALLBACK winProc(HWND hwnd,UINT msj,WPARAM wParam,LPARAM lParam)
 {
     ///Declaración de cadenas
