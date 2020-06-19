@@ -750,7 +750,7 @@ int prioridad (char op1, char op2){
 }
 
 char tope(struct PILAA p){
-	return (p.a[p.t-1]);
+	return (p.a[p.t-1]); ///Regresa el carácter sin eliminarlo
 }
 void init_pila(struct PILAA *p){
 	p->t = 0; ///Inicializar pila
@@ -770,7 +770,7 @@ void retira_pila(struct PILAA *p, char *s){
     if(pila_vacia(p)){ ///Si la pila está vacía, se le pasa el guión bajo por referencia
 		*s = '_'; ///último carácter de la cadena
 	}else{
-	    *s = p->a [p->t - 1];///Carácter por referencia = carácter del tope de la pila
+	    *s = p->a [p->t - 1];///Carácter por referencia = carácter del tope (último agregado) de la pila
         p->t--; ///Como se elimina el último carácter de la pila, entonces la posición se borra
 	}
 }
@@ -817,31 +817,33 @@ void pos(char entrada[n], char postfija[n]){
 	j = -1;
 	init_pila(&pila);///Se inicializa la pila
 	while(entrada[i] != '_') {
-	   if(operando(entrada[i]) == 1){ ///Si el caracter es un operando
+	   if(operando(entrada[i]) == 1){ ///Si el caracter es un número o punto decimal
             postfija [++j] = entrada[i++]; ///Lo pone en postfija
 	   }
-	   else{
+	   else{///Mientras la pila no esté vacía y la prioridad no sea NULL (último valor de la pila y el carácter que sigue en la cadena
 		     while (!pila_vacia (&pila) && prioridad(tope(pila), entrada[i])){
 			     retira_pila (&pila, &elemento);
-			     postfija[++j] = elemento;
+			     postfija[++j] = elemento;///El último elemento que se retiró del tope de la pila se agrega a la cadena postfija
 		      }
-		      if(operando(postfija[j]) == 1){
-                postfija[++j] = ',';
-                }
-                if (entrada[i] == ')'){
-                    retira_pila(&pila, &elemento);
+		      if(operando(postfija[j]) == 1){///Si el carácter es un número/'.'
+                postfija[++j] = ',';///Al siguiente carácter de la cadena postfija se le agrega la coma
+                } ///La coma sirve para separar un número de otro
+
+                if (entrada[i] == ')'){///Si es un paréntesis derecho, entonces
+                    retira_pila(&pila, &elemento);///El último elemento que se retiró del tope de la pila se guarda en elemento
                 }
                 else{
-                    ins_pila(&pila, entrada[i]);
+                    ins_pila(&pila, entrada[i]);///Se inserta el carácter de entrada a la pila
                 }
 		      i++;
 		}
 	}
-	while (!pila_vacia (&pila)){
-		retira_pila (&pila, &elemento);
-		postfija[++j] = elemento;
+	///Vaciar toda la pila para ponerlas en postfija:
+	while (!pila_vacia (&pila)){///Si la pila no está vacía
+		retira_pila (&pila, &elemento);///El último elemento que se retiró del tope de la pila se guarda en elemento
+		postfija[++j] = elemento;///Se agrega a postfija
 	}
-	postfija[++j] = '\0';
+	postfija[++j] = '\0'; ///El último carácter de postfija será nulo
 }
 void ConversionInfijaAPostfija(char entrada[n], char postfija[n]){
 	int longitud;
