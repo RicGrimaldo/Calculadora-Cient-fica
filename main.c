@@ -906,7 +906,6 @@ float operacion_trig(float operando1, char operador, int *error,HWND hwnd){
                 *error = 1;
                 break;
             }else{
-                printf("El operando 1 es: %f y su raiz es : %f\n",operando1,sqrt(9));
                 return sqrt(operando1);
                 break;
             }
@@ -970,15 +969,15 @@ float operacion_trig(float operando1, char operador, int *error,HWND hwnd){
         case '%': return operando1/100;
     }
 }
-
+///Se guardan los números como cadenas, pasándose con la función 'atof', agregándose a la pila
 float ObtenerResultado(char postfija[n], int *error, HWND hwnd){
     nodo_float *pila;
-    int I = 0;
-    char valor[n];
+    int I = 0;///Contador para la cadena 'valor'
+    char valor[n];///Se guardan los números en la cadena
     float operando1, operando2, resultado, valor_float;
     pila = crear_pila_float(pila);
     for(int i=0; postfija[i] != '\0'; i++){
-        if(postfija[i] >= 48 && postfija[i] <=57 || postfija[i] == '.'){
+        if(postfija[i] >= 48 && postfija[i] <=57 || postfija[i] == '.'){///Si es un número o punto decimal
             for(int j = i; postfija[j] >= 48 && postfija[j] <=57 || postfija[j] == '.'; j++){
                 valor[I] = postfija[j];
                 I++;
@@ -986,36 +985,32 @@ float ObtenerResultado(char postfija[n], int *error, HWND hwnd){
                     i++;
                 }
             }
-            valor_float = atof(valor);
-            pila = push_float(valor_float, pila);
+            valor_float = atof(valor);///Guarda el número guardado en la cadena en un float
+            pila = push_float(valor_float, pila); ///Se pasa a la lista
             for(int j=0; j<40; j++){
-                valor[j] = '\0';
+                valor[j] = '\0';///Vacía / inicializa la cadena para volverse a usar
             }
             I = 0;
         }else{
             if(postfija[i] == '+' || postfija[i] == '-' || postfija[i] == '*' || postfija[i] == '/' || postfija[i] == '^'){
                 pila = pop_float(&operando2, pila);
-                pila = pop_float(&operando1, pila);
+                pila = pop_float(&operando1, pila);///Se retiran y se pasan los números de la pila por referencia
                 resultado = operacion(operando1, operando2, postfija[i], &*error,hwnd);
-                pila = push_float(resultado, pila);
+                pila = push_float(resultado, pila); ///El resultado se inserta en la pila
             }else{
                 if(postfija[i] == 'a' || postfija[i] == 'b' || postfija[i] == 'c' || postfija[i] == 'd' || postfija[i] == 'e'
                    || postfija[i] == 'f' || postfija[i] == 'g' || postfija[i] == 'h' || postfija[i] == 'i' || postfija[i] == 'j'
-                   || postfija[i] == '!' || postfija[i] == '%'){
+                   || postfija[i] == '!' || postfija[i] == '%'){///Caso especial debido a que solamente usan 1 operando a la vez
                     pila = pop_float(&operando1, pila);
                     resultado = operacion_trig(operando1, postfija[i], &*error,hwnd);
                     pila = push_float(resultado, pila);
                 }else{
-                    continue;
+                    continue;///Si es una coma, se ignora (la coma sirve para diferenciar dígitos)
                 }
             }
         }
-        if(postfija[i+1] == 10){
-            postfija[i+2] = '\0';
-            postfija[i+3] = '\0';
-            postfija[i+4] = '\0';
-            postfija[i+5] = '\0';
-            postfija[i+6] = '\0';
+        if(postfija[i+1] == 10){///Si había salto de línea, se eliminaban (sólo en el caso del cmd)
+            postfija[i+2] = '\0';///Validación obsoleta
         }
     }
    if(pila -> valor > 999999999999999999){
@@ -1039,7 +1034,7 @@ void Procedimiento(char entrada[n], char postfija[n], HWND hwnd){
             if(resultado == resultado_aux){
     ///Sprintf sirve para guardar en una cadena, un tipo de número
                     sprintf(resultado_txt,"%i",resultado_int); ///Crea una cadena según cierto formato, con datos a guardar
-                    SetWindowText(caja_texto,resultado_txt);
+                    SetWindowText(caja_texto,resultado_txt);///Muestra el resultado en forma de cadena en la caja de texto
             }else{
                 sprintf(resultado_txt,"%.4f",resultado); ///Sprintf(La cadena de destino, la cadena de formato y los datos a guardar)
                 SetWindowText(caja_texto,resultado_txt);
@@ -1050,7 +1045,8 @@ void Procedimiento(char entrada[n], char postfija[n], HWND hwnd){
             conversion_grados(resultado);
         }
     }
-    else SetWindowText(caja_texto,entrada);
+    else SetWindowText(caja_texto,entrada); ///En caso de que se detecte un error, la expresión quedará tal y como se escribió para que el usuario
+    ///pueda corregir su error
 }
 
 LRESULT CALLBACK winProc(HWND hwnd,UINT msj,WPARAM wParam,LPARAM lParam)
