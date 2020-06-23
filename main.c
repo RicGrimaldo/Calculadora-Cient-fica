@@ -224,8 +224,9 @@ int WINAPI WinMain(HINSTANCE ins,HINSTANCE ins2,LPSTR cmd, int estado){
     ShowWindow(ventana,SW_SHOWNORMAL);///Esta función especifica cómo se mostrará la ventana.
     MSG msj;///Variable que guarda mensajes
 
+///Bucle que se encarga de recolectar todos los mensajes que vengan desde todas las ventanas
 
-    while(GetMessage(&msj,NULL,0,0)){
+    while(GetMessage(&msj,NULL,0,0)){///Similar a while(true), se ejecutará si es distinto de 0
         DispatchMessage(&msj);///Se envían los mensajes a WinProc
         TranslateMessage(&msj);///Traduce el msj
 
@@ -1049,8 +1050,13 @@ void Procedimiento(char entrada[n], char postfija[n], HWND hwnd){
     ///pueda corregir su error
 }
 
+///LRESULT: Entero largo, su valor depende del msj que haya procesado la función
+///CALLBACK: Función que será llamada cuando un evento en específico ocurra
+///Se procesan los msj enviados a una ventana, en este caso, la ventana madre
+
 LRESULT CALLBACK winProc(HWND hwnd,UINT msj,WPARAM wParam,LPARAM lParam)
-{
+{ ///WPARAM y LPARAM = contenido del msj (gracias a ellos podemos saber a qué botón se le hizo click)
+
     ///Declaración de cadenas
     char texto[n];
     switch(msj){
@@ -1278,8 +1284,10 @@ LRESULT CALLBACK winProc(HWND hwnd,UINT msj,WPARAM wParam,LPARAM lParam)
         break;
 
     case WM_DESTROY :
-        PostQuitMessage(0); ///Cerrar la ventana
+        PostQuitMessage(0); ///Cerrar la ventana y devolver el valor 0 a GetMessage
         break;
     }
-    DefWindowProc(hwnd,msj,wParam,lParam);
+    DefWindowProc(hwnd,msj,wParam,lParam); ///Proceso por defecto a los msg no evaluados en el switch
+///Se pasan los mismos parámetros de la función para que se pueda seguir ejecutando la ventana en caso de que no se realice nada
+///(siempre se tiene que enviar un msg, aunque no se haga nada)
 }
