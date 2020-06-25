@@ -663,12 +663,12 @@ void funciones_tri(char entrada [n]){
             else if (Encontrar_cadena2("arccos",trig ) == 1)    {operador = 'i'; J += 5;}
             else if (Encontrar_cadena2("arctan",trig ) == 1)    {operador = 'j'; J += 5;}
             entrada[i] = operador;
-            for(int j = (I+i); entrada[j] != '\0'; j++){
+            for(int j = (I+i); entrada[j] != '\0'; j++){///Se recorre todo lo que había después
                 entrada[j-(I-1)] = entrada[j];
             }
             I = 0;
         }
-        if(entrada[i+1] == '\0'){
+        if(entrada[i+1] == '\0'){ ///Vaciar si quedaron carácteres de la cadena original (duplicados)
             for(int j = 0; j <= J; j++){
                 entrada[(i+1)-j] = '\0';
             }
@@ -821,7 +821,7 @@ void pos(char entrada[n], char postfija[n]){
 	   if(operando(entrada[i]) == 1){ ///Si el caracter es un número o punto decimal
             postfija [++j] = entrada[i++]; ///Lo pone en postfija
 	   }
-	   else{///Mientras la pila no esté vacía y la prioridad no sea NULL (último valor de la pila y el carácter que sigue en la cadena
+	   else{///Mientras la pila no esté vacía y la prioridad sea diferente de 0(último valor de la pila,el carácter que sigue en la cadena)
 		     while (!pila_vacia (&pila) && prioridad(tope(pila), entrada[i])){
 			     retira_pila (&pila, &elemento);
 			     postfija[++j] = elemento;///El último elemento que se retiró del tope de la pila se agrega a la cadena postfija
