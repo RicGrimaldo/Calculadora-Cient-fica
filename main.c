@@ -430,11 +430,11 @@ int parentesis_paridad(char a[n],HWND hwnd){
     for(int i=0;i<m;i++){
         if(a[i]=='(') b++;
         if(a[i]==')') c++;
-        }
         if(c>b){ ///Ej: 4)(6
             MessageBox(hwnd,"Error de paréntesis","Error sintáctico",MB_ICONWARNING | MB_OK);
             return error = 1;
         }
+    }
     if(c!=b){///En el caso de falte un paréntesis
             MessageBox(hwnd,"Error debido a falta de un parentesis","Error sintáctico",MB_ICONWARNING | MB_OK);
             return error = 1;
